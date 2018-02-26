@@ -12,11 +12,11 @@ import sx.blah.discord.util.RateLimitException;
 
 import java.util.List;
 
-/**
- * List of commands that users can input:
+/**List of commands that users can input:
+ * CHARACTER COMMANDS
  * !createchar name
  * !deletechar name
- * !showchar name
+ * !charinfo name
  * !changecharname name
  * !setchardescription name "desc"
  * !setcharfamily name "family"
@@ -51,50 +51,117 @@ import java.util.List;
  * !setlevelcap name cap
  * !promote char class
  * !showinventory char
+ * !charskilllist char
  * !heal char HP
+ * !setteam char team
+ * !removecharitem char itemname
+ * !setcharweaponrank char weapontype rank
+ * !equipweapon char weapon
+ * !unequipweapon char
+ * !equipstaff char staff
+ * !promotechar char class
  *
- * !addclass name
+ * CLASS COMMANDS
+ * !createclass name
  * !addclasspromopath name class
+ * !removeclasspromopath name class
  * !setclassrankbonus name bonus
  * !setclassskillbonus name bonus
+ * !removeclassskillbonus name bonus
  * !setclassstatbonus name bonus
  * !classinfo
  *
- * !addskill name type
+ * SKILL COMMANDS
+ * !createskill name type
  * !deleteskill name
- * !setskillname skill name
+ * !setskillname skill "name"
+ * !setskilldesc skill "description"
+ * !listskills
+ * !skillinfo skill
  * !setslayrace skill race
  * !setslaybonus skill stat bonus
  * !setbreakerweapon skill weapon
  * !setbreakerbonus skill stat bonus
  * !setmiraclerate skill rate
- * !listskills
- * !skillinfo skill
+ * !setmiraclestat skill stat
+ * !setdefensivebuff skill stat buff
+ * !setoffensivebuff skill stat buff
+ * !setthresholdthresh skill threshold
+ * !setthresholdbuff skill buff
+ * !setskillprocrate skill rate
+ * !setprocskillstatmulti skill statmulti
+ * !setprocskillactistat skill stat
+ * !setprocskillusenemystat skill yes/no
+ * !setprocskillcancel skill yes/no
+ * !setprocskillwhenattacked skill yes/no
+ * !setprocskillinputstat skill stat
+ * !setprocskillisdamaging skill yes/no
+ * !setprocskillishealing skill yes/no
+ * !setpassiveskillbuff skill stat buff
+ * !setvantage skill yes/no
+ * !setvantagethreshold skill threshold
  *
- * !additem char name
+ * ITEM COMMANDS
+ * !createitem name type
  * !setitemdescription item "desc"
  * !makeindestructible item
  * !useitem char item
  * !breakitem char item
  * !iteminfo item
- * !setadvantage item type
- * !setweakness item type
  *
+ * WEAPON COMMANDS
+ * !setphysadvantage weapon weapontype
+ * !setphysweakness weapon weapontype
+ * !setmagadvantage weapon weapontype
+ * !setmagdisadvantage weapon weapontype
+ * !setrequiredweaponrank weapon rank
+ * !setweaponeffectiveness weapon weapontype yes/no
+ * !setarmorslaying weapon yes/no
+ * !setantifliers weapon yes/no
+ * !setantimounted weapon yes/no
+ * !settargetsres weapon yes/no
+ * !setusesmagicstat weapon yes/no
+ * !setweaponhitrate weapon hitrate
+ * !setweaponmight weapon might
+ * !setweaponcritrate weapon critrate
+ * !setweaponcounterable weapon yes/no
+ * !setminweaponrange weapon range
+ * !setmaxweaponrange weapon range
+ * !setbraveweapon weapon yes/no
+ * !setweaponcandouble weapon yes/no
+ * !setweaponignoredefense weapon yes/no
+ * !setlifesteal weapon yes/no
+ *
+ * STAFF COMMANDS
+ * !setstaffrank staff rank
+ * !sethealingstaff staff yes/no
+ * !setstaffmagmulti staff multiplier
+ *
+ * RECIPE COMMANDS
  * !definerecipe name "items"
  * !removerecipeitem name item
  * !addrecipeitem name item
  * !recipeinfo name
  * !listrecipes
  *
+ * BATTLE COMMANDS
  * !battle initiator defender
  * !battlecommand initiator defender command
  * !battleforecast char1 char2
- * !addstatus char statusname duration
  * !battlestaff initiator target
  *
- * !toast
+ * STATUS COMMANDS
+ * !createstatus name
+ * !setdefaultduration name duration
+ * !setstatusdebuff stat debuff
+ * !cyclestatus team
+ * !cyclecharstatus char
+ * !addstatus char status
  *
- * !neal
+ * MISC COMMANDS
+ * !toast "All toasters toast toast."
+ * !neal "people die when they are killed."
+ * !royalty "BECOME AS GODS"
  */
 
 public class FERPBot extends BaseBot implements IListener<MessageEvent> {

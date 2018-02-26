@@ -7,6 +7,7 @@ public class Character {
     private String family;
     private String background;
     private String race;
+    private String owner;
     private ArrayList<Item> inventory = new ArrayList<>();
     private SkillList skilllist = new SkillList();
     private String[] weapontypes = new String[] {"Sword", "Lance", "Axe", "Anima", "Light", "Dark", "Bow", "Staff"};
@@ -14,6 +15,8 @@ public class Character {
     private String[] stattypes = new String[] {"HP", "Strength", "Magic", "Skill", "Speed", "Luck", "Defense", "Resistance", "Hit", "Avoid", "Crit"};
     private Weapon equippedweapon;
     private boolean hasEquippedWeapon;
+    private boolean isPlayerChar;
+    private boolean isBoss;
     private Staff equippedstaff;
     private int[] weaponrank = new int[8];
     private int[] growths = new int[8];
@@ -30,6 +33,7 @@ public class Character {
         family = "";
         background = "";
         race = "";
+        owner = "";
         int i;
         for (i = 0; i < 8; i++) {
             growths[i] = 0;
@@ -45,6 +49,8 @@ public class Character {
         levelcap = 20;
         statusmessage = "";
         hasEquippedWeapon = false;
+        isPlayerChar = true;
+        isBoss = false;
     }
     public Character(String name) {
         this();
@@ -56,6 +62,29 @@ public class Character {
         statusmessage = "";
         return temp;
     }
+    public void setNPC(boolean b) {
+        if (b) {
+            statusmessage += name + " is now a non-player character and cannot gain EXP.\n";
+        } else {
+            statusmessage += name + " is now a player character and can gain EXP.\n";
+        }
+        isPlayerChar = !b;
+    }
+    public boolean isNPC() { return (!isPlayerChar); }
+    public void setBoss(boolean b) {
+        if (b) {
+            statusmessage += name + " is now a boss.\n";
+        } else {
+            statusmessage += name + " is no longer a boss.\n";
+        }
+        isBoss = b;
+    }
+    public boolean isBoss() { return isBoss; }
+    public void setOwner(String s) {
+        owner = s;
+        statusmessage += s + " is now the owner of " + getName() + ".\n";
+    }
+    public String getOwner() { return owner; }
     public SkillList getSkills() {
         return skilllist;
     }
@@ -275,38 +304,49 @@ public class Character {
         return false;
     }
     public void levelup() { //levels up the character
-        statusmessage += name + " leveled up from " + level + " to " + (level+1) + "!\n";
-        int i;
-        int temp;
-        int gtemp;
-        for (i = 0; i < 8; i++) {
-            int total = 0;
-            gtemp = growths[i];
-            do {
-                temp = (int) (Math.random() * 100);
-                if (temp < growths[i]) {
-                    total++;
+        if (level < levelcap) {
+            statusmessage += name + " leveled up from " + level + " to " + (level + 1) + "!\n";
+            int i;
+            int temp;
+            int gtemp;
+            for (i = 0; i < 8; i++) {
+                int total = 0;
+                gtemp = growths[i];
+                do {
+                    temp = (int) (Math.random() * 100);
+                    if (temp < growths[i]) {
+                        total++;
+                    }
+                    gtemp -= 100;
+                } while (gtemp > 100);
+                if (total > 0) {
+                    statusmessage += stattypes[i] + " increased by " + total + "! {" + stats[i] + "->" + (stats[i] + total) + ").\n";
                 }
-                gtemp -= 100;
-            } while (gtemp > 100);
-            if (total > 0) {
-                statusmessage += stattypes[i] + " increased by " + total + "! {" + stats[i] + "->" + (stats[i] + total) + ").\n";
+                stats[i] += total;
             }
-            stats[i] += total;
+        }
+        else {
+            statusmessage += name + " is at maximum level.\n";
         }
     }
     public void gainExperience(int experience) { //adds experience to the character and levels it up if it reaches 100
-        if (experience > 0) {
-            statusmessage += name + " gained " + experience + " experience!\n";
-            int temp = experience;
-            while (exp + temp >= 100 && level < levelcap) {
-                temp -= (100 - exp);
-                exp = 0;
-                levelup();
+        if (level < levelcap) {
+            if (experience > 0) {
+                statusmessage += name + " gained " + experience + " experience!\n";
+                int temp = experience;
+                while (exp + temp >= 100 && level < levelcap) {
+                    temp -= (100 - exp);
+                    exp = 0;
+                    levelup();
+                }
+                if (level < levelcap) {
+                    exp += temp;
+                }
+            } else {
+                statusmessage += "Invalid experience amount.\n";
             }
-            exp += temp;
         } else {
-            statusmessage += "Invalid experience amount.";
+            statusmessage += name + " is at maximum level.\n";
         }
     }
     public int getExperience() { return exp; }

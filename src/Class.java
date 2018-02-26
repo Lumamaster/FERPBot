@@ -11,8 +11,8 @@ public class Class {
     private boolean armored;
     private int tier;
     private String statusmessage;
-    private ArrayList<Skill> bonusskills;
-    private ArrayList<Class> promotionpaths;
+    private ArrayList<Skill> bonusskills = new ArrayList<>();
+    private ArrayList<Class> promotionpaths = new ArrayList<>();
     private String[] weapontypes = new String[] {"Sword", "Lance", "Axe", "Bow", "Anima", "Light", "Dark"};
     private String[] ranktypes = new String[] {"E","D","C","B","A","S"};
     private String[] stattypes = new String[] {"HP", "Strength", "Magic", "Skill", "Speed", "Luck", "Defense", "Resistance", "Hit", "Avoid", "Crit"};

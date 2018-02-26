@@ -2,8 +2,6 @@ public class Staff extends Item {
     private int baseheal;
     private int magicmulti;
     private boolean healing;
-    private int[] statmod = new int[10];
-    private boolean percentage;
     private String statusmessage;
     private int weaponrank;
     private String[] ranktypes = new String[] {"E","D","C","B","A","S"};
@@ -14,12 +12,7 @@ public class Staff extends Item {
         baseheal = 0;
         magicmulti = 1;
         healing = true;
-        percentage = false;
         weaponrank = 0;
-        int i;
-        for (i = 0; i < 10; i++) {
-            statmod[i] = 0;
-        }
         this.setStaff(true);
     }
     public String getStatus() {
@@ -62,25 +55,5 @@ public class Staff extends Item {
     public int getMagicMultiplier()
     {
         return magicmulti;
-    }
-    public void setPercentage(boolean b) { //sets if status given applies health based damage
-        if (b) {
-            statusmessage += getName() + " now does percentage based health damage.\n";
-        } else {
-            statusmessage += getName() + " no longer does percentage based health damage.\n";
-        }
-        percentage = b;
-    }
-    public boolean isPercentage()
-    {
-        return percentage;
-    }
-    public void setStatModifier(int stat, int mod) { //sets the stat modifier on status given
-        statusmessage += getName() + " now buffs/debuffs " + stattypes[stat] + " by " + mod + ".\n";
-        statmod[stat] = mod;
-    }
-    public int[] getStatModifiers()
-    {
-        return statmod;
     }
 }

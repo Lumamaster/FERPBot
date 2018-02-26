@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class SkillList {
@@ -9,6 +10,7 @@ public class SkillList {
     private ArrayList<Miracle> miracles;
     private ArrayList<DefensiveSkill> defensives;
     private ArrayList<InitiationSkill> offensives;
+    private ArrayList<Threshold> thresholds;
     SkillList()
     {
 
@@ -30,6 +32,8 @@ public class SkillList {
                 miracles.add((Miracle) s);
             } else if (s.isPassive()) {
                 passives.add((PassiveSkill) s);
+            } else if (s.isThreshhold()) {
+                thresholds.add((Threshold) s);
             }
             return true;
         }
@@ -68,50 +72,14 @@ public class SkillList {
         return false;
     }
     //helper methods
-    public int getNumOfPassives()
-    {
-        return passives.size();
-    }
-    public ArrayList<DefensiveSkill> getDefensives() {
-        return defensives;
-    }
-    public ArrayList<InitiationSkill> getOffensives() {
-        return offensives;
-    }
-    public ArrayList<Miracle> getMiracles() {
-        return miracles;
-    }
-    public ArrayList<PassiveSkill> getPassives() {
-        return passives;
-    }
-    public ArrayList<ProcSkill> getProcs() {
-        return procs;
-    }
-    public ArrayList<RaceSlayer> getSlayers() {
-        return raceslayers;
-    }
-    public ArrayList<Skill> getSkills() {
-        return allskills;
-    }
-    public ArrayList<WeaponBreaker> getBreakers() {
-        return breakers;
-    }
-    public int getNumOfOffensives() {
-        return offensives.size();
-    }
-    public int getNumOfDefensives() {
-        return defensives.size();
-    }
-    public int getNumOfProcs() {
-        return procs.size();
-    }
-    public int getNumOfSlayers() {
-        return raceslayers.size();
-    }
-    public int getNumOfBreakers() {
-        return breakers.size();
-    }
-    public int getNumOfMiracles() {
-        return miracles.size();
-    }
+    public int getNumOfPassives() { return passives.size(); }
+    public ArrayList<DefensiveSkill> getDefensives() { return defensives; }
+    public ArrayList<InitiationSkill> getOffensives() { return offensives; }
+    public ArrayList<Miracle> getMiracles() { return miracles; }
+    public ArrayList<PassiveSkill> getPassives() { return passives; }
+    public ArrayList<ProcSkill> getProcs() { return procs; }
+    public ArrayList<RaceSlayer> getSlayers() { return raceslayers; }
+    public ArrayList<Skill> getSkills() { return allskills; }
+    public ArrayList<WeaponBreaker> getBreakers() { return breakers; }
+    public ArrayList<Threshold> getThresholds() { return thresholds; }
 }
