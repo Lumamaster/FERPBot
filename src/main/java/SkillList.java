@@ -1,16 +1,17 @@
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class SkillList {
-    private ArrayList<Skill> allskills;
-    private ArrayList<PassiveSkill> passives;
-    private ArrayList<ProcSkill> procs;
-    private ArrayList<RaceSlayer> raceslayers;
-    private ArrayList<WeaponBreaker> breakers;
-    private ArrayList<Miracle> miracles;
-    private ArrayList<DefensiveSkill> defensives;
-    private ArrayList<InitiationSkill> offensives;
-    private ArrayList<Threshold> thresholds;
+public class SkillList implements Serializable {
+    private ArrayList<Skill> allskills = new ArrayList<>();
+    private ArrayList<PassiveSkill> passives = new ArrayList<>();
+    private ArrayList<ProcSkill> procs = new ArrayList<>();
+    private ArrayList<RaceSlayer> raceslayers = new ArrayList<>();
+    private ArrayList<WeaponBreaker> breakers = new ArrayList<>();
+    private ArrayList<Miracle> miracles = new ArrayList<>();
+    private ArrayList<DefensiveSkill> defensives = new ArrayList<>();
+    private ArrayList<InitiationSkill> offensives = new ArrayList<>();
+    private ArrayList<Threshold> thresholds = new ArrayList<>();
     SkillList()
     {
 

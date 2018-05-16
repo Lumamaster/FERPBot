@@ -1,4 +1,6 @@
-public class PassiveSkill extends Skill {
+import java.io.Serializable;
+
+public class PassiveSkill extends Skill implements Serializable{
     private String[] stattypes = new String[] {"HP", "Strength", "Magic", "Skill", "Speed", "Luck", "Defense", "Resistance", "Hit", "Avoid", "Crit", "Physical damage taken", "Magical damage taken", "Damage taken", "Physical damage dealt", "Magical damage dealt", "Damage dealt"};
     private int[] buff = new int[17];
     private boolean vantage;

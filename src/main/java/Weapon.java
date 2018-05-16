@@ -1,4 +1,6 @@
-public class Weapon extends Item{
+import java.io.Serializable;
+
+public class Weapon extends Item implements Serializable{
     private int might;
     private int hitrate;
     private int critrate;

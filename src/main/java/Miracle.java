@@ -1,4 +1,6 @@
-public class Miracle extends Skill {
+import java.io.Serializable;
+
+public class Miracle extends Skill implements Serializable{
     private double luckmulti;
     private String[] stattypes = new String[] {"HP", "Strength", "Magic", "Skill", "Speed", "Luck", "Defense", "Resistance"};
     private int stattype;

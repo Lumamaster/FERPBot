@@ -25,26 +25,45 @@ public class Storage {
     public void removeItem(String s) { itemhash.remove(s); }
     public void removeClass(String s) { classhash.remove(s); }
     public void removeSkill(String s) { skillhash.remove(s); }
+    public Character[] getcharlist() {
+        Collection<Character> tempchar = charhash.values();
+        Character[] chararray = tempchar.toArray(new Character[0]);
+        return chararray;
+    }
+    public Class[] getclasslist() {
+        Collection<Character> tempclass = classhash.values();
+        Class[] classarray = tempclass.toArray(new Class[0]);
+        return classarray;
+    }
+    public Skill[] getskilllist() {
+        Collection<Character> tempskill = skillhash.values();
+        Skill[] skillarray = tempskill.toArray(new Skill[0]);
+        return skillarray;
+    }
+    public Item[] getitemlist() {
+        Collection<Character> tempitem = itemhash.values();
+        Item[] itemarray = tempitem.toArray(new Item[0]);
+        return itemarray;
+    }
     public void saveData()
     {
         Collection<Character> tempchar = charhash.values();
         Collection<Item> tempitem = itemhash.values();
         Collection<Class> tempclass = classhash.values();
         Collection<Skill> tempskill = skillhash.values();
-        Character[] chararray = (Character[])tempchar.toArray();
-        Item[] itemarray = (Item[])tempitem.toArray();
-        Class[] classarray = (Class[])tempclass.toArray();
-        Skill[] skillarray = (Skill[])tempskill.toArray();
+        Character[] chararray = tempchar.toArray(new Character[0]);
+        Item[] itemarray = tempitem.toArray(new Item[0]);
+        Class[] classarray = tempclass.toArray(new Class[0]);
+        Skill[] skillarray = tempskill.toArray(new Skill[0]);
         int i;
-        int j;
         try {
             for (i = 0; i < chararray.length; i++) {
-                File f = new File(System.getProperty("user.dir") + "/characters/" + chararray[i].getName() + ".char");
+                File f = new File(System.getProperty("user.dir") + "/characters/" + chararray[i].getName());
                 f.getParentFile().mkdirs();
                 if (!f.exists()) {
                     f.createNewFile();
                 }
-                FileOutputStream fout = new FileOutputStream(System.getProperty("user.dir") + "/characters/" + chararray[i].getName() + ".char");
+                FileOutputStream fout = new FileOutputStream(System.getProperty("user.dir") + "/characters/" + chararray[i].getName());
                 ObjectOutputStream oout = new ObjectOutputStream(fout);
                 oout.writeObject(chararray[i]);
                 oout.close();
@@ -52,7 +71,7 @@ public class Storage {
                 fileWriter.write(chararray[i].getName() + "\n");
                 fileWriter.write(chararray[i].getAppearance() + "\n");
                 fileWriter.write(chararray[i].getFamily() + "\n");
-                fileWriter.write(chararray[i].getBackground() + "\n");
+                fileWriter.write(chararray[i].getDescription() + "\n");
                 fileWriter.write(chararray[i].getRace() + "\n");
                 fileWriter.write(chararray[i].getOwner() + "\n");
                 fileWriter.write(chararray[i].getStats()[0] + " " + chararray[i].getStats()[1] + " " + chararray[i].getStats()[2] + " " + chararray[i].getStats()[3] + " " + chararray[i].getStats()[4] + " " + chararray[i].getStats()[5] + " " + chararray[i].getStats()[6] + " " + chararray[i].getStats()[7] + " " + chararray[i].getStats()[8] + " " + chararray[i].getStats()[9] + " " + chararray[i].getStats()[10] + "\n");
@@ -156,6 +175,40 @@ public class Storage {
             System.out.println(e);
         } catch (ClassNotFoundException e) {
             System.out.println(e);
+        } catch (NullPointerException e) {
+            File chars = new File(System.getProperty("user.dir") + "/characters/" + "dummy.char");
+            chars.mkdirs();
+            File items = new File(System.getProperty("user.dir") + "/items/" + "dummy.item");
+            items.mkdirs();
+            File classes = new File(System.getProperty("user.dir") + "/classes/" + "dummy.class");
+            classes.mkdirs();
+            File skills = new File(System.getProperty("user.dir") + "/skills/" + "dummy.skill");
+            skills.mkdirs();
+        }
+        Collection<Character> tempchar = charhash.values();
+        Collection<Item> tempitem = itemhash.values();
+        Collection<Class> tempclass = classhash.values();
+        Collection<Skill> tempskill = skillhash.values();
+        Character[] chararray = tempchar.toArray(new Character[0]);
+        Item[] itemarray = tempitem.toArray(new Item[0]);
+        Class[] classarray = tempclass.toArray(new Class[0]);
+        Skill[] skillarray = tempskill.toArray(new Skill[0]);
+        int i;
+        System.out.println("Characters loaded: " + charhash.size());
+        for (i = 0; i < chararray.length; i++) {
+            System.out.println(chararray[i].getName());
+        }
+        System.out.println("Classes loaded: " + classhash.size());
+        for (i = 0; i < classarray.length; i++) {
+            System.out.println(classarray[i].getName());
+        }
+        System.out.println("Items loaded: " + itemhash.size());
+        for (i = 0; i < itemarray.length; i++) {
+            System.out.println(itemarray[i].getName());
+        }
+        System.out.println("Skills loaded: " + skillhash.size());
+        for (i = 0; i < skillarray.length; i++) {
+            System.out.println(skillarray[i].getName());
         }
     }
 }

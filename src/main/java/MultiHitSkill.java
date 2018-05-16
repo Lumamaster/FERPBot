@@ -1,4 +1,6 @@
-public class MultiHitSkill extends ProcSkill {
+import java.io.Serializable;
+
+public class MultiHitSkill extends ProcSkill implements Serializable{
     private int attackcount;
     private String statusmessage;
     private boolean stack;

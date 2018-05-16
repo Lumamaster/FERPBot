@@ -1,4 +1,6 @@
-public class RaceSlayer extends Skill {
+import java.io.Serializable;
+
+public class RaceSlayer extends Skill implements Serializable{
     private String[] types = new String[]{"Hit", "Avoid", "Crit", "Damage dealt", "Damage Multiplier", "Damage taken"};
     private String raceslay;
     private double[] advantage = new double[6];

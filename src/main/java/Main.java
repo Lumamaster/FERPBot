@@ -2,9 +2,23 @@ import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.util.DiscordException;
 
+import java.io.*;
+
 public class Main {
-    public static void main(String[] args) {
-        FERPBot bot = new FERPBot(createClient("Mzk4ODg4MjUyNTg2NTkwMjA4.DYOhVQ.akzqQEReoqNiDJqJbR_wyLqYFfc", true));
+    public static void main(String[] args) throws IOException {
+        String token;
+        FileInputStream fin = null;
+        try {
+            fin = new FileInputStream(System.getProperty("user.dir")+"\\token.txt");
+            BufferedReader br = new BufferedReader(new InputStreamReader(fin));
+            token = br.readLine();
+            br.close();
+            System.out.println("Attempting to create FERPBot using token: " + token);
+            FERPBot bot = new FERPBot(createClient(token, true));
+        } catch (FileNotFoundException e) {
+            System.out.println("No token file found. Please put your token in 'token.txt' in the file directory.");
+            e.printStackTrace();
+        }
     }
     public static IDiscordClient createClient(String token, boolean login) { // Returns a new instance of the Discord client
         ClientBuilder clientBuilder = new ClientBuilder(); // Creates the ClientBuilder instance

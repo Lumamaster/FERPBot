@@ -1,4 +1,6 @@
-public class WeaponBreaker extends PassiveSkill {
+import java.io.Serializable;
+
+public class WeaponBreaker extends PassiveSkill implements Serializable{
     private int weapon;
     private String[] types = new String[]{"Hit", "Avoid", "Crit", "Damage dealt", "Damage Multiplier", "Damage taken"};
     private double[] advantage = new double[6];

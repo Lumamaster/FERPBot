@@ -1,4 +1,6 @@
-public class Staff extends Item {
+import java.io.Serializable;
+
+public class Staff extends Item implements Serializable{
     private int baseheal;
     private int magicmulti;
     private boolean healing;

@@ -5,7 +5,7 @@ public class Class implements Serializable{
     private String name;
     private int[] gains = new int[8];
     private int[] classbonus = new int[11];
-    private int[] bonusweaponrank = new int[7];
+    private int[] bonusweaponrank = new int[8];
     private boolean bonusset;
     private boolean mounted;
     private boolean flying;
@@ -14,7 +14,7 @@ public class Class implements Serializable{
     private String statusmessage;
     private ArrayList<Skill> bonusskills = new ArrayList<>();
     private ArrayList<Class> promotionpaths = new ArrayList<>();
-    private String[] weapontypes = new String[] {"Sword", "Lance", "Axe", "Bow", "Anima", "Light", "Dark"};
+    private String[] weapontypes = new String[] {"Sword", "Lance", "Axe", "Bow", "Anima", "Light", "Dark", "Staff"};
     private String[] ranktypes = new String[] {"E","D","C","B","A","S"};
     private String[] stattypes = new String[] {"HP", "Strength", "Magic", "Skill", "Speed", "Luck", "Defense", "Resistance", "Hit", "Avoid", "Crit"};
 
@@ -26,7 +26,7 @@ public class Class implements Serializable{
         for (i = 0; i < 11; i++) {
             classbonus[i] = 0;
         }
-        for (i = 0; i < 7; i++) {
+        for (i = 0; i < 8; i++) {
             bonusweaponrank[i] = 0;
         }
         bonusset = false;
@@ -93,7 +93,7 @@ public class Class implements Serializable{
         return bonusset;
     }
     public void setPromoWeaponRankBonus(int weapon, int rank) { //sets weapon rank bonus on promotion
-        statusmessage += name + "'s " + weapontypes[weapon] + " rank bonus is now " + ranktypes[rank] + ".\n";
+        statusmessage += name + "'s " + weapontypes[weapon] + " rank bonus is now " + ranktypes[rank-1] + ".\n";
         bonusweaponrank[weapon] = rank;
     }
     public int[] getPromoWeaponRankBonus()

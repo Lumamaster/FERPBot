@@ -1,4 +1,6 @@
-public class Consumable extends Item {
+import java.io.Serializable;
+
+public class Consumable extends Item implements Serializable{
     private int[] statmod = new int[11];
     private String statusmessage;
     private String[] stattypes = new String[] {"HP", "Strength", "Magic", "Skill", "Speed", "Luck", "Defense", "Resistance", "Hit", "Avoid", "Crit"};

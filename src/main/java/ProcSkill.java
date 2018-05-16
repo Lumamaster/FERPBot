@@ -1,4 +1,6 @@
-public class ProcSkill extends Skill {
+import java.io.Serializable;
+
+public class ProcSkill extends Skill implements Serializable{
     private String[] stattypes = new String[] {"HP", "Strength", "Magic", "Skill", "Speed", "Luck", "Defense", "Resistance", "Physical damage taken", "Magical damage taken", "Damage taken", "Physical damage dealt", "Magical damage dealt", "Damage dealt"};
     private double statmultiplier;
     private double damagemulti;

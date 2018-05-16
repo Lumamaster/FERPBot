@@ -1,4 +1,6 @@
-public class Threshold extends Skill {
+import java.io.Serializable;
+
+public class Threshold extends Skill implements Serializable{
     private String statusmessage;
     private String[] stattypes = new String[] {"HP", "Strength", "Magic", "Skill", "Speed", "Luck", "Defense", "Resistance", "Hit", "Avoid", "Crit", "Physical damage taken", "Magical damage taken", "Damage taken", "Physical damage dealt", "Magical damage dealt", "Damage dealt"};
     private int[] buff = new int[17];
