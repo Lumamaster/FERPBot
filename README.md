@@ -4,9 +4,13 @@ A Discord bot meant to simulate Fire Emblem style combat with the capability to 
 THIS BOT IS CURRENTLY WORK IN PROGRESS.
 
 TODO:
+
 SKILLS
+
 ITEMS
+
 STATUSES
+
 BATTLE
 
 This bot was made in IntelliJ IDEA Community Edition, and uses Discord4J as part of its functionality.
