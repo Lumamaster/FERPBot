@@ -3,6 +3,7 @@ import java.util.ArrayList;
 
 public class Class implements Serializable{
     private String name;
+    private String description;
     private int[] gains = new int[8];
     private int[] classbonus = new int[11];
     private int[] bonusweaponrank = new int[8];
@@ -33,6 +34,7 @@ public class Class implements Serializable{
         mounted = false;
         flying = false;
         armored = false;
+        description = "";
     }
     public Class(String name) {
         this();
@@ -53,6 +55,11 @@ public class Class implements Serializable{
     {
         return name;
     }
+    public void setDescription(String s) { //sets class description
+        description = s;
+        statusmessage += name + "'s description has been changed.\n";
+    }
+    public String getDescription() { return description; }
     public void setBonusWeaponRankToBeFixed(boolean b) { //sets if on promotion, weapon ranks will be raised to a point rather than added
         if (b) {
             statusmessage += name + "'s weapon rank bonus on promotion will now raise ranks to its level.\n";

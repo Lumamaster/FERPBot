@@ -2,7 +2,7 @@ import java.io.Serializable;
 
 public class PassiveSkill extends Skill implements Serializable{
     private String[] stattypes = new String[] {"HP", "Strength", "Magic", "Skill", "Speed", "Luck", "Defense", "Resistance", "Hit", "Avoid", "Crit", "Physical damage taken", "Magical damage taken", "Damage taken", "Physical damage dealt", "Magical damage dealt", "Damage dealt"};
-    private int[] buff = new int[17];
+    private double[] buff = new double[17];
     private boolean vantage;
     private double vantagethreshold;
     private String statusmessage;
@@ -26,7 +26,7 @@ public class PassiveSkill extends Skill implements Serializable{
         statusmessage += getName() + " now increases/decreases " + stattypes[stat] + " by " + b + ".\n";
         buff[stat] = b;
     }
-    public int[] getBuff() { return buff; }
+    public double[] getBuff() { return buff; }
     public void setVantage(boolean b) {
         if (b) {
             statusmessage += getName() + " is now a vantage-type skill.\n";

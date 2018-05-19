@@ -5,7 +5,7 @@ public class Miracle extends Skill implements Serializable{
     private String[] stattypes = new String[] {"HP", "Strength", "Magic", "Skill", "Speed", "Luck", "Defense", "Resistance"};
     private int stattype;
     private String statusmessage;
-    Miracle(String name, int p) {
+    Miracle(String name, double p) {
         super(name);
         super.setMiracle(true);
         luckmulti = p;
@@ -17,7 +17,7 @@ public class Miracle extends Skill implements Serializable{
         statusmessage = "";
         return temp;
     }
-    public void setPercentage(int i) {
+    public void setPercentage(double i) {
         statusmessage += getName() + "'s luck multiplier percentage has been changed to " + i + ".\n";
         luckmulti = i;
     }

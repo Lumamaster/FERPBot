@@ -11,62 +11,6 @@ import sx.blah.discord.util.RateLimitException;
 import java.util.List;
 
 /**List of commands that users can input:
- * CHARACTER COMMANDS
- * !createchar name
- * !deletechar name
- * !charinfo name
- * !changecharname name
- * !setchardescription name "description"
- * !setcharclass name class
- * !setcharrace name race
- * !setcharweaponrank name rank
- * !setcharlevel name level
- * !setcharexp name experience
- * !addexp name experience
- * !levelchar name
- * !sethp name hp
- * !setstr name strength
- * !setmag name magic
- * !setskl name skill
- * !setspd name speed
- * !setlck name luck
- * !setdef name defense
- * !setres name resistance
- * !setcurrhp name hp
- * !setcharhitbonus name bonus
- * !setcharavoidbonus name bonus
- * !setcharcritbonus name bonus
- * !sethpgrow name growth
- * !setstrgrow name growth
- * !setmaggrow name growth
- * !setsklgrow name growth
- * !setspdgrow name growth
- * !setlckgrow name growth
- * !setdefgrow name growth
- * !setresgrow name growth
- * !setlevelcap name cap
- * !promote char class
- * !showinventory char
- * !charskilllist char
- * !heal char HP
- * !setteam char team
- * !removecharitem char itemname
- * !setcharweaponrank char weapontype rank
- * !equipweapon char weapon
- * !unequipweapon char
- * !equipstaff char staff
- * !promotechar char class
- *
- * CLASS COMMANDS
- * !createclass name
- * !addclasspromopath name class
- * !removeclasspromopath name class
- * !setclassrankbonus name bonus
- * !setclassskillbonus name skill
- * !removeclassskillbonus name bonus
- * !setclassstatbonus name bonus
- * !classinfo
- *
  * SKILL COMMANDS
  * !createskill name type
  * !deleteskill name
@@ -145,26 +89,12 @@ import java.util.List;
  * !battlecommand initiator defender command
  * !battleforecast char1 char2
  * !battlestaff initiator target
- *
- * STATUS COMMANDS
- * !createstatus name
- * !setdefaultduration name duration
- * !setstatusdebuff stat debuff
- * !cyclestatus team
- * !cyclecharstatus char
- * !addstatus char status
- *
- * MISC COMMANDS
- * !toast "All toasters toast toast."
- * !neal "find it in game."
- * !royalty "BECOME AS GODS"
- * !frown ">:["
  */
 
 public class FERPBot extends BaseBot implements IListener<MessageEvent> {
-    Storage store = new Storage();
+    private Storage store = new Storage();
 
-    public FERPBot(IDiscordClient discordClient) {
+    FERPBot(IDiscordClient discordClient) {
         super(discordClient);
         store.loadData();
         EventDispatcher dispatcher = discordClient.getDispatcher(); // Gets the client's event dispatcher
@@ -186,7 +116,6 @@ public class FERPBot extends BaseBot implements IListener<MessageEvent> {
             {
                 String withoutstart = message.getContent().substring(1, message.getContent().length());
                 String[] m = withoutstart.split(" (?=(([^'\"]*['\"]){2})*[^'\"]*$)");
-                int argnum = m.length;
                 int i;
                 for (i = 0; i < m.length; i++) {
                     if (m[i].charAt(0) == '"') {
@@ -387,40 +316,50 @@ public class FERPBot extends BaseBot implements IListener<MessageEvent> {
                                 int rank = Integer.parseInt(m[3]);
                                 if (rank < 0 || rank > 6) {
                                     if (store.hasCharacter(m[1])) {
-                                        if (m[2].equals("Sword")) {
-                                            store.getCharacter(m[1]).setWeaponRank(0, rank);
-                                            store.saveData();
-                                            printmessage(store.getCharacter(m[1]).getStatus(), channel);
-                                        } else if (m[2].equals("Lance")) {
-                                            store.getCharacter(m[1]).setWeaponRank(1, rank);
-                                            store.saveData();
-                                            printmessage(store.getCharacter(m[1]).getStatus(), channel);
-                                        } else if (m[2].equals("Axe")) {
-                                            store.getCharacter(m[1]).setWeaponRank(2, rank);
-                                            store.saveData();
-                                            printmessage(store.getCharacter(m[1]).getStatus(), channel);
-                                        } else if (m[2].equals("Anima")) {
-                                            store.getCharacter(m[1]).setWeaponRank(3, rank);
-                                            store.saveData();
-                                            printmessage(store.getCharacter(m[1]).getStatus(), channel);
-                                        } else if (m[2].equals("Light")) {
-                                            store.getCharacter(m[1]).setWeaponRank(4, rank);
-                                            store.saveData();
-                                            printmessage(store.getCharacter(m[1]).getStatus(), channel);
-                                        } else if (m[2].equals("Dark")) {
-                                            store.getCharacter(m[1]).setWeaponRank(5, rank);
-                                            store.saveData();
-                                            printmessage(store.getCharacter(m[1]).getStatus(), channel);
-                                        } else if (m[2].equals("Bow")) {
-                                            store.getCharacter(m[1]).setWeaponRank(6, rank);
-                                            store.saveData();
-                                            printmessage(store.getCharacter(m[1]).getStatus(), channel);
-                                        } else if (m[2].equals("Staff")) {
-                                            store.getCharacter(m[1]).setWeaponRank(7, rank);
-                                            store.saveData();
-                                            printmessage(store.getCharacter(m[1]).getStatus(), channel);
-                                        } else {
-                                            printmessage("Invalid weapon type inputted. The bot currently only supports: \"Sword, Lance, Axe, Bow, Anima, Light, Dark, Staff\".", channel);
+                                        switch (m[2]) {
+                                            case "Sword":
+                                                store.getCharacter(m[1]).setWeaponRank(0, rank);
+                                                store.saveData();
+                                                printmessage(store.getCharacter(m[1]).getStatus(), channel);
+                                                break;
+                                            case "Lance":
+                                                store.getCharacter(m[1]).setWeaponRank(1, rank);
+                                                store.saveData();
+                                                printmessage(store.getCharacter(m[1]).getStatus(), channel);
+                                                break;
+                                            case "Axe":
+                                                store.getCharacter(m[1]).setWeaponRank(2, rank);
+                                                store.saveData();
+                                                printmessage(store.getCharacter(m[1]).getStatus(), channel);
+                                                break;
+                                            case "Anima":
+                                                store.getCharacter(m[1]).setWeaponRank(3, rank);
+                                                store.saveData();
+                                                printmessage(store.getCharacter(m[1]).getStatus(), channel);
+                                                break;
+                                            case "Light":
+                                                store.getCharacter(m[1]).setWeaponRank(4, rank);
+                                                store.saveData();
+                                                printmessage(store.getCharacter(m[1]).getStatus(), channel);
+                                                break;
+                                            case "Dark":
+                                                store.getCharacter(m[1]).setWeaponRank(5, rank);
+                                                store.saveData();
+                                                printmessage(store.getCharacter(m[1]).getStatus(), channel);
+                                                break;
+                                            case "Bow":
+                                                store.getCharacter(m[1]).setWeaponRank(6, rank);
+                                                store.saveData();
+                                                printmessage(store.getCharacter(m[1]).getStatus(), channel);
+                                                break;
+                                            case "Staff":
+                                                store.getCharacter(m[1]).setWeaponRank(7, rank);
+                                                store.saveData();
+                                                printmessage(store.getCharacter(m[1]).getStatus(), channel);
+                                                break;
+                                            default:
+                                                printmessage("Invalid weapon type inputted. The bot currently only supports: Sword, Lance, Axe, Bow, Anima, Light, Dark, Staff.", channel);
+                                                break;
                                         }
                                     } else {
                                         printmessage("Character does not exist.", channel);
@@ -891,18 +830,18 @@ public class FERPBot extends BaseBot implements IListener<MessageEvent> {
                             }
                         }
                     }
-                    if (m[0].equals("charskilllist"))// char
+                    if (m[0].equals("addcharskill")) // char skill
                     {
-                        if (m.length != 2) {
-                            printmessage("Invalid argument amount. Usage: !charskilllist \"name\"", channel);
+                        if (m.length != 3) {
+                            printmessage("Invalid argument amount. Usage: !addcharskill \"name\" \"skill\"", channel);
                         } else {
                             if (store.hasCharacter(m[1])) {
-                                String temp = store.getCharacter(m[1]).getName() + "'s skill list:\n";
-                                int a;
-                                for (a = 0; a < store.getCharacter(m[1]).getInventory().size(); a++) {
-                                    temp += store.getCharacter(m[1]).getSkilllist().getSkills().get(a).getName() + "\n";
+                                if (store.hasSkill(m[2])) {
+                                    store.getCharacter(m[1]).addSkill(store.getSkill(m[2]));
+                                    printmessage(store.getCharacter(m[1]).getStatus(), channel);
+                                } else {
+                                    printmessage("Skill does not exist.", channel);
                                 }
-                                printmessage(temp, channel);
                             } else {
                                 printmessage("Character does not exist.", channel);
                             }
@@ -1008,7 +947,7 @@ public class FERPBot extends BaseBot implements IListener<MessageEvent> {
                     if (m[0].equals("equipstaff"))// char staff
                     {
                         if (m.length != 3) {
-                            printmessage("Invalid argument amount. Usage: !equipstaff \"name\" staff", channel);
+                            printmessage("Invalid argument amount. Usage: !equipstaff \"name\" \"staff\"", channel);
                         } else {
                             if (store.hasCharacter(m[1])) {
                                 int a;
@@ -1076,6 +1015,19 @@ public class FERPBot extends BaseBot implements IListener<MessageEvent> {
                             printmessage("Class " + m[1] + " created.", channel);
                         }
                     }
+                    if (m[0].equals("setclassdescription")) // name "description"
+                    {
+                        if (m.length != 3) {
+                            printmessage("Invalid argument amount. Usage: !setclassdescription \"name\" \"description\"", channel);
+                        } else {
+                            if (store.hasClass(m[1])) {
+                                store.getClass(m[1]).setDescription(m[2]);
+                                printmessage(store.getClass(m[1]).getStatus(), channel);
+                            } else {
+                                printmessage("Class does not exist.", channel);
+                            }
+                        }
+                    }
                     if (m[0].equals("addclasspromopath")) // name class
                     {
                         if (m.length != 3) {
@@ -1084,7 +1036,7 @@ public class FERPBot extends BaseBot implements IListener<MessageEvent> {
                             if (store.hasClass(m[1])) {
                                 int a;
                                 for (a = 0; a < store.getClass(m[1]).getPromotionPaths().size(); a++) {
-                                    if (store.getClass(m[1]).getPromotionPaths().get(a).getName().equals(m[3])) {
+                                    if (store.getClass(m[1]).getPromotionPaths().get(a).getName().equals(m[2])) {
                                         printmessage("Class already has this promotion path.", channel);
                                         return;
                                     }
@@ -1094,7 +1046,7 @@ public class FERPBot extends BaseBot implements IListener<MessageEvent> {
                                     printmessage(store.getClass(m[1]).getStatus(), channel);
                                     store.saveData();
                                 } else {
-                                    printmessage("Class you are trying to add does not exist.", channel);
+                                    printmessage("The class you are trying to add does not exist.", channel);
                                 }
                             } else {
                                 printmessage("Class does not exist.", channel);
@@ -1125,47 +1077,57 @@ public class FERPBot extends BaseBot implements IListener<MessageEvent> {
                     if (m[0].equals("setclassrankbonus")) // name weapon bonus
                     {
                         if (m.length != 4) {
-                            printmessage("Invalid argument amount. Usage: !setclassrankbonus \"name\" \"weapon\" \"bonus\"", channel);
+                            printmessage("Invalid argument amount. Usage: !setclassrankbonus \"name\" weapon bonus", channel);
                         } else {
                             if (store.hasClass(m[1])) {
                                 String regex = "\\d+";
                                 if (m[3].matches(regex)) {
                                     int bonus = Integer.parseInt(m[3]);
                                     if (bonus > 0 && bonus < 7) {
-                                        if (m[2].equals("Sword")) {
-                                            store.getClass(m[1]).setPromoWeaponRankBonus(0, bonus);
-                                            store.saveData();
-                                            printmessage(store.getClass(m[1]).getStatus(), channel);
-                                        } else if (m[2].equals("Lance")) {
-                                            store.getClass(m[1]).setPromoWeaponRankBonus(1, bonus);
-                                            store.saveData();
-                                            printmessage(store.getClass(m[1]).getStatus(), channel);
-                                        } else if (m[2].equals("Axe")) {
-                                            store.getClass(m[1]).setPromoWeaponRankBonus(2, bonus);
-                                            store.saveData();
-                                            printmessage(store.getClass(m[1]).getStatus(), channel);
-                                        } else if (m[2].equals("Anima")) {
-                                            store.getClass(m[1]).setPromoWeaponRankBonus(4, bonus);
-                                            store.saveData();
-                                            printmessage(store.getClass(m[1]).getStatus(), channel);
-                                        } else if (m[2].equals("Light")) {
-                                            store.getClass(m[1]).setPromoWeaponRankBonus(5, bonus);
-                                            store.saveData();
-                                            printmessage(store.getClass(m[1]).getStatus(), channel);
-                                        } else if (m[2].equals("Dark")) {
-                                            store.getClass(m[1]).setPromoWeaponRankBonus(6, bonus);
-                                            store.saveData();
-                                            printmessage(store.getClass(m[1]).getStatus(), channel);
-                                        } else if (m[2].equals("Bow")) {
-                                            store.getClass(m[1]).setPromoWeaponRankBonus(3, bonus);
-                                            store.saveData();
-                                            printmessage(store.getClass(m[1]).getStatus(), channel);
-                                        } else if (m[2].equals("Staff")) {
-                                            store.getClass(m[1]).setPromoWeaponRankBonus(7, bonus);
-                                            store.saveData();
-                                            printmessage(store.getClass(m[1]).getStatus(), channel);
-                                        } else {
-                                            printmessage("Invalid weapon type inputted. The bot currently only supports: \"Sword, Lance, Axe, Bow, Anima, Light, Dark, Staff\".", channel);
+                                        switch (m[2]) {
+                                            case "Sword":
+                                                store.getClass(m[1]).setPromoWeaponRankBonus(0, bonus);
+                                                store.saveData();
+                                                printmessage(store.getClass(m[1]).getStatus(), channel);
+                                                break;
+                                            case "Lance":
+                                                store.getClass(m[1]).setPromoWeaponRankBonus(1, bonus);
+                                                store.saveData();
+                                                printmessage(store.getClass(m[1]).getStatus(), channel);
+                                                break;
+                                            case "Axe":
+                                                store.getClass(m[1]).setPromoWeaponRankBonus(2, bonus);
+                                                store.saveData();
+                                                printmessage(store.getClass(m[1]).getStatus(), channel);
+                                                break;
+                                            case "Anima":
+                                                store.getClass(m[1]).setPromoWeaponRankBonus(4, bonus);
+                                                store.saveData();
+                                                printmessage(store.getClass(m[1]).getStatus(), channel);
+                                                break;
+                                            case "Light":
+                                                store.getClass(m[1]).setPromoWeaponRankBonus(5, bonus);
+                                                store.saveData();
+                                                printmessage(store.getClass(m[1]).getStatus(), channel);
+                                                break;
+                                            case "Dark":
+                                                store.getClass(m[1]).setPromoWeaponRankBonus(6, bonus);
+                                                store.saveData();
+                                                printmessage(store.getClass(m[1]).getStatus(), channel);
+                                                break;
+                                            case "Bow":
+                                                store.getClass(m[1]).setPromoWeaponRankBonus(3, bonus);
+                                                store.saveData();
+                                                printmessage(store.getClass(m[1]).getStatus(), channel);
+                                                break;
+                                            case "Staff":
+                                                store.getClass(m[1]).setPromoWeaponRankBonus(7, bonus);
+                                                store.saveData();
+                                                printmessage(store.getClass(m[1]).getStatus(), channel);
+                                                break;
+                                            default:
+                                                printmessage("Invalid weapon type inputted. The bot currently only supports: \"Sword, Lance, Axe, Bow, Anima, Light, Dark, Staff\".", channel);
+                                                break;
                                         }
                                     } else {
                                         printmessage("Rank bonus out of bounds, ensure it is between 1 and 6 inclusive.", channel);
@@ -1183,8 +1145,21 @@ public class FERPBot extends BaseBot implements IListener<MessageEvent> {
                         if (m.length != 3) {
                             printmessage("Invalid argument amount. Usage: !setclassskillbonus \"name\" \"skill\"", channel);
                         } else {
-                            if (store.hasClass(m[2])) {
-
+                            if (store.hasClass(m[1])) {
+                                int a;
+                                for (a = 0; a < store.getClass(m[1]).getBonusSkills().size(); a++) {
+                                    if (store.getClass(m[1]).getBonusSkills().get(a).getName().equals(m[2])) {
+                                        printmessage("Class already has this skill.", channel);
+                                        return;
+                                    }
+                                }
+                                if (store.hasSkill(m[2])) {
+                                    store.getClass(m[1]).addSkill(store.getSkill(m[2]));
+                                    printmessage(store.getClass(m[1]).getStatus(), channel);
+                                    store.saveData();
+                                } else {
+                                    printmessage("The skill you are trying to add does not exist.", channel);
+                                }
                             } else {
                                 printmessage("Class does not exist.", channel);
                             }
@@ -1195,20 +1170,83 @@ public class FERPBot extends BaseBot implements IListener<MessageEvent> {
                         if (m.length != 3) {
                             printmessage("Invalid argument amount. Usage: !removeclassskillbonus \"name\" \"skill\"", channel);
                         } else {
-                            if (store.hasClass(m[2])) {
-
+                            if (store.hasClass(m[1])) {
+                                int a;
+                                for (a = 0; a < store.getClass(m[1]).getBonusSkills().size(); a++) {
+                                    if (store.getClass(m[1]).getBonusSkills().get(a).getName().equals(m[2])) {
+                                        store.getClass(m[1]).removeSkill(store.getClass(m[1]).getBonusSkills().get(a));
+                                        printmessage(store.getClass(m[1]).getStatus(), channel);
+                                        return;
+                                    }
+                                }
+                                printmessage("Class does not have this skill.", channel);
                             } else {
                                 printmessage("Class does not exist.", channel);
                             }
                         }
                     }
-                    if (m[0].equals("setclassstatbonus")) // name bonus
+                    if (m[0].equals("setclassstatbonus")) // name stat bonus
+                    {
+                        if (m.length != 4) {
+                            printmessage("Invalid argument amount. Usage: !setclassstatbonus \"name\" stat bonus", channel);
+                        } else {
+                            if (store.hasClass(m[1])) {
+                                String regex = "\\d+";
+                                if (m[2].matches(regex)) {
+                                    if (m[3].matches(regex)) {
+                                        int bonus = Integer.parseInt(m[3]);
+                                        int stat = Integer.parseInt(m[2]);
+                                        store.getClass(m[1]).setClassBonus(stat, bonus);
+                                        printmessage(store.getClass(m[1]).getStatus(), channel);
+                                    } else {
+                                        printmessage("Invalid stat bonus input. Ensure it is a number.", channel);
+                                    }
+                                } else {
+                                    printmessage("Invalid stat. Ensure it is a number.", channel);
+                                }
+                            } else {
+                                printmessage("Class does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("setclasstier")) // name tier
                     {
                         if (m.length != 3) {
-                            printmessage("Invalid argument amount. Usage: !setclassstatbonus \"name\" \"bonus\"", channel);
+                            printmessage("Invalid argument amount. Usage: !setclasstier \"name\" tier", channel);
                         } else {
-                            if (store.hasClass(m[2])) {
-
+                            if (store.hasClass(m[1])) {
+                                String regex = "\\d+";
+                                if (m[2].matches(regex)) {
+                                    int tier = Integer.parseInt(m[2]);
+                                    store.getClass(m[1]).setTier(tier);
+                                    printmessage(store.getClass(m[1]).getStatus(), channel);
+                                } else {
+                                    printmessage("Invalid tier. Ensure it is a number.", channel);
+                                }
+                            } else {
+                                printmessage("Class does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("setclasspromogain")) // name stat bonus
+                    {
+                        if (m.length != 4) {
+                            printmessage("Invalid argument amount. Usage: !setclasspromogain \"name\" stat bonus", channel);
+                        } else {
+                            if (store.hasClass(m[1])) {
+                                String regex = "\\d+";
+                                if (m[2].matches(regex)) {
+                                    if (m[3].matches(regex)) {
+                                        int bonus = Integer.parseInt(m[3]);
+                                        int stat = Integer.parseInt(m[2]);
+                                        store.getClass(m[1]).setPromotionGain(stat, bonus);
+                                        printmessage(store.getClass(m[1]).getStatus(), channel);
+                                    } else {
+                                        printmessage("Invalid stat bonus input. Ensure it is a number.", channel);
+                                    }
+                                } else {
+                                    printmessage("Invalid stat. Ensure it is a number.", channel);
+                                }
                             } else {
                                 printmessage("Class does not exist.", channel);
                             }
@@ -1219,11 +1257,1528 @@ public class FERPBot extends BaseBot implements IListener<MessageEvent> {
                         if (m.length != 2) {
                             printmessage("Invalid argument amount. Usage: !classinfo \"name\"", channel);
                         } else {
-                            if (store.hasClass(m[2])) {
-
+                            if (store.hasClass(m[1])) {
+                                String mess = "";
+                                mess += "***Class Name: *** " + store.getClass(m[1]).getName() + "\n";
+                                mess += "***Tier: *** " + store.getClass(m[1]).getTier() + "\n";
+                                mess += "***Description: *** " + store.getClass(m[1]).getDescription() + "\n";
+                                mess += "***Weapon Rank Bonuses: ***\n";
+                                if (store.getClass(m[1]).getPromoWeaponRankBonus()[0] > 0) {
+                                    if (store.getClass(m[1]).getPromoWeaponRankBonus()[0] == 1) {
+                                        mess += "Sword: E\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[0] == 2) {
+                                        mess += "Sword: D\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[0] == 3) {
+                                        mess += "Sword: C\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[0] == 4) {
+                                        mess += "Sword: B\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[0] == 5) {
+                                        mess += "Sword: A\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[0] == 6) {
+                                        mess += "Sword: S\n";
+                                    }
+                                }
+                                if (store.getClass(m[1]).getPromoWeaponRankBonus()[1] > 0) {
+                                    if (store.getClass(m[1]).getPromoWeaponRankBonus()[1] == 1) {
+                                        mess += "Lance: E\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[1] == 2) {
+                                        mess += "Lance: D\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[1] == 3) {
+                                        mess += "Lance: C\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[1] == 4) {
+                                        mess += "Lance: B\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[1] == 5) {
+                                        mess += "Lance: A\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[1] == 6) {
+                                        mess += "Lance: S\n";
+                                    }
+                                }
+                                if (store.getClass(m[1]).getPromoWeaponRankBonus()[2] > 0) {
+                                    if (store.getClass(m[1]).getPromoWeaponRankBonus()[2] == 1) {
+                                        mess += "Axe: E\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[2] == 2) {
+                                        mess += "Axe: D\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[2] == 3) {
+                                        mess += "Axe: C\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[2] == 4) {
+                                        mess += "Axe: B\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[2] == 5) {
+                                        mess += "Axe: A\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[2] == 6) {
+                                        mess += "Axe: S\n";
+                                    }
+                                }
+                                if (store.getClass(m[1]).getPromoWeaponRankBonus()[3] > 0) {
+                                    if (store.getClass(m[1]).getPromoWeaponRankBonus()[3] == 1) {
+                                        mess += "Bow: E\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[3] == 2) {
+                                        mess += "Bow: D\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[3] == 3) {
+                                        mess += "Bow: C\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[3] == 4) {
+                                        mess += "Bow: B\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[3] == 5) {
+                                        mess += "Bow: A\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[3] == 6) {
+                                        mess += "Bow: S\n";
+                                    }
+                                }
+                                if (store.getClass(m[1]).getPromoWeaponRankBonus()[4] > 0) {
+                                    if (store.getClass(m[1]).getPromoWeaponRankBonus()[4] == 1) {
+                                        mess += "Anima: E\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[4] == 2) {
+                                        mess += "Anima: D\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[4] == 3) {
+                                        mess += "Anima: C\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[4] == 4) {
+                                        mess += "Anima: B\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[4] == 5) {
+                                        mess += "Anima: A\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[4] == 6) {
+                                        mess += "Anima: S\n";
+                                    }
+                                }
+                                if (store.getClass(m[1]).getPromoWeaponRankBonus()[5] > 0) {
+                                    if (store.getClass(m[1]).getPromoWeaponRankBonus()[5] == 1) {
+                                        mess += "Light: E\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[5] == 2) {
+                                        mess += "Light: D\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[5] == 3) {
+                                        mess += "Light: C\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[5] == 4) {
+                                        mess += "Light: B\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[5] == 5) {
+                                        mess += "Light: A\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[5] == 6) {
+                                        mess += "Light: S\n";
+                                    }
+                                }
+                                if (store.getClass(m[1]).getPromoWeaponRankBonus()[6] > 0) {
+                                    if (store.getClass(m[1]).getPromoWeaponRankBonus()[6] == 1) {
+                                        mess += "Dark: E\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[6] == 2) {
+                                        mess += "Dark: D\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[6] == 3) {
+                                        mess += "Dark: C\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[6] == 4) {
+                                        mess += "Dark: B\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[6] == 5) {
+                                        mess += "Dark: A\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[6] == 6) {
+                                        mess += "Dark: S\n";
+                                    }
+                                }
+                                if (store.getClass(m[1]).getPromoWeaponRankBonus()[7] > 0) {
+                                    if (store.getClass(m[1]).getPromoWeaponRankBonus()[7] == 1) {
+                                        mess += "Staff: E\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[7] == 2) {
+                                        mess += "Staff: D\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[7] == 3) {
+                                        mess += "Staff: C\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[7] == 4) {
+                                        mess += "Staff: B\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[7] == 5) {
+                                        mess += "Staff: A\n";
+                                    } else if (store.getClass(m[1]).getPromoWeaponRankBonus()[7] == 6) {
+                                        mess += "Staff: S\n";
+                                    }
+                                }
+                                int a;
+                                mess += "***Bonus Skills: ***\n";
+                                for (a = 0; a < store.getClass(m[1]).getBonusSkills().size(); a++) {
+                                    mess += store.getClass(m[1]).getBonusSkills().get(a).getName() + ", ";
+                                }
+                                mess += "\n";
+                                mess += "***Promotion Bonuses: ***\n";
+                                if (store.getClass(m[1]).getPromotionGains()[0] > 0) {
+                                    mess += "HP: " + store.getClass(m[1]).getPromotionGains()[0] + "\n";
+                                }
+                                if (store.getClass(m[1]).getPromotionGains()[1] > 0) {
+                                    mess += "STR: " + store.getClass(m[1]).getPromotionGains()[1] + "\n";
+                                }
+                                if (store.getClass(m[1]).getPromotionGains()[2] > 0) {
+                                    mess += "MAG: " + store.getClass(m[1]).getPromotionGains()[2] + "\n";
+                                }
+                                if (store.getClass(m[1]).getPromotionGains()[3] > 0) {
+                                    mess += "SKL: " + store.getClass(m[1]).getPromotionGains()[3] + "\n";
+                                }
+                                if (store.getClass(m[1]).getPromotionGains()[4] > 0) {
+                                    mess += "SPD: " + store.getClass(m[1]).getPromotionGains()[4] + "\n";
+                                }
+                                if (store.getClass(m[1]).getPromotionGains()[5] > 0) {
+                                    mess += "LUCK: " + store.getClass(m[1]).getPromotionGains()[5] + "\n";
+                                }
+                                if (store.getClass(m[1]).getPromotionGains()[6] > 0) {
+                                    mess += "DEF: " + store.getClass(m[1]).getPromotionGains()[6] + "\n";
+                                }
+                                if (store.getClass(m[1]).getPromotionGains()[7] > 0) {
+                                    mess += "RES: " + store.getClass(m[1]).getPromotionGains()[7] + "\n";
+                                }
+                                printmessage(mess, channel);
                             } else {
                                 printmessage("Class does not exist.", channel);
                             }
+                        }
+                    }
+                    if (m[0].equals("setclassattribute")) // name attribute true/false
+                    {
+                        if (m.length != 4) {
+                            printmessage("Invalid argument amount. Usage: !setclassattribute \"name\" attribute true/false", channel);
+                        } else {
+                            if (store.hasClass(m[1])) {
+                                switch (m[2]) {
+                                    case "mounted":
+                                        switch (m[3]) {
+                                            case "true":
+                                                store.getClass(m[1]).setMounted(true);
+                                                printmessage(store.getClass(m[1]).getStatus(), channel);
+                                                store.saveData();
+                                                break;
+                                            case "false":
+                                                store.getClass(m[1]).setMounted(false);
+                                                printmessage(store.getClass(m[1]).getStatus(), channel);
+                                                store.saveData();
+                                                break;
+                                            default:
+                                                printmessage("Please use true or false.", channel);
+                                                break;
+                                        }
+                                        break;
+                                    case "flier":
+                                        switch (m[3]) {
+                                            case "true":
+                                                store.getClass(m[1]).setFlying(true);
+                                                printmessage(store.getClass(m[1]).getStatus(), channel);
+                                                store.saveData();
+                                                break;
+                                            case "false":
+                                                store.getClass(m[1]).setFlying(false);
+                                                printmessage(store.getClass(m[1]).getStatus(), channel);
+                                                store.saveData();
+                                                break;
+                                            default:
+                                                printmessage("Please use true or false.", channel);
+                                                break;
+                                        }
+                                        break;
+                                    case "armored":
+                                        switch (m[3]) {
+                                            case "true":
+                                                store.getClass(m[1]).setArmored(true);
+                                                printmessage(store.getClass(m[1]).getStatus(), channel);
+                                                store.saveData();
+                                                break;
+                                            case "false":
+                                                store.getClass(m[1]).setArmored(false);
+                                                printmessage(store.getClass(m[1]).getStatus(), channel);
+                                                store.saveData();
+                                                break;
+                                            default:
+                                                printmessage("Please use true or false.", channel);
+                                                break;
+                                        }
+                                        break;
+                                    default:
+                                        printmessage("Unknown attribute. The bot currently only supports: Flier, Armored, Mounted", channel);
+                                        break;
+                                }
+                            } else {
+                                printmessage("Class does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("setclassbonusrankfixed")) // name true/false
+                    {
+                        if (m.length != 3) {
+                            printmessage("Invalid argument amount. Usage: !setclassbonusrankfixed \"name\" true/false", channel);
+                        } else {
+                            if (store.hasClass(m[1])) {
+                                switch (m[2]) {
+                                    case "true":
+                                        store.getClass(m[1]).setBonusWeaponRankToBeFixed(true);
+                                        store.saveData();
+                                        printmessage(store.getClass(m[1]).getStatus(), channel);
+                                        break;
+                                    case "false":
+                                        store.getClass(m[1]).setBonusWeaponRankToBeFixed(false);
+                                        store.saveData();
+                                        printmessage(store.getClass(m[1]).getStatus(), channel);
+                                        break;
+                                    default:
+                                        printmessage("Please use true or false.", channel);
+                                        break;
+                                }
+                            } else {
+                                printmessage("Class does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("createpassiveskill")) // name
+                    {
+                        if (m.length != 2) {
+                            printmessage("Invalid argument amount. Usage: !createpassiveskill \"name\"", channel);
+                        } else {
+                            PassiveSkill temp = new PassiveSkill(m[1]);
+                            store.addSkill(m[1], temp);
+                            store.saveData();
+                            printmessage(temp.getStatus(), channel);
+                        }
+                    }
+                    if (m[0].equals("createprocskill")) // name type
+                    {
+                        if (m.length != 6) {
+                            printmessage("Invalid argument amount. Usage: !createskill \"name\" procrate damagemultiplier activationstat inputstat", channel);
+                        } else {
+                            double procrate;
+                            double dammulti;
+                            int activationstat;
+                            int inputstat;
+                            String regex = "/^\\d*\\.?\\d*$/";
+                            if (m[2].matches(regex) && m[3].matches(regex)) {
+                                procrate = Double.parseDouble(m[2]);
+                                dammulti = Double.parseDouble(m[3]);
+                                switch (m[4]) {
+                                    case "hp":
+                                        activationstat = 0;
+                                        break;
+                                    case "strength":
+                                        activationstat = 1;
+                                        break;
+                                    case "magic":
+                                        activationstat = 2;
+                                        break;
+                                    case "skill":
+                                        activationstat = 3;
+                                        break;
+                                    case "speed":
+                                        activationstat = 4;
+                                        break;
+                                    case "luck":
+                                        activationstat = 5;
+                                        break;
+                                    case "defense":
+                                        activationstat = 6;
+                                        break;
+                                    case "resistance":
+                                        activationstat = 7;
+                                        break;
+                                    default:
+                                        printmessage("Invalid activation stat. Ensure it is one of these: hp, strength, magic, skill, speed, luck, defense, resistance", channel);
+                                        return;
+                                }
+                                switch (m[5]) {
+                                    case "hp":
+                                        inputstat = 0;
+                                        break;
+                                    case "strength":
+                                        inputstat = 1;
+                                        break;
+                                    case "magic":
+                                        inputstat = 2;
+                                        break;
+                                    case "skill":
+                                        inputstat = 3;
+                                        break;
+                                    case "speed":
+                                        inputstat = 4;
+                                        break;
+                                    case "luck":
+                                        inputstat = 5;
+                                        break;
+                                    case "defense":
+                                        inputstat = 6;
+                                        break;
+                                    case "resistance":
+                                        inputstat = 7;
+                                        break;
+                                    default:
+                                        printmessage("Invalid input stat. Ensure it is one of these: hp, strength, magic, skill, speed, luck, defense, resistance", channel);
+                                        return;
+                                }
+                                ProcSkill temp = new ProcSkill(m[1], procrate, dammulti, activationstat, inputstat);
+                                store.addSkill(m[1], temp);
+                                store.saveData();
+                                printmessage(temp.getStatus(), channel);
+                            } else {
+                                printmessage("Invalid procrate or damage multiplier. Ensure they are numbers.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("createmultihitskill")) // name type
+                    {
+                        if (m.length != 6) {
+                            printmessage("Invalid argument amount. Usage: !createmultihitskill \"name\" hitcount procrate damagemulti inputstat", channel);
+                        } else {
+                            int hitcount;
+                            double procrate;
+                            double damagemulti;
+                            int inputstat;
+                            String regex = "\\d+";
+                            String doubleregex = "/^\\d*\\.?\\d*$/";
+                            if (m[3].matches(regex)) {
+                                hitcount = Integer.parseInt(m[3]);
+                            } else {
+                                printmessage("Invalid hitcount. Ensure it is a number.", channel);
+                                return;
+                            }
+                            if (m[4].matches(doubleregex) && m[5].matches(doubleregex)) {
+                                procrate = Double.parseDouble(m[4]);
+                                damagemulti = Double.parseDouble(m[5]);
+                            } else {
+                                printmessage("Invalid damage multiplier or proc rate. Ensure it is a number or decimal.", channel);
+                                return;
+                            }
+                            switch (m[6]) {
+                                case "hp":
+                                    inputstat = 0;
+                                    break;
+                                case "strength":
+                                    inputstat = 1;
+                                    break;
+                                case "magic":
+                                    inputstat = 2;
+                                    break;
+                                case "skill":
+                                    inputstat = 3;
+                                    break;
+                                case "speed":
+                                    inputstat = 4;
+                                    break;
+                                case "luck":
+                                    inputstat = 5;
+                                    break;
+                                case "defense":
+                                    inputstat = 6;
+                                    break;
+                                case "resistance":
+                                    inputstat = 7;
+                                    break;
+                                default:
+                                    printmessage("Invalid input stat. Ensure it is one of these: hp, strength, magic, skill, speed, luck, defense, resistance", channel);
+                                    return;
+                            }
+                            MultiHitSkill temp = new MultiHitSkill(m[1], hitcount, procrate, damagemulti, inputstat);
+                            store.addSkill(m[1], temp);
+                            store.saveData();
+                            printmessage(temp.getStatus(), channel);
+                        }
+                    }
+                    if (m[0].equals("createinitiationskill")) // name type
+                    {
+                        if (m.length != 4) {
+                            printmessage("Invalid argument amount. Usage: !createinitiationskill \"name\" buff stat", channel);
+                        } else {
+                            int inputstat;
+                            int buff = 0;
+                            String regex = "\\d+";
+                            if (m[2].matches(regex)) {
+                                buff = Integer.parseInt(m[2]);
+                            } else {
+                                printmessage("Invalid buff amount. Ensure it is a number.", channel);
+                            }
+                            switch (m[3]) {
+                                case "hp":
+                                    inputstat = 0;
+                                    break;
+                                case "strength":
+                                    inputstat = 1;
+                                    break;
+                                case "magic":
+                                    inputstat = 2;
+                                    break;
+                                case "skill":
+                                    inputstat = 3;
+                                    break;
+                                case "speed":
+                                    inputstat = 4;
+                                    break;
+                                case "luck":
+                                    inputstat = 5;
+                                    break;
+                                case "defense":
+                                    inputstat = 6;
+                                    break;
+                                case "resistance":
+                                    inputstat = 7;
+                                    break;
+                                case "hit":
+                                    inputstat = 8;
+                                    break;
+                                case "avoid":
+                                    inputstat = 9;
+                                    break;
+                                case "crit":
+                                    inputstat = 10;
+                                    break;
+                                case "physdamtake":
+                                    inputstat = 11;
+                                    break;
+                                case "magdamtake":
+                                    inputstat = 12;
+                                    break;
+                                case "damtake":
+                                    inputstat = 13;
+                                    break;
+                                case "physdamdeal":
+                                    inputstat = 14;
+                                    break;
+                                case "magdamdeal":
+                                    inputstat = 15;
+                                    break;
+                                case "damdeal":
+                                    inputstat = 16;
+                                    break;
+                                default:
+                                    printmessage("Invalid input stat. Ensure it is one of these: hp, strength, magic, skill, speed, luck, defense, resistance, hit, avoid, crit, physdamtake, magdamtake, damtake, physdamdeal, magdamdeal, damdeal", channel);
+                                    return;
+                            }
+                            InitiationSkill temp = new InitiationSkill(m[1]);
+                            temp.setBuff(inputstat, buff);
+                            store.addSkill(m[1], temp);
+                            store.saveData();
+                            printmessage(temp.getStatus(), channel);
+                        }
+                    }
+                    if (m[0].equals("createdefensiveskill")) // name type
+                    {
+                        if (m.length != 4) {
+                            printmessage("Invalid argument amount. Usage: !createinitiationskill \"name\" buff stat", channel);
+                        } else {
+                            int inputstat;
+                            int buff = 0;
+                            String regex = "\\d+";
+                            if (m[2].matches(regex)) {
+                                buff = Integer.parseInt(m[2]);
+                            } else {
+                                printmessage("Invalid buff amount. Ensure it is a number.", channel);
+                            }
+                            switch (m[3]) {
+                                case "hp":
+                                    inputstat = 0;
+                                    break;
+                                case "strength":
+                                    inputstat = 1;
+                                    break;
+                                case "magic":
+                                    inputstat = 2;
+                                    break;
+                                case "skill":
+                                    inputstat = 3;
+                                    break;
+                                case "speed":
+                                    inputstat = 4;
+                                    break;
+                                case "luck":
+                                    inputstat = 5;
+                                    break;
+                                case "defense":
+                                    inputstat = 6;
+                                    break;
+                                case "resistance":
+                                    inputstat = 7;
+                                    break;
+                                case "hit":
+                                    inputstat = 8;
+                                    break;
+                                case "avoid":
+                                    inputstat = 9;
+                                    break;
+                                case "crit":
+                                    inputstat = 10;
+                                    break;
+                                case "physdamtake":
+                                    inputstat = 11;
+                                    break;
+                                case "magdamtake":
+                                    inputstat = 12;
+                                    break;
+                                case "damtake":
+                                    inputstat = 13;
+                                    break;
+                                case "physdamdeal":
+                                    inputstat = 14;
+                                    break;
+                                case "magdamdeal":
+                                    inputstat = 15;
+                                    break;
+                                case "damdeal":
+                                    inputstat = 16;
+                                    break;
+                                default:
+                                    printmessage("Invalid input stat. Ensure it is one of these: hp, strength, magic, skill, speed, luck, defense, resistance, hit, avoid, crit, physdamtake, magdamtake, damtake, physdamdeal, magdamdeal, damdeal", channel);
+                                    return;
+                            }
+                            DefensiveSkill temp = new DefensiveSkill(m[1]);
+                            temp.setBuff(inputstat, buff);
+                            store.addSkill(m[1], temp);
+                            store.saveData();
+                            printmessage(temp.getStatus(), channel);
+                        }
+                    }
+                    if (m[0].equals("createbreakerskill")) // name type
+                    {
+                        if (m.length != 5) {
+                            printmessage("Invalid argument amount. Usage: !createbreakerskill \"name\" weapon stat advantage", channel);
+                        } else {
+                            int stat;
+                            double advantage;
+                            int weapon;
+                            String regex = "/^\\d*\\.?\\d*$/";
+                            if (m[4].matches(regex)) {
+                                advantage = Double.parseDouble(m[4]);
+                            } else {
+                                printmessage("Invalid advantage number. Ensure it is a number.", channel);
+                                return;
+                            }
+                            switch (m[2]) {
+                                case "Sword":
+                                    weapon = 0;
+                                    break;
+                                case "Lance":
+                                    weapon = 1;
+                                    break;
+                                case "Axe":
+                                    weapon = 2;
+                                    break;
+                                case "Anima":
+                                    weapon = 3;
+                                    break;
+                                case "Light":
+                                    weapon = 4;
+                                    break;
+                                case "Dark":
+                                    weapon = 5;
+                                    break;
+                                case "Bow":
+                                    weapon = 6;
+                                    break;
+                                default:
+                                    printmessage("Invalid weapon type inputted. The bot currently only supports: \"Sword, Lance, Axe, Bow, Anima, Light, Dark\".", channel);
+                                    return;
+                            }
+                            switch (m[3]) {
+                                case "hit":
+                                    stat = 0;
+                                    break;
+                                case "avoid":
+                                    stat = 1;
+                                    break;
+                                case "crit":
+                                    stat = 2;
+                                    break;
+                                case "damdeal":
+                                    stat = 3;
+                                    break;
+                                case "damtake":
+                                    stat = 4;
+                                    break;
+                                case "dammulti":
+                                    stat = 5;
+                                    break;
+                                default:
+                                    printmessage("Invalid stat inputted. The bot currently only supports: \"hit, avoid, crit, damdeal, damtake, dammulti\"", channel);
+                                    return;
+                            }
+                            WeaponBreaker temp = new WeaponBreaker(m[1], weapon);
+                            temp.setAdvantage(stat, advantage);
+                            store.addSkill(m[1], temp);
+                            store.saveData();
+                            printmessage(temp.getStatus(), channel);
+                        }
+                    }
+                    if (m[0].equals("createslayerskill")) // name type
+                    {
+                        if (m.length != 5) {
+                            printmessage("Invalid argument amount. Usage: !createslayerskill \"name\" race stat advantage", channel);
+                        } else {
+                            double advantage;
+                            int stat;
+                            String regex = "/^\\d*\\.?\\d*$/";
+                            if (m[4].matches(regex)) {
+                                advantage = Double.parseDouble(m[4]);
+                            } else {
+                                printmessage("Invalid advantage number. Ensure it is a number.", channel);
+                                return;
+                            }
+                            switch (m[3]) {
+                                case "hit":
+                                    stat = 0;
+                                    break;
+                                case "avoid":
+                                    stat = 1;
+                                    break;
+                                case "crit":
+                                    stat = 2;
+                                    break;
+                                case "damdeal":
+                                    stat = 3;
+                                    break;
+                                case "damtake":
+                                    stat = 4;
+                                    break;
+                                case "dammulti":
+                                    stat = 5;
+                                    break;
+                                default:
+                                    printmessage("Invalid stat inputted. The bot currently only supports: \"hit, avoid, crit, damdeal, damtake, dammulti\"", channel);
+                                    return;
+                            }
+                            RaceSlayer temp = new RaceSlayer(m[1], m[2]);
+                            temp.setStatAdvantage(stat, advantage);
+                            store.addSkill(m[1], temp);
+                            store.saveData();
+                            printmessage(temp.getStatus(), channel);
+
+                        }
+                    }
+                    if (m[0].equals("createmiracleskill")) // name type
+                    {
+                        if (m.length != 4) {
+                            printmessage("Invalid argument amount. Usage: !createskill \"name\" stat multiplier", channel);
+                        } else {
+                            double multiplier;
+                            int inputstat;
+                            String regex = "/^\\d*\\.?\\d*$/";
+                            if (m[3].matches(regex)) {
+                                multiplier = Double.parseDouble(m[3]);
+                            } else {
+                                printmessage("Invalid stat multiplier. Ensure it is a number.", channel);
+                                return;
+                            }
+                            switch (m[2]) {
+                                case "hp":
+                                    inputstat = 0;
+                                    break;
+                                case "strength":
+                                    inputstat = 1;
+                                    break;
+                                case "magic":
+                                    inputstat = 2;
+                                    break;
+                                case "skill":
+                                    inputstat = 3;
+                                    break;
+                                case "speed":
+                                    inputstat = 4;
+                                    break;
+                                case "luck":
+                                    inputstat = 5;
+                                    break;
+                                case "defense":
+                                    inputstat = 6;
+                                    break;
+                                case "resistance":
+                                    inputstat = 7;
+                                    break;
+                                default:
+                                    printmessage("Invalid stat inputted. Ensure it is a number.", channel);
+                                    return;
+                            }
+                            Miracle temp = new Miracle(m[1], multiplier);
+                            temp.setActivationStat(inputstat);
+                            store.addSkill(m[1], temp);
+                            store.saveData();
+                            printmessage(temp.getStatus(), channel);
+                        }
+                    }
+                    if (m[0].equals("deleteskill")) // name
+                    {
+                        if (m.length != 2) {
+                            printmessage("Invalid argument amount. Usage: !deleteskill \"name\"", channel);
+                        } else {
+                            if (store.hasSkill(m[1])) {
+                                int a;
+                                Character[] temp = store.getcharlist();
+                                Class[] tempclass = store.getclasslist();
+                                for (a = 0; a < temp.length; a++) {
+                                    if (temp[a].getSkilllist().hasSkill(store.getSkill(m[1]))) {
+                                        store.getCharacter(temp[a].getName()).removeSkill(store.getSkill(m[1]));
+                                    }
+                                }
+                                for (a = 0; a < tempclass.length; a++) {
+                                    if (tempclass[a].getBonusSkills().contains(store.getSkill(m[1]))) {
+                                        store.getClass(tempclass[a].getName()).removeSkill(store.getSkill(m[1]));
+                                    }
+                                }
+                                store.removeSkill(m[1]);
+                                printmessage("Skill removed.", channel);
+                                store.saveData();
+                            } else {
+                                printmessage("Skill does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("setskilldesc")) // skill "description"
+                    {
+                        if (m.length != 3) {
+                            printmessage("Invalid argument amount. Usage: !setskilldesc \"name\" \"description\"", channel);
+                        } else {
+                            if (store.hasSkill(m[1])) {
+                                store.getSkill(m[1]).setDescription(m[2]);
+                                store.saveData();
+                                printmessage(store.getSkill(m[1]).getStatus(), channel);
+                            } else {
+                                printmessage("Skill does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("listskills"))
+                    {
+                        if (m.length != 1) {
+                            printmessage("Invalid argument amount. Usage: !listskills", channel);
+                        } else {
+                            Skill[] temp = store.getskilllist();
+                            String list = "**List of Skills:**\n";
+                            int a;
+                            for (a = 0; a < temp.length; a++) {
+                                list += temp[a].getName();
+                                if (temp[a].isAttackMulti()) {
+                                    list += " (Attack Multiplier)";
+                                } else if (temp[a].isBreaker()) {
+                                    list += " (Breaker)";
+                                } else if (temp[a].isDefensive()) {
+                                    list += " (Defensive)";
+                                } else if (temp[a].isMiracle()) {
+                                    list += " (Miracle)";
+                                } else if (temp[a].isOffensive()) {
+                                    list += " (Initiation)";
+                                } else if (temp[a].isPassive()) {
+                                    list += " (Passive)";
+                                } else if (temp[a].isProc()) {
+                                    list += " (Proc)";
+                                } else if (temp[a].isSlayer()) {
+                                    list += " (Slayer)";
+                                } else if (temp[a].isThreshhold()) {
+                                    list += " (Threshold Activated)";
+                                }
+                                list += "\n";
+                            }
+                            printmessage(list, channel);
+                        }
+                    }
+                    if (m[0].equals("skillinfo")) // skill
+                    {
+                        if (m.length != 2) {
+                            printmessage("Invalid argument amount. Usage: !skillinfo \"name\"", channel);
+                        } else {
+                            if (store.hasSkill(m[1])) {
+                                String temp = "";
+                                temp += "***" + store.getSkill(m[1]).getName() + "***" + "\n";
+                                temp += "***Description: ***" + store.getSkill(m[1]).getDescription();
+                                if (store.getSkill(m[1]).isAttackMulti()) {
+                                    temp += "**Type:** Attack Multiplier\n";
+                                    MultiHitSkill tempskill = (MultiHitSkill) store.getSkill(m[1]);
+                                    temp += "**Hit Count: ** " + tempskill.getAttackCount() + "\n";
+                                    temp += "**Activation Stat:** ";
+                                    switch (tempskill.getActivationstat()) {
+                                        case 0:
+                                            temp += "HP";
+                                            break;
+                                        case 1:
+                                            temp += "Strength";
+                                            break;
+                                        case 2:
+                                            temp += "Magic";
+                                            break;
+                                        case 3:
+                                            temp += "Skill";
+                                            break;
+                                        case 4:
+                                            temp += "Speed";
+                                            break;
+                                        case 5:
+                                            temp += "Luck";
+                                            break;
+                                        case 6:
+                                            temp += "Defense";
+                                            break;
+                                        case 7:
+                                            temp += "Resistance";
+                                            break;
+                                    }
+                                    temp += " x " + tempskill.getProcRate() + "%\n";
+                                    temp += "**Damage Multiplier:** " + tempskill.getDamageMultiplier() + "\n";
+                                } else if (store.getSkill(m[1]).isBreaker()) {
+                                    temp += "**Type:** Breaker\n";
+                                    WeaponBreaker tempskill = (WeaponBreaker) store.getSkill(m[1]);
+                                    switch (tempskill.getEffectiveWeapon()) {
+                                        case 0:
+                                            temp += "**Effective against: **Sword\n";
+                                            break;
+                                        case 1:
+                                            temp += "**Effective against: **Lance\n";
+                                            break;
+                                        case 2:
+                                            temp += "**Effective against: **Axe\n";
+                                            break;
+                                        case 3:
+                                            temp += "**Effective against: **Anima\n";
+                                            break;
+                                        case 4:
+                                            temp += "**Effective against: **Light\n";
+                                            break;
+                                        case 5:
+                                            temp += "**Effective against: **Dark\n";
+                                            break;
+                                        case 6:
+                                            temp += "**Effective against: **Bow\n";
+                                            break;
+                                    }
+                                    if (tempskill.getAdvantage()[0] > 0) {
+                                        temp += "**Hit Bonus:** " + tempskill.getAdvantage()[0] + "\n";
+                                    }
+                                    if (tempskill.getAdvantage()[1] > 0) {
+                                        temp += "**Avoid Bonus:** " + tempskill.getAdvantage()[1] + "\n";
+                                    }
+                                    if (tempskill.getAdvantage()[2] > 0) {
+                                        temp += "**Crit Bonus:** " + tempskill.getAdvantage()[2] + "\n";
+                                    }
+                                    if (tempskill.getAdvantage()[3] > 0) {
+                                        temp += "**Bonus to Damage Dealt:** " + tempskill.getAdvantage()[3] + "\n";
+                                    }
+                                    if (tempskill.getAdvantage()[4] > 0) {
+                                        temp += "**Bonus to Damage Dealt (multiplicative):** " + tempskill.getAdvantage()[4] + "\n";
+                                    }
+                                    if (tempskill.getAdvantage()[5] > 0) {
+                                        temp += "**Damage Reduction:** " + tempskill.getAdvantage()[5] + "\n";
+                                    }
+                                } else if (store.getSkill(m[1]).isDefensive()) {
+                                    temp += "**Type:** Defensive\n";
+                                    DefensiveSkill tempskill = (DefensiveSkill) store.getSkill(m[1]);
+                                    if (tempskill.getBuff()[0] > 0) {
+                                        temp += "**Bonus to HP:** " + tempskill.getBuff()[0] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[1] > 0) {
+                                        temp += "**Bonus to Strength:** " + tempskill.getBuff()[1] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[2] > 0) {
+                                        temp += "**Bonus to Magic:** " + tempskill.getBuff()[2] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[3] > 0) {
+                                        temp += "**Bonus to Skill:** " + tempskill.getBuff()[3] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[4] > 0) {
+                                        temp += "**Bonus to Speed:** " + tempskill.getBuff()[4] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[5] > 0) {
+                                        temp += "**Bonus to Luck:** " + tempskill.getBuff()[5] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[6] > 0) {
+                                        temp += "**Bonus to Defense:** " + tempskill.getBuff()[6] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[7] > 0) {
+                                        temp += "**Bonus to Resistance:** " + tempskill.getBuff()[7] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[8] > 0) {
+                                        temp += "**Bonus to Hit:** " + tempskill.getBuff()[8] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[9] > 0) {
+                                        temp += "**Bonus to Avoid:** " + tempskill.getBuff()[9] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[10] > 0) {
+                                        temp += "**Bonus to Crit:** " + tempskill.getBuff()[10] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[11] > 0) {
+                                        temp += "**Bonus to Physical Damage Taken:** " + tempskill.getBuff()[11] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[12] > 0) {
+                                        temp += "**Bonus to Magical Damage Taken:** " + tempskill.getBuff()[12] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[13] > 0) {
+                                        temp += "**Bonus to Damage Taken:** " + tempskill.getBuff()[13] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[14] > 0) {
+                                        temp += "**Bonus to Physical Damage Dealt:** " + tempskill.getBuff()[14] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[15] > 0) {
+                                        temp += "**Bonus to Magical Damage Dealt:** " + tempskill.getBuff()[15] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[16] > 0) {
+                                        temp += "**Bonus to Damage Dealt:** " + tempskill.getBuff()[16] + "\n";
+                                    }
+                                } else if (store.getSkill(m[1]).isMiracle()) {
+                                    temp += "**Type:** Miracle\n";
+                                    Miracle tempskill = (Miracle) store.getSkill(m[1]);
+                                    switch (tempskill.getActivationstat()) {
+                                        case 0:
+                                            temp += "**Activation Chance:** HP";
+                                            break;
+                                        case 1:
+                                            temp += "**Activation Chance:** Strength";
+                                            break;
+                                        case 2:
+                                            temp += "**Activation Chance:** Magic";
+                                            break;
+                                        case 3:
+                                            temp += "**Activation Chance:** Skill";
+                                            break;
+                                        case 4:
+                                            temp += "**Activation Chance:** Speed";
+                                            break;
+                                        case 5:
+                                            temp += "**Activation Chance:** Luck";
+                                            break;
+                                        case 6:
+                                            temp += "**Activation Chance:** Defense";
+                                            break;
+                                        case 7:
+                                            temp += "**Activation Chance:** Resistance";
+                                            break;
+                                    }
+                                    temp += " x " + tempskill.getLuckMultiplier() + "%\n";
+                                } else if (store.getSkill(m[1]).isOffensive()) {
+                                    temp += "**Type:** Initiation\n";
+                                    InitiationSkill tempskill = (InitiationSkill) store.getSkill(m[1]);
+                                    if (tempskill.getBuff()[0] > 0) {
+                                        temp += "**Bonus to HP:** " + tempskill.getBuff()[0] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[1] > 0) {
+                                        temp += "**Bonus to Strength:** " + tempskill.getBuff()[1] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[2] > 0) {
+                                        temp += "**Bonus to Magic:** " + tempskill.getBuff()[2] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[3] > 0) {
+                                        temp += "**Bonus to Skill:** " + tempskill.getBuff()[3] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[4] > 0) {
+                                        temp += "**Bonus to Speed:** " + tempskill.getBuff()[4] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[5] > 0) {
+                                        temp += "**Bonus to Luck:** " + tempskill.getBuff()[5] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[6] > 0) {
+                                        temp += "**Bonus to Defense:** " + tempskill.getBuff()[6] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[7] > 0) {
+                                        temp += "**Bonus to Resistance:** " + tempskill.getBuff()[7] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[8] > 0) {
+                                        temp += "**Bonus to Hit:** " + tempskill.getBuff()[8] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[9] > 0) {
+                                        temp += "**Bonus to Avoid:** " + tempskill.getBuff()[9] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[10] > 0) {
+                                        temp += "**Bonus to Crit:** " + tempskill.getBuff()[10] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[11] > 0) {
+                                        temp += "**Bonus to Physical Damage Taken:** " + tempskill.getBuff()[11] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[12] > 0) {
+                                        temp += "**Bonus to Magical Damage Taken:** " + tempskill.getBuff()[12] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[13] > 0) {
+                                        temp += "**Bonus to Damage Taken:** " + tempskill.getBuff()[13] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[14] > 0) {
+                                        temp += "**Bonus to Physical Damage Dealt:** " + tempskill.getBuff()[14] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[15] > 0) {
+                                        temp += "**Bonus to Magical Damage Dealt:** " + tempskill.getBuff()[15] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[16] > 0) {
+                                        temp += "**Bonus to Damage Dealt:** " + tempskill.getBuff()[16] + "\n";
+                                    }
+                                } else if (store.getSkill(m[1]).isPassive()) {
+                                    temp += "**Type:** Passive\n";
+                                    PassiveSkill tempskill = (PassiveSkill) store.getSkill(m[1]);
+                                    if (tempskill.isVantage()) {
+                                        temp += "**Vantage-Type:** Yes\n";
+                                    }
+                                    if (tempskill.getBuff()[0] > 0) {
+                                        temp += "**Bonus to HP:** " + tempskill.getBuff()[0] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[1] > 0) {
+                                        temp += "**Bonus to Strength:** " + tempskill.getBuff()[1] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[2] > 0) {
+                                        temp += "**Bonus to Magic:** " + tempskill.getBuff()[2] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[3] > 0) {
+                                        temp += "**Bonus to Skill:** " + tempskill.getBuff()[3] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[4] > 0) {
+                                        temp += "**Bonus to Speed:** " + tempskill.getBuff()[4] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[5] > 0) {
+                                        temp += "**Bonus to Luck:** " + tempskill.getBuff()[5] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[6] > 0) {
+                                        temp += "**Bonus to Defense:** " + tempskill.getBuff()[6] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[7] > 0) {
+                                        temp += "**Bonus to Resistance:** " + tempskill.getBuff()[7] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[8] > 0) {
+                                        temp += "**Bonus to Hit:** " + tempskill.getBuff()[8] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[9] > 0) {
+                                        temp += "**Bonus to Avoid:** " + tempskill.getBuff()[9] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[10] > 0) {
+                                        temp += "**Bonus to Crit:** " + tempskill.getBuff()[10] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[11] > 0) {
+                                        temp += "**Bonus to Physical Damage Taken:** " + tempskill.getBuff()[11] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[12] > 0) {
+                                        temp += "**Bonus to Magical Damage Taken:** " + tempskill.getBuff()[12] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[13] > 0) {
+                                        temp += "**Bonus to Damage Taken:** " + tempskill.getBuff()[13] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[14] > 0) {
+                                        temp += "**Bonus to Physical Damage Dealt:** " + tempskill.getBuff()[14] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[15] > 0) {
+                                        temp += "**Bonus to Magical Damage Dealt:** " + tempskill.getBuff()[15] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[16] > 0) {
+                                        temp += "**Bonus to Damage Dealt:** " + tempskill.getBuff()[16] + "\n";
+                                    }
+                                } else if (store.getSkill(m[1]).isProc()) {
+                                    temp += "**Type:** Proc\n";
+                                    ProcSkill tempskill = (ProcSkill) store.getSkill(m[1]);
+                                    if (tempskill.isCancel()) {
+                                        temp += "**Cancels enemy counterattacks.\n";
+                                    }
+                                    if (tempskill.isDamaging()) {
+                                        temp += "**Deals bonus damage.**\n";
+                                    } else {
+                                        temp += "**Heals the user.**\n";
+                                    }
+                                    if (tempskill.isOnAttacked()) {
+                                        temp += "**Activates when attacked.**\n";
+                                    }
+                                    if (tempskill.isUseEnemyStat()) {
+                                        temp += "**Uses enemy stats for calculations.**\n";
+                                    }
+                                    switch (tempskill.getActivationstat()) {
+                                        case 0:
+                                            temp += "**Activation Chance:** HP";
+                                            break;
+                                        case 1:
+                                            temp += "**Activation Chance:** Strength";
+                                            break;
+                                        case 2:
+                                            temp += "**Activation Chance:** Magic";
+                                            break;
+                                        case 3:
+                                            temp += "**Activation Chance:** Skill";
+                                            break;
+                                        case 4:
+                                            temp += "**Activation Chance:** Speed";
+                                            break;
+                                        case 5:
+                                            temp += "**Activation Chance:** Luck";
+                                            break;
+                                        case 6:
+                                            temp += "**Activation Chance:** Defense";
+                                            break;
+                                        case 7:
+                                            temp += "**Activation Chance:** Resistance";
+                                            break;
+                                    }
+                                    temp += " x " + tempskill.getProcRate() + "%\n";
+                                    temp += "**Damage Multiplier: **" + tempskill.getDamageMultiplier() + "\n";
+                                } else if (store.getSkill(m[1]).isSlayer()) {
+                                    temp += "**Type:** Slayer\n";
+                                    RaceSlayer tempskill = (RaceSlayer) store.getSkill(m[1]);
+                                    temp += "**Effective Against:** " + tempskill.getSlay() + "\n";
+                                    if (tempskill.getStatAdvantage()[0] > 0) {
+                                        temp += "**Hit Bonus:** " + tempskill.getStatAdvantage()[0] + "\n";
+                                    }
+                                    if (tempskill.getStatAdvantage()[1] > 0) {
+                                        temp += "**Avoid Bonus:** " + tempskill.getStatAdvantage()[1] + "\n";
+                                    }
+                                    if (tempskill.getStatAdvantage()[2] > 0) {
+                                        temp += "**Crit Bonus:** " + tempskill.getStatAdvantage()[2] + "\n";
+                                    }
+                                    if (tempskill.getStatAdvantage()[3] > 0) {
+                                        temp += "**Bonus to Damage Dealt:** " + tempskill.getStatAdvantage()[3] + "\n";
+                                    }
+                                    if (tempskill.getStatAdvantage()[4] > 0) {
+                                        temp += "**Bonus to Damage Dealt (multiplicative):** " + tempskill.getStatAdvantage()[4] + "\n";
+                                    }
+                                    if (tempskill.getStatAdvantage()[5] > 0) {
+                                        temp += "**Damage Reduction:** " + tempskill.getStatAdvantage()[5] + "\n";
+                                    }
+                                } else if (store.getSkill(m[1]).isThreshhold()) {
+                                    temp += "**Type:** Threshold-Activated\n";
+                                    Threshold tempskill = (Threshold) store.getSkill(m[1]);
+                                    temp += "**Threshold Amount: **" + tempskill.getThresholdAmount();
+                                    if (tempskill.getBuff()[0] > 0) {
+                                        temp += "**Bonus to HP:** " + tempskill.getBuff()[0] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[1] > 0) {
+                                        temp += "**Bonus to Strength:** " + tempskill.getBuff()[1] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[2] > 0) {
+                                        temp += "**Bonus to Magic:** " + tempskill.getBuff()[2] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[3] > 0) {
+                                        temp += "**Bonus to Skill:** " + tempskill.getBuff()[3] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[4] > 0) {
+                                        temp += "**Bonus to Speed:** " + tempskill.getBuff()[4] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[5] > 0) {
+                                        temp += "**Bonus to Luck:** " + tempskill.getBuff()[5] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[6] > 0) {
+                                        temp += "**Bonus to Defense:** " + tempskill.getBuff()[6] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[7] > 0) {
+                                        temp += "**Bonus to Resistance:** " + tempskill.getBuff()[7] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[8] > 0) {
+                                        temp += "**Bonus to Hit:** " + tempskill.getBuff()[8] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[9] > 0) {
+                                        temp += "**Bonus to Avoid:** " + tempskill.getBuff()[9] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[10] > 0) {
+                                        temp += "**Bonus to Crit:** " + tempskill.getBuff()[10] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[11] > 0) {
+                                        temp += "**Bonus to Physical Damage Taken:** " + tempskill.getBuff()[11] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[12] > 0) {
+                                        temp += "**Bonus to Magical Damage Taken:** " + tempskill.getBuff()[12] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[13] > 0) {
+                                        temp += "**Bonus to Damage Taken:** " + tempskill.getBuff()[13] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[14] > 0) {
+                                        temp += "**Bonus to Physical Damage Dealt:** " + tempskill.getBuff()[14] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[15] > 0) {
+                                        temp += "**Bonus to Magical Damage Dealt:** " + tempskill.getBuff()[15] + "\n";
+                                    }
+                                    if (tempskill.getBuff()[16] > 0) {
+                                        temp += "**Bonus to Damage Dealt:** " + tempskill.getBuff()[16] + "\n";
+                                    }
+                                }
+                                printmessage(temp, channel);
+                            } else {
+                                printmessage("Skill does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("setslayrace")) // skill race
+                    {
+                        if (m.length != 3) {
+                            printmessage("Invalid argument amount. Usage: !setslayrace \"name\" \"race\"", channel);
+                        } else {
+                            if (store.hasSkill(m[1])) {
+                                if (store.getSkill(m[1]).isSlayer()) {
+                                    ((RaceSlayer) store.getSkill(m[1])).setSlay(m[2]);
+                                    store.saveData();
+                                    printmessage(store.getSkill(m[1]).getStatus(), channel);
+                                } else {
+                                    printmessage("Skill is not a slayer-type skill.", channel);
+                                }
+                            } else {
+                                printmessage("Skill does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("setslaybonus")) // skill stat bonus
+                    {
+                        if (m.length != 4) {
+                            printmessage("Invalid argument amount. Usage: !setslaybonus \"name\" stat buff", channel);
+                        } else {
+                            if (store.hasSkill(m[1])) {
+                                if (store.getSkill(m[1]).isSlayer()) {
+                                    int inputstat;
+                                    double advantage;
+                                    String regex = "/^\\d*\\.?\\d*$/";
+                                    if (m[3].matches(regex)) {
+                                        advantage = Double.parseDouble(m[3]);
+                                    } else {
+                                        printmessage("Invalid buff amount. Ensure it is a number.", channel);
+                                        return;
+                                    }
+                                    switch (m[2]) {
+                                        case "hit":
+                                            inputstat = 0;
+                                            break;
+                                        case "avoid":
+                                            inputstat = 1;
+                                            break;
+                                        case "crit":
+                                            inputstat = 2;
+                                            break;
+                                        case "damtake":
+                                            inputstat = 5;
+                                            break;
+                                        case "damdeal":
+                                            inputstat = 4;
+                                            break;
+                                        case "dammulti":
+                                            inputstat = 4;
+                                            break;
+                                        default:
+                                            printmessage("Invalid input stat. Ensure it is one of these: hit, avoid, crit, damtake, damdeal, dammulti", channel);
+                                            return;
+                                    }
+                                    ((RaceSlayer) store.getSkill(m[1])).setStatAdvantage(inputstat, advantage);
+                                    store.saveData();
+                                    printmessage(store.getSkill(m[1]).getStatus(), channel);
+                                } else {
+                                    printmessage("Skill is not a slayer-type skill.", channel);
+                                }
+                            } else {
+                                printmessage("Skill does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("setbreakerweapon")) // skill weapon
+                    {
+                        if (store.hasSkill(m[1])) {
+                            if (store.getSkill(m[1]).isBreaker()) {
+                                int weapon;
+                                switch (m[2]) {
+                                    case "Sword":
+                                        weapon = 0;
+                                        break;
+                                    case "Lance":
+                                        weapon = 1;
+                                        break;
+                                    case "Axe":
+                                        weapon = 2;
+                                        break;
+                                    case "Anima":
+                                        weapon = 3;
+                                        break;
+                                    case "Light":
+                                        weapon = 4;
+                                        break;
+                                    case "Dark":
+                                        weapon = 5;
+                                        break;
+                                    case "Bow":
+                                        weapon = 6;
+                                        break;
+                                    default:
+                                        printmessage("Invalid weapon type inputted. The bot currently only supports: \"Sword, Lance, Axe, Bow, Anima, Light, Dark\".", channel);
+                                        return;
+                                }
+                                ((WeaponBreaker)store.getSkill(m[1])).setWeapon(weapon);
+                                printmessage(store.getSkill(m[1]).getStatus(), channel);
+                            } else {
+                                printmessage("Skill is not a breaker-type skill.", channel);
+                            }
+                        } else {
+                            printmessage("Skill does not exist.", channel);
+                        }
+                    }
+                    if (m[0].equals("setbreakerbonus")) // skill stat bonus
+                    {
+                        if (store.hasSkill(m[1])) {
+                            if (store.getSkill(m[1]).isBreaker()) {
+                                int inputstat;
+                                double advantage = 0;
+                                String regex = "/^\\d*\\.?\\d*$/";
+                                if (m[3].matches(regex)) {
+                                    advantage = Double.parseDouble(m[3]);
+                                } else {
+                                    printmessage("Invalid buff amount. Ensure it is a number.", channel);
+                                }
+                                switch (m[2]) {
+                                    case "hit":
+                                        inputstat = 0;
+                                        break;
+                                    case "avoid":
+                                        inputstat = 1;
+                                        break;
+                                    case "crit":
+                                        inputstat = 2;
+                                        break;
+                                    case "damtake":
+                                        inputstat = 5;
+                                        break;
+                                    case "damdeal":
+                                        inputstat = 4;
+                                        break;
+                                    case "dammulti":
+                                        inputstat = 4;
+                                        break;
+                                    default:
+                                        printmessage("Invalid input stat. Ensure it is one of these: hit, avoid, crit, damtake, damdeal, dammulti", channel);
+                                        return;
+                                }
+                                ((WeaponBreaker)store.getSkill(m[1])).setAdvantage(inputstat,advantage);
+                                printmessage(store.getSkill(m[1]).getStatus(), channel);
+                                store.saveData();
+                            } else {
+                                printmessage("Skill is not a breaker-type skill.", channel);
+                            }
+                        } else {
+                            printmessage("Skill does not exist.", channel);
+                        }
+                    }
+                    if (m[0].equals("setmiraclerate")) // skill rate
+                    {
+                        if (m.length != 3) {
+                            printmessage("Invalid argument amount. Usage: !setmiraclerate \"name\" rate", channel);
+                        } else {
+                            if (store.hasSkill(m[1])) {
+                                if (store.getSkill(m[1]).isMiracle()) {
+                                    double rate;
+                                    String regex = "/^\\d*\\.?\\d*$/";
+                                    if (m[2].matches(regex)) {
+                                        rate = Double.parseDouble(m[2]);
+                                    } else {
+                                        printmessage("Invalid activation rate. Ensure it is a number.", channel);
+                                        return;
+                                    }
+                                    ((Miracle)store.getSkill(m[1])).setPercentage(rate);
+                                    store.saveData();
+                                    printmessage(store.getSkill(m[1]).getStatus(),channel);
+                                } else {
+                                    printmessage("Skill is not a miracle-type skill.", channel);
+                                }
+                            } else {
+                                printmessage("Skill does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("setmiraclestat")) // skill stat
+                    {
+                        if (store.hasSkill(m[1])) {
+
+                        } else {
+                            printmessage("Skill does not exist.", channel);
+                        }
+                    }
+                    if (m[0].equals("setdefensivebuff")) // skill stat buff
+                    {
+                        if (store.hasSkill(m[1])) {
+
+                        } else {
+                            printmessage("Skill does not exist.", channel);
+                        }
+                    }
+                    if (m[0].equals("setoffensivebuff")) // skill stat buff
+                    {
+                        if (store.hasSkill(m[1])) {
+
+                        } else {
+                            printmessage("Skill does not exist.", channel);
+                        }
+                    }
+                    if (m[0].equals("setthresholdthresh")) // skill threshold
+                    {
+                        if (store.hasSkill(m[1])) {
+
+                        } else {
+                            printmessage("Skill does not exist.", channel);
+                        }
+                    }
+                    if (m[0].equals("setthresholdbuff")) // skill buff
+                    {
+                        if (store.hasSkill(m[1])) {
+
+                        } else {
+                            printmessage("Skill does not exist.", channel);
+                        }
+                    }
+                    if (m[0].equals("setskillprocrate")) // skill rate
+                    {
+                        if (store.hasSkill(m[1])) {
+
+                        } else {
+                            printmessage("Skill does not exist.", channel);
+                        }
+                    }
+                    if (m[0].equals("setprocskillstatmulti")) // skill statmulti
+                    {
+                        if (store.hasSkill(m[1])) {
+
+                        } else {
+                            printmessage("Skill does not exist.", channel);
+                        }
+                    }
+                    if (m[0].equals("setprocskillactistat")) // skill stat
+                    {
+                        if (store.hasSkill(m[1])) {
+
+                        } else {
+                            printmessage("Skill does not exist.", channel);
+                        }
+                    }
+                    if (m[0].equals("setprocskillusenemystat")) // skill true/false
+                    {
+                        if (store.hasSkill(m[1])) {
+
+                        } else {
+                            printmessage("Skill does not exist.", channel);
+                        }
+                    }
+                    if (m[0].equals("setprocskillcancel")) // skill true/false
+                    {
+                        if (store.hasSkill(m[1])) {
+
+                        } else {
+                            printmessage("Skill does not exist.", channel);
+                        }
+                    }
+                    if (m[0].equals("setprocskillwhenattacked")) // skill true/false
+                    {
+                        if (store.hasSkill(m[1])) {
+
+                        } else {
+                            printmessage("Skill does not exist.", channel);
+                        }
+                    }
+                    if (m[0].equals("setprocskillinputstat")) // skill stat
+                    {
+                        if (store.hasSkill(m[1])) {
+
+                        } else {
+                            printmessage("Skill does not exist.", channel);
+                        }
+                    }
+                    if (m[0].equals("setprocskillisdamaging")) // skill true/false
+                    {
+                        if (store.hasSkill(m[1])) {
+
+                        } else {
+                            printmessage("Skill does not exist.", channel);
+                        }
+                    }
+                    if (m[0].equals("setprocskillishealing")) // skill true/false
+                    {
+                        if (store.hasSkill(m[1])) {
+
+                        } else {
+                            printmessage("Skill does not exist.", channel);
+                        }
+                    }
+                    if (m[0].equals("setpassiveskillbuff")) // skill stat buff
+                    {
+                        if (store.hasSkill(m[1])) {
+
+                        } else {
+                            printmessage("Skill does not exist.", channel);
+                        }
+                    }
+                    if (m[0].equals("setvantage")) // skill true/false
+                    {
+                        if (store.hasSkill(m[1])) {
+
+                        } else {
+                            printmessage("Skill does not exist.", channel);
+                        }
+                    }
+                    if (m[0].equals("setvantagethreshold")) // skill threshold
+                    {
+                        if (store.hasSkill(m[1])) {
+
+                        } else {
+                            printmessage("Skill does not exist.", channel);
                         }
                     }
                 }
