@@ -2,7 +2,7 @@ import java.io.Serializable;
 
 public class DefensiveSkill extends Skill implements Serializable{
     private String[] stattypes = new String[] {"HP", "Strength", "Magic", "Skill", "Speed", "Luck", "Defense", "Resistance", "Hit", "Avoid", "Crit", "Physical damage taken", "Magical damage taken", "Damage taken", "Physical damage dealt", "Magical damage dealt", "Damage dealt"};
-    private double[] buff = new double[17];
+    private int[] buff = new int[17];
     private String statusmessage;
     DefensiveSkill(String name) {
         super(name);
@@ -18,9 +18,9 @@ public class DefensiveSkill extends Skill implements Serializable{
         statusmessage = "";
         return temp;
     }
-    public void setBuff(int stat, double b) {
+    public void setBuff(int stat, int b) {
         statusmessage += getName() + " now increases/decreases " + stattypes[stat] + " by " + b + " when defending.\n";
         buff[stat] = b;
     }
-    public double[] getBuff() { return buff; }
+    public int[] getBuff() { return buff; }
 }
