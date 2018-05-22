@@ -10,91 +10,91 @@ Further documentation will be shown below as bot development continues.
 ## Commands
 ###### CHARACTER COMMANDS
  * !createchar name 
-   - (Creates a new character.)
+   - Creates a new character.
  * !deletechar name 
-  - (Deletes an existing character if it exists.)
+   - Deletes an existing character if it exists.
  * !charinfo name 
-  - (Prints information about a character.)
+   - Prints information about a character.
  * !changecharname name newname 
-  - (Changes a character's name.)
+   - Changes a character's name.
  * !setchardescription name "desc" 
-  - (Changes a character's description.)
+   - Changes a character's description.
  * !setcharclass name class 
-  - (Changes a character's class. Weapon ranks, etc. will have to be edited manually.)
+   - Changes a character's class. Weapon ranks, etc. will have to be edited manually.)
  * !setcharrace name race 
-  - (Sets a character's race.)
+   - Sets a character's race.
  * !setcharweaponrank name weapon rank 
-  - (Sets a character's rank in the given weapon.)
+   - Sets a character's rank in the given weapon.
  * !setcharlevel name level 
-  - (Sets the character's current level.)
+   - Sets the character's current level.
  * !setcharexp name experience 
-  - (Sets the character's current experience.)
+   - Sets the character's current experience.
  * !addexp name experience 
-  - (Gives the character experience, and levels them up if they go over 100.)
+   - Gives the character experience, and levels them up if they go over 100.
  * !levelchar name 
-  - (Levels up a character.)
+   - Levels up a character.
  * !sethp name hp 
-  - (Sets a character's maximum HP.)
+   - Sets a character's maximum HP.
  * !setstr name strength 
-  - (Sets a character's strength stat.)
+   - Sets a character's strength stat.
  * !setmag name magic 
-  - (Sets a character's magic stat.)
+   - Sets a character's magic stat.
  * !setskl name skill 
-  - (Sets a character's skill stat.)
+   - Sets a character's skill stat.
  * !setspd name speed 
-  - (Sets a character's speed stat.)
+   - Sets a character's speed stat.
  * !setlck name luck 
-  - (Sets a character's luck stat.)
+   - Sets a character's luck stat.
  * !setdef name defense 
-  - (Sets a character's defense stat.)
+   - Sets a character's defense stat.
  * !setres name resistance 
-  - (Sets a character's resistance stat.)
+   - Sets a character's resistance stat.
  * !setcurrhp name hp 
-  - (Sets a character's current HP.)
+   - Sets a character's current HP.
  * !setcharhitbonus name bonus 
-  - (Sets a character's bonus to hit.)
+   - Sets a character's bonus to hit.
  * !setcharavoidbonus name bonus 
-  - (Sets a character's bonus to avoid.)
+   - Sets a character's bonus to avoid.
  * !setcharcritbonus name bonus 
-  - (Sets a character's bonus to crit.)
+   - Sets a character's bonus to crit.
  * !sethpgrow name growth 
-  - (Sets a character's HP growth.)
+   - Sets a character's HP growth.
  * !setstrgrow name growth 
-  - (Sets a character's Strength growth.)
+   - Sets a character's Strength growth.
  * !setmaggrow name growth 
-  - (Sets a character's Magic growth.)
- * !setsklgrow name growth 
-  - (Sets a character's Skill growth.)
+   - Sets a character's Magic growth.
+ * !setsklgrow name growth
+   - Sets a character's Skill growth.
  * !setspdgrow name growth 
-  - (Sets a character's Speed growth.)
+   - Sets a character's Speed growth.
  * !setlckgrow name growth 
-  - (Sets a character's Luck growth.)
- * !setdefgrow name growth 
-  - (Sets a character's Defense growth.)
+   - Sets a character's Luck growth.
+ * !setdefgrow name growth
+   - Sets a character's Defense growth.
  * !setresgrow name growth 
-  - (Sets a character's Resistance growth.)
+   - Sets a character's Resistance growth.
  * !setlevelcap name cap 
-  - (Sets a character's maximum level. (Default: 20))
+   - Sets a character's maximum level. (Default: 20)
  * !promote char class 
-  - (Promotes a character to the given class, if it is a promotion path for them.)
+   - Promotes a character to the given class, if it is a promotion path for them.
  * !showinventory char 
-  - (Prints out the character's inventory.)
+   - Prints out the character's inventory.
  * !heal char HP 
-  - (Heals the character for the specified amount.)
+   - Heals the character for the specified amount.
  * !setteam char team 
-  - (Sets a character's team.)
+   - Sets a character's team.
  * !removecharitem char itemname 
-  - (Removes an item from the character's inventory.)
+   - Removes an item from the character's inventory.
  * !equipweapon char weapon 
-  - (Equips the weapon onto the character if it is in their inventory.)
+   - Equips the weapon onto the character if it is in their inventory.
  * !unequipweapon char 
-  - (Unequips the character's current weapon, if he/she has one.)
+   - Unequips the character's current weapon, if he/she has one.
  * !equipstaff char staff 
-  - (Equips a staff to the character.)
+   - Equips a staff to the character.
 
 ###### CLASS COMMANDS
  * !createclass name 
-  - (Creates a new class.)
+   - Creates a new class.
  * !addclasspromopath name class
  * !removeclasspromopath name class
  * !setclassrankbonus name bonus
