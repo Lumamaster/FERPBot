@@ -122,13 +122,13 @@ Further documentation will be shown below as bot development continues.
  * !createmultihitskill "name" hitcount procrate damagemulti inputstat
    - Creates a new multi hit skill.
  * !createinitiationskill "name" buff stat
-   - Creates a new initiation skill.
+   - Creates a new initiation skill.
  * !createdefensiveskill "name" buff stat
    - Creates a new defensive skill.
  * !createbreakerskill "name" weapon stat advantage
-   - Creates a new weapon breaker skill.
+   - Creates a new weapon breaker skill.
  * !createslayerskill "name" "race" stat advantage
-   - Creates a new anti race skill.
+   - Creates a new anti race skill.
  * !createmiracleskill "name" stat multiplier
    - Creates a new miracle-type skill.
  * !deleteskill "name"
@@ -212,7 +212,7 @@ Further documentation will be shown below as bot development continues.
  * !setrequiredweaponrank "weapon" rank
    - Sets the required weapon rank for a weapon to be usable.
  * !setweaponeffectiveness "weapon" weapontype true/false
-  -  Sets if a weapon is effective against a weapon type.
+   - Sets if a weapon is effective against a weapon type.
  * !setarmorslaying "weapon" true/false
    - Sets if a weapon is effective against armored units.
  * !setantifliers "weapon" true/false
