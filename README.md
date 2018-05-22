@@ -10,7 +10,7 @@ Further documentation will be shown below as bot development continues.
 ## Commands
 ###### CHARACTER COMMANDS
  * !createchar name 
-  - (Creates a new character.)
+   - (Creates a new character.)
  * !deletechar name 
   - (Deletes an existing character if it exists.)
  * !charinfo name 
