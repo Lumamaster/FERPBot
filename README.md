@@ -7,6 +7,8 @@ This bot was made in IntelliJ IDEA Community Edition, and uses Discord4J as part
 
 Further documentation will be shown below as bot development continues.
 
+TODO LIST: Implement statuses and status staves, implement team commands, implmement permissions and player only control.
+
 Use the jar file in the root directory if you want to host this bot under your own bot account. It will be updated to the latest build as time goes on. Just put your bot account token in a txt file named "token.txt" in the directory with the jar file.
 
 Below are a list of commands and their functions.
