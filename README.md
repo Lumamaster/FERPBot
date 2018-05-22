@@ -3,71 +3,98 @@ A Discord bot meant to simulate Fire Emblem style combat with the capability to 
 
 THIS BOT IS CURRENTLY WORK IN PROGRESS.
 
-TODO:
-
-SKILLS
-
-ITEMS
-
-STATUSES
-
-BATTLE
-
 This bot was made in IntelliJ IDEA Community Edition, and uses Discord4J as part of its functionality.
 
 Further documentation will be shown below as bot development continues.
 
 ## Commands
 ###### CHARACTER COMMANDS
- * !createchar name
- * !deletechar name
- * !charinfo name
- * !changecharname name
- * !setchardescription name "desc"
- * !setcharfamily name "family"
- * !setcharbackground name "background"
- * !setcharclass name class
- * !setcharrace name race
- * !setcharweaponrank name rank
- * !setcharlevel name level
- * !setcharexp name experience
- * !addexp name experience
- * !levelchar name
- * !sethp name hp
- * !setstr name strength
- * !setmag name magic
- * !setskl name skill
- * !setspd name speed
- * !setlck name luck
- * !setdef name defense
- * !setres name resistance
- * !setcurrhp name hp
- * !setcharhitbonus name bonus
- * !setcharavoidbonus name bonus
- * !setcharcritbonus name bonus
- * !sethpgrow name growth
- * !setstrgrow name growth
- * !setmaggrow name growth
- * !setsklgrow name growth
- * !setspdgrow name growth
- * !setlckgrow name growth
- * !setdefgrow name growth
- * !setresgrow name growth
- * !setlevelcap name cap
- * !promote char class
- * !showinventory char
- * !charskilllist char
- * !heal char HP
- * !setteam char team
- * !removecharitem char itemname
- * !setcharweaponrank char weapontype rank
- * !equipweapon char weapon
- * !unequipweapon char
- * !equipstaff char staff
- * !promotechar char class
+ * !createchar name 
+ - (Creates a new character.)
+ * !deletechar name 
+ - (Deletes an existing character if it exists.)
+ * !charinfo name 
+ - (Prints information about a character.)
+ * !changecharname name newname 
+ - (Changes a character's name.)
+ * !setchardescription name "desc" 
+ - (Changes a character's description.)
+ * !setcharclass name class 
+ - (Changes a character's class. Weapon ranks, etc. will have to be edited manually.)
+ * !setcharrace name race 
+ - (Sets a character's race.)
+ * !setcharweaponrank name weapon rank 
+ - (Sets a character's rank in the given weapon.)
+ * !setcharlevel name level 
+ - (Sets the character's current level.)
+ * !setcharexp name experience 
+ - (Sets the character's current experience.)
+ * !addexp name experience 
+ - (Gives the character experience, and levels them up if they go over 100.)
+ * !levelchar name 
+ - (Levels up a character.)
+ * !sethp name hp 
+ - (Sets a character's maximum HP.)
+ * !setstr name strength 
+ - (Sets a character's strength stat.)
+ * !setmag name magic 
+ - (Sets a character's magic stat.)
+ * !setskl name skill 
+ - (Sets a character's skill stat.)
+ * !setspd name speed 
+ - (Sets a character's speed stat.)
+ * !setlck name luck 
+ - (Sets a character's luck stat.)
+ * !setdef name defense 
+ - (Sets a character's defense stat.)
+ * !setres name resistance 
+ - (Sets a character's resistance stat.)
+ * !setcurrhp name hp 
+ - (Sets a character's current HP.)
+ * !setcharhitbonus name bonus 
+ - (Sets a character's bonus to hit.)
+ * !setcharavoidbonus name bonus 
+ - (Sets a character's bonus to avoid.)
+ * !setcharcritbonus name bonus 
+ - (Sets a character's bonus to crit.)
+ * !sethpgrow name growth 
+ - (Sets a character's HP growth.)
+ * !setstrgrow name growth 
+ - (Sets a character's Strength growth.)
+ * !setmaggrow name growth 
+ - (Sets a character's Magic growth.)
+ * !setsklgrow name growth 
+ - (Sets a character's Skill growth.)
+ * !setspdgrow name growth 
+ - (Sets a character's Speed growth.)
+ * !setlckgrow name growth 
+ - (Sets a character's Luck growth.)
+ * !setdefgrow name growth 
+ - (Sets a character's Defense growth.)
+ * !setresgrow name growth 
+ - (Sets a character's Resistance growth.)
+ * !setlevelcap name cap 
+ - (Sets a character's maximum level. (Default: 20))
+ * !promote char class 
+ - (Promotes a character to the given class, if it is a promotion path for them.)
+ * !showinventory char 
+ - (Prints out the character's inventory.)
+ * !heal char HP 
+ - (Heals the character for the specified amount.)
+ * !setteam char team 
+ - (Sets a character's team.)
+ * !removecharitem char itemname 
+ - (Removes an item from the character's inventory.)
+ * !equipweapon char weapon 
+ - (Equips the weapon onto the character if it is in their inventory.)
+ * !unequipweapon char 
+ - (Unequips the character's current weapon, if he/she has one.)
+ * !equipstaff char staff 
+ - (Equips a staff to the character.)
 
 ###### CLASS COMMANDS
- * !createclass name
+ * !createclass name 
+ - (Creates a new class.)
  * !addclasspromopath name class
  * !removeclasspromopath name class
  * !setclassrankbonus name bonus
