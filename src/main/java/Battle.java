@@ -9,7 +9,7 @@ public class Battle {
     }
 
     public String commenceBattle(Character initiator, Character defender) {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         int[] istattemp = initiator.getStats();
         int[] dstattemp = defender.getStats();
         int ihit = CalculateHit(initiator, true); //calculate initial values
@@ -191,7 +191,7 @@ public class Battle {
         int defattack = 1;
         int defhitcount = 1;
         double defattackmod = 1;
-        boolean ibrave = false;
+        boolean ibrave;
         boolean dbrave = false;
         int iheal = 0;
         int dheal = 0;
@@ -216,19 +216,19 @@ public class Battle {
             if (defender.getSkilllist().getPassives().get(i).isVantage()) {
                 if (defender.getSkilllist().getPassives().get(i).getVantageThreshold() * defender.getStats()[0] > defender.getCurrHP()) {
                     dvantage = true;
-                    result += defender.getName() + " activates " + defender.getSkilllist().getPassives().get(i).getName() + " and gets to attack first!\n";
+                    result.append(defender.getName()).append(" activates ").append(defender.getSkilllist().getPassives().get(i).getName()).append(" and gets to attack first!\n");
                     break;
                 }
             }
         }
         if (dvantage && canretaliate) {
-            result += defender.getName() + " attacks " + initiator.getName() + " with " + defender.getEquippedWeapon().getName() + ".\n";
+            result.append(defender.getName()).append(" attacks ").append(initiator.getName()).append(" with ").append(defender.getEquippedWeapon().getName()).append(".\n");
             for (i = 0; i < defender.getSkilllist().getProcs().size(); i++) { //tests for multiattack skills
                 if (defender.getSkilllist().getProcs().get(i).isAttackMulti()) {
                     if (defender.getSkilllist().getProcs().get(i).activate(dstattemp[defender.getSkilllist().getProcs().get(i).getActivationstat()])) {
                         defattack *= ((MultiHitSkill) defender.getSkilllist().getProcs().get(i)).getAttackCount();
                         defattackmod = (defender.getSkilllist().getProcs().get(i)).getDamageMultiplier();
-                        result += defender.getName() + " activates " + defender.getSkilllist().getProcs().get(i).getName() + "!\n";
+                        result.append(defender.getName()).append(" activates ").append(defender.getSkilllist().getProcs().get(i).getName()).append("!\n");
                         if (!((MultiHitSkill) defender.getSkilllist().getProcs().get(i)).getStack()) {
                             break;
                         }
@@ -262,7 +262,7 @@ public class Battle {
                                     if (defender.getSkilllist().getProcs().get(i).isCancel()) {
                                         inithitcount = 0;
                                     }
-                                    result += defender.getName() + " activates " + defender.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                    result.append(defender.getName()).append(" activates ").append(defender.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                     break;
                                 }
                             }
@@ -274,18 +274,18 @@ public class Battle {
                                 if (initiator.getSkilllist().getProcs().get(i).getInputStat() == 8) {
                                     if (!defender.getEquippedWeapon().isUsesMagic()) {
                                         damage /= defender.getSkilllist().getProcs().get(i).getDamageMultiplier();
-                                        result += initiator.getName() + " activates " + initiator.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                        result.append(initiator.getName()).append(" activates ").append(initiator.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                         break;
                                     }
                                 } else if (initiator.getSkilllist().getProcs().get(i).getInputStat() == 9) {
                                     if (defender.getEquippedWeapon().isUsesMagic()) {
                                         damage /= initiator.getSkilllist().getProcs().get(i).getDamageMultiplier();
-                                        result += initiator.getName() + " activates " + initiator.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                        result.append(initiator.getName()).append(" activates ").append(initiator.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                         break;
                                     }
                                 } else if (initiator.getSkilllist().getProcs().get(i).getInputStat() == 10) {
                                     damage /= initiator.getSkilllist().getProcs().get(i).getDamageMultiplier();
-                                    result += initiator.getName() + " activates " + initiator.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                    result.append(initiator.getName()).append(" activates ").append(initiator.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                     break;
                                 }
                             }
@@ -299,13 +299,13 @@ public class Battle {
                     }
                     if (Math.random() * 100 < dcrit) {
                         damage *= defender.getEquippedWeapon().getCritModifier();
-                        result += "***CRITICAL!***\n";
+                        result.append("***CRITICAL!***\n");
                     }
-                    result += defender.getName() + " hit for " + damage + " damage!\n";
+                    result.append(defender.getName()).append(" hit for ").append(damage).append(" damage!\n");
                     for (j = 0; j < initiator.getSkilllist().getMiracles().size(); j++) {
                         if (damage > initiator.getCurrHP() && initiator.getSkilllist().getMiracles().get(j).testMiracle(istattemp[initiator.getSkilllist().getMiracles().get(j).getActivationstat()])) {
                             damage = initiator.getCurrHP() - 1;
-                            result += initiator.getName() + " activated " + initiator.getSkilllist().getMiracles().get(j).getName() + " and survived with 1 HP!\n";
+                            result.append(initiator.getName()).append(" activated ").append(initiator.getSkilllist().getMiracles().get(j).getName()).append(" and survived with 1 HP!\n");
                             break;
                         }
                     }
@@ -314,24 +314,24 @@ public class Battle {
                     }
                     if (dheal > 0) {
                         defender.heal(dheal);
-                        result += defender.getStatus();
+                        result.append(defender.getStatus());
                     }
                     if (ialive = false) {
-                        result += initiator.getName() + " was defeated!\n";
+                        result.append(initiator.getName()).append(" was defeated!\n");
                         break;
                     }
                 } else {
-                    result += defender.getName() + " missed!\n";
+                    result.append(defender.getName()).append(" missed!\n");
                 }
             }
             if (dbrave && ialive) {
-                result += defender.getName() + " attacks again consecutively!\n";
+                result.append(defender.getName()).append(" attacks again consecutively!\n");
                 for (i = 0; i < defender.getSkilllist().getProcs().size(); i++) { //tests for multiattack skills
                     if (defender.getSkilllist().getProcs().get(i).isAttackMulti()) {
                         if (defender.getSkilllist().getProcs().get(i).activate(dstattemp[defender.getSkilllist().getProcs().get(i).getActivationstat()])) {
                             defattack *= ((MultiHitSkill) defender.getSkilllist().getProcs().get(i)).getAttackCount();
                             defattackmod = (defender.getSkilllist().getProcs().get(i)).getDamageMultiplier();
-                            result += defender.getName() + " activates " + defender.getSkilllist().getProcs().get(i).getName() + "!\n";
+                            result.append(defender.getName()).append(" activates ").append(defender.getSkilllist().getProcs().get(i).getName()).append("!\n");
                             if (!((MultiHitSkill) defender.getSkilllist().getProcs().get(i)).getStack()) {
                                 break;
                             }
@@ -365,7 +365,7 @@ public class Battle {
                                         if (defender.getSkilllist().getProcs().get(i).isCancel()) {
                                             inithitcount = 0;
                                         }
-                                        result += defender.getName() + " activates " + defender.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                        result.append(defender.getName()).append(" activates ").append(defender.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                         break;
                                     }
                                 }
@@ -377,18 +377,18 @@ public class Battle {
                                     if (initiator.getSkilllist().getProcs().get(i).getInputStat() == 8) {
                                         if (!defender.getEquippedWeapon().isUsesMagic()) {
                                             damage /= defender.getSkilllist().getProcs().get(i).getDamageMultiplier();
-                                            result += initiator.getName() + " activates " + initiator.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                            result.append(initiator.getName()).append(" activates ").append(initiator.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                             break;
                                         }
                                     } else if (initiator.getSkilllist().getProcs().get(i).getInputStat() == 9) {
                                         if (defender.getEquippedWeapon().isUsesMagic()) {
                                             damage /= initiator.getSkilllist().getProcs().get(i).getDamageMultiplier();
-                                            result += initiator.getName() + " activates " + initiator.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                            result.append(initiator.getName()).append(" activates ").append(initiator.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                             break;
                                         }
                                     } else if (initiator.getSkilllist().getProcs().get(i).getInputStat() == 10) {
                                         damage /= initiator.getSkilllist().getProcs().get(i).getDamageMultiplier();
-                                        result += initiator.getName() + " activates " + initiator.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                        result.append(initiator.getName()).append(" activates ").append(initiator.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                         break;
                                     }
                                 }
@@ -402,13 +402,13 @@ public class Battle {
                         }
                         if (Math.random() * 100 < dcrit) {
                             damage *= defender.getEquippedWeapon().getCritModifier();
-                            result += "***CRITICAL!***\n";
+                            result.append("***CRITICAL!***\n");
                         }
-                        result += defender.getName() + " hit for " + damage + " damage!\n";
+                        result.append(defender.getName()).append(" hit for ").append(damage).append(" damage!\n");
                         for (j = 0; j < initiator.getSkilllist().getMiracles().size(); j++) {
                             if (damage > initiator.getCurrHP() && initiator.getSkilllist().getMiracles().get(j).testMiracle(istattemp[initiator.getSkilllist().getMiracles().get(j).getActivationstat()])) {
                                 damage = initiator.getCurrHP() - 1;
-                                result += initiator.getName() + " activated " + initiator.getSkilllist().getMiracles().get(j).getName() + " and survived with 1 HP!\n";
+                                result.append(initiator.getName()).append(" activated ").append(initiator.getSkilllist().getMiracles().get(j).getName()).append(" and survived with 1 HP!\n");
                                 break;
                             }
                         }
@@ -417,27 +417,27 @@ public class Battle {
                         }
                         if (dheal > 0) {
                             defender.heal(dheal);
-                            result += defender.getStatus();
+                            result.append(defender.getStatus());
                         }
                         if (ialive = false) {
-                            result += initiator.getName() + " was defeated!\n";
+                            result.append(initiator.getName()).append(" was defeated!\n");
                             break;
                         }
                     } else {
-                        result += defender.getName() + " missed!\n";
+                        result.append(defender.getName()).append(" missed!\n");
                     }
                 }
             }
         }
 
         if (ialive && inithitcount > 0) {
-            result += initiator.getName() + " attacks " + defender.getName() + " with " + initiator.getEquippedWeapon().getName() + ".\n";
+            result.append(initiator.getName()).append(" attacks ").append(defender.getName()).append(" with ").append(initiator.getEquippedWeapon().getName()).append(".\n");
             for (i = 0; i < initiator.getSkilllist().getProcs().size(); i++) { //tests for multiattack skills
                 if (initiator.getSkilllist().getProcs().get(i).isAttackMulti()) {
                     if (initiator.getSkilllist().getProcs().get(i).activate(istattemp[initiator.getSkilllist().getProcs().get(i).getActivationstat()])) {
                         initattack *= ((MultiHitSkill) initiator.getSkilllist().getProcs().get(i)).getAttackCount();
                         iattackmod = (initiator.getSkilllist().getProcs().get(i)).getDamageMultiplier();
-                        result += initiator.getName() + " activates " + initiator.getSkilllist().getProcs().get(i).getName() + "!\n";
+                        result.append(initiator.getName()).append(" activates ").append(initiator.getSkilllist().getProcs().get(i).getName()).append("!\n");
                         if (!((MultiHitSkill) initiator.getSkilllist().getProcs().get(i)).getStack()) {
                             break;
                         }
@@ -471,7 +471,7 @@ public class Battle {
                                     if (initiator.getSkilllist().getProcs().get(i).isCancel()) {
                                         defhitcount = 0;
                                     }
-                                    result += initiator.getName() + " activates " + initiator.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                    result.append(initiator.getName()).append(" activates ").append(initiator.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                     break;
                                 }
                             }
@@ -483,18 +483,18 @@ public class Battle {
                                 if (defender.getSkilllist().getProcs().get(i).getInputStat() == 8) {
                                     if (!initiator.getEquippedWeapon().isUsesMagic()) {
                                         damage /= defender.getSkilllist().getProcs().get(i).getDamageMultiplier();
-                                        result += defender.getName() + " activates " + defender.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                        result.append(defender.getName()).append(" activates ").append(defender.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                         break;
                                     }
                                 } else if (defender.getSkilllist().getProcs().get(i).getInputStat() == 9) {
                                     if (initiator.getEquippedWeapon().isUsesMagic()) {
                                         damage /= defender.getSkilllist().getProcs().get(i).getDamageMultiplier();
-                                        result += defender.getName() + " activates " + defender.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                        result.append(defender.getName()).append(" activates ").append(defender.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                         break;
                                     }
                                 } else if (defender.getSkilllist().getProcs().get(i).getInputStat() == 10) {
                                     damage /= defender.getSkilllist().getProcs().get(i).getDamageMultiplier();
-                                    result += defender.getName() + " activates " + defender.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                    result.append(defender.getName()).append(" activates ").append(defender.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                     break;
                                 }
                             }
@@ -508,13 +508,13 @@ public class Battle {
                     }
                     if (Math.random() * 100 < icrit) {
                         damage *= initiator.getEquippedWeapon().getCritModifier();
-                        result += "***CRITICAL!***\n";
+                        result.append("***CRITICAL!***\n");
                     }
-                    result += initiator.getName() + " hit for " + damage + " damage!\n";
+                    result.append(initiator.getName()).append(" hit for ").append(damage).append(" damage!\n");
                     for (j = 0; j < defender.getSkilllist().getMiracles().size(); j++) {
                         if (damage > defender.getCurrHP() && defender.getSkilllist().getMiracles().get(j).testMiracle(dstattemp[defender.getSkilllist().getMiracles().get(j).getActivationstat()])) {
                             damage = defender.getCurrHP() - 1;
-                            result += defender.getName() + " activated " + defender.getSkilllist().getMiracles().get(j).getName() + " and survived with 1 HP!\n";
+                            result.append(defender.getName()).append(" activated ").append(defender.getSkilllist().getMiracles().get(j).getName()).append(" and survived with 1 HP!\n");
                             break;
                         }
                     }
@@ -523,24 +523,24 @@ public class Battle {
                     }
                     if (iheal > 0) {
                         initiator.heal(iheal);
-                        result += initiator.getStatus();
+                        result.append(initiator.getStatus());
                     }
                     if (dalive = false) {
-                        result += defender.getName() + " was defeated!\n";
+                        result.append(defender.getName()).append(" was defeated!\n");
                         break;
                     }
                 } else {
-                    result += initiator.getName() + " missed!\n";
+                    result.append(initiator.getName()).append(" missed!\n");
                 }
             }
             if (ibrave && dalive) {
-                result += initiator.getName() + " attacks again consecutively!";
+                result.append(initiator.getName()).append(" attacks again consecutively!");
                 for (i = 0; i < initiator.getSkilllist().getProcs().size(); i++) { //tests for multiattack skills
                     if (initiator.getSkilllist().getProcs().get(i).isAttackMulti()) {
                         if (initiator.getSkilllist().getProcs().get(i).activate(istattemp[initiator.getSkilllist().getProcs().get(i).getActivationstat()])) {
                             initattack *= ((MultiHitSkill) initiator.getSkilllist().getProcs().get(i)).getAttackCount();
                             iattackmod = (initiator.getSkilllist().getProcs().get(i)).getDamageMultiplier();
-                            result += initiator.getName() + " activates " + initiator.getSkilllist().getProcs().get(i).getName() + "!\n";
+                            result.append(initiator.getName()).append(" activates ").append(initiator.getSkilllist().getProcs().get(i).getName()).append("!\n");
                             if (!((MultiHitSkill) initiator.getSkilllist().getProcs().get(i)).getStack()) {
                                 break;
                             }
@@ -574,7 +574,7 @@ public class Battle {
                                         if (initiator.getSkilllist().getProcs().get(i).isCancel()) {
                                             defhitcount = 0;
                                         }
-                                        result += initiator.getName() + " activates " + initiator.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                        result.append(initiator.getName()).append(" activates ").append(initiator.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                         break;
                                     }
                                 }
@@ -586,18 +586,18 @@ public class Battle {
                                     if (defender.getSkilllist().getProcs().get(i).getInputStat() == 8) {
                                         if (!initiator.getEquippedWeapon().isUsesMagic()) {
                                             damage /= defender.getSkilllist().getProcs().get(i).getDamageMultiplier();
-                                            result += defender.getName() + " activates " + defender.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                            result.append(defender.getName()).append(" activates ").append(defender.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                             break;
                                         }
                                     } else if (defender.getSkilllist().getProcs().get(i).getInputStat() == 9) {
                                         if (initiator.getEquippedWeapon().isUsesMagic()) {
                                             damage /= defender.getSkilllist().getProcs().get(i).getDamageMultiplier();
-                                            result += defender.getName() + " activates " + defender.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                            result.append(defender.getName()).append(" activates ").append(defender.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                             break;
                                         }
                                     } else if (defender.getSkilllist().getProcs().get(i).getInputStat() == 10) {
                                         damage /= defender.getSkilllist().getProcs().get(i).getDamageMultiplier();
-                                        result += defender.getName() + " activates " + defender.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                        result.append(defender.getName()).append(" activates ").append(defender.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                         break;
                                     }
                                 }
@@ -611,13 +611,13 @@ public class Battle {
                         }
                         if (Math.random() * 100 < icrit) {
                             damage *= initiator.getEquippedWeapon().getCritModifier();
-                            result += "***CRITICAL!***\n";
+                            result.append("***CRITICAL!***\n");
                         }
-                        result += initiator.getName() + " hit for " + damage + " damage!\n";
+                        result.append(initiator.getName()).append(" hit for ").append(damage).append(" damage!\n");
                         for (j = 0; j < defender.getSkilllist().getMiracles().size(); j++) {
                             if (damage > defender.getCurrHP() && defender.getSkilllist().getMiracles().get(j).testMiracle(dstattemp[defender.getSkilllist().getMiracles().get(j).getActivationstat()])) {
                                 damage = defender.getCurrHP() - 1;
-                                result += defender.getName() + " activated " + defender.getSkilllist().getMiracles().get(j).getName() + " and survived with 1 HP!\n";
+                                result.append(defender.getName()).append(" activated ").append(defender.getSkilllist().getMiracles().get(j).getName()).append(" and survived with 1 HP!\n");
                                 break;
                             }
                         }
@@ -626,14 +626,14 @@ public class Battle {
                         }
                         if (iheal > 0) {
                             initiator.heal(iheal);
-                            result += initiator.getStatus();
+                            result.append(initiator.getStatus());
                         }
                         if (dalive = false) {
-                            result += defender.getName() + " was defeated!\n";
+                            result.append(defender.getName()).append(" was defeated!\n");
                             break;
                         }
                     } else {
-                        result += initiator.getName() + " missed!\n";
+                        result.append(initiator.getName()).append(" missed!\n");
                     }
                 }
             }
@@ -646,7 +646,7 @@ public class Battle {
                         if (initiator.getSkilllist().getProcs().get(i).activate(istattemp[initiator.getSkilllist().getProcs().get(i).getActivationstat()])) {
                             initattack *= ((MultiHitSkill) initiator.getSkilllist().getProcs().get(i)).getAttackCount();
                             iattackmod = (initiator.getSkilllist().getProcs().get(i)).getDamageMultiplier();
-                            result += initiator.getName() + " activates " + initiator.getSkilllist().getProcs().get(i).getName() + "!\n";
+                            result.append(initiator.getName()).append(" activates ").append(initiator.getSkilllist().getProcs().get(i).getName()).append("!\n");
                             if (!((MultiHitSkill) initiator.getSkilllist().getProcs().get(i)).getStack()) {
                                 break;
                             }
@@ -680,7 +680,7 @@ public class Battle {
                                         if (initiator.getSkilllist().getProcs().get(i).isCancel()) {
                                             defhitcount = 0;
                                         }
-                                        result += initiator.getName() + " activates " + initiator.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                        result.append(initiator.getName()).append(" activates ").append(initiator.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                         break;
                                     }
                                 }
@@ -692,18 +692,18 @@ public class Battle {
                                     if (defender.getSkilllist().getProcs().get(i).getInputStat() == 8) {
                                         if (!initiator.getEquippedWeapon().isUsesMagic()) {
                                             damage /= defender.getSkilllist().getProcs().get(i).getDamageMultiplier();
-                                            result += defender.getName() + " activates " + defender.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                            result.append(defender.getName()).append(" activates ").append(defender.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                             break;
                                         }
                                     } else if (defender.getSkilllist().getProcs().get(i).getInputStat() == 9) {
                                         if (initiator.getEquippedWeapon().isUsesMagic()) {
                                             damage /= defender.getSkilllist().getProcs().get(i).getDamageMultiplier();
-                                            result += defender.getName() + " activates " + defender.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                            result.append(defender.getName()).append(" activates ").append(defender.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                             break;
                                         }
                                     } else if (defender.getSkilllist().getProcs().get(i).getInputStat() == 10) {
                                         damage /= defender.getSkilllist().getProcs().get(i).getDamageMultiplier();
-                                        result += defender.getName() + " activates " + defender.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                        result.append(defender.getName()).append(" activates ").append(defender.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                         break;
                                     }
                                 }
@@ -717,13 +717,13 @@ public class Battle {
                         }
                         if (Math.random() * 100 < icrit) {
                             damage *= initiator.getEquippedWeapon().getCritModifier();
-                            result += "***CRITICAL!***\n";
+                            result.append("***CRITICAL!***\n");
                         }
-                        result += initiator.getName() + " hit for " + damage + " damage!\n";
+                        result.append(initiator.getName()).append(" hit for ").append(damage).append(" damage!\n");
                         for (j = 0; j < defender.getSkilllist().getMiracles().size(); j++) {
                             if (damage > defender.getCurrHP() && defender.getSkilllist().getMiracles().get(j).testMiracle(dstattemp[defender.getSkilllist().getMiracles().get(j).getActivationstat()])) {
                                 damage = defender.getCurrHP() - 1;
-                                result += defender.getName() + " activated " + defender.getSkilllist().getMiracles().get(j).getName() + " and survived with 1 HP!\n";
+                                result.append(defender.getName()).append(" activated ").append(defender.getSkilllist().getMiracles().get(j).getName()).append(" and survived with 1 HP!\n");
                                 break;
                             }
                         }
@@ -732,24 +732,24 @@ public class Battle {
                         }
                         if (iheal > 0) {
                             initiator.heal(iheal);
-                            result += initiator.getStatus();
+                            result.append(initiator.getStatus());
                         }
                         if (dalive = false) {
-                            result += defender.getName() + " was defeated!\n";
+                            result.append(defender.getName()).append(" was defeated!\n");
                             break;
                         }
                     } else {
-                        result += initiator.getName() + " missed!\n";
+                        result.append(initiator.getName()).append(" missed!\n");
                     }
                 }
                 if (ibrave && dalive) {
-                    result += initiator.getName() + " attacks again consecutively!\n";
+                    result.append(initiator.getName()).append(" attacks again consecutively!\n");
                     for (i = 0; i < initiator.getSkilllist().getProcs().size(); i++) { //tests for multiattack skills
                         if (initiator.getSkilllist().getProcs().get(i).isAttackMulti()) {
                             if (initiator.getSkilllist().getProcs().get(i).activate(istattemp[initiator.getSkilllist().getProcs().get(i).getActivationstat()])) {
                                 initattack *= ((MultiHitSkill) initiator.getSkilllist().getProcs().get(i)).getAttackCount();
                                 iattackmod = (initiator.getSkilllist().getProcs().get(i)).getDamageMultiplier();
-                                result += initiator.getName() + " activates " + initiator.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                result.append(initiator.getName()).append(" activates ").append(initiator.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                 if (!((MultiHitSkill) initiator.getSkilllist().getProcs().get(i)).getStack()) {
                                     break;
                                 }
@@ -783,7 +783,7 @@ public class Battle {
                                             if (initiator.getSkilllist().getProcs().get(i).isCancel()) {
                                                 defhitcount = 0;
                                             }
-                                            result += initiator.getName() + " activates " + initiator.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                            result.append(initiator.getName()).append(" activates ").append(initiator.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                             break;
                                         }
                                     }
@@ -795,18 +795,18 @@ public class Battle {
                                         if (defender.getSkilllist().getProcs().get(i).getInputStat() == 8) {
                                             if (!initiator.getEquippedWeapon().isUsesMagic()) {
                                                 damage /= defender.getSkilllist().getProcs().get(i).getDamageMultiplier();
-                                                result += defender.getName() + " activates " + defender.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                                result.append(defender.getName()).append(" activates ").append(defender.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                                 break;
                                             }
                                         } else if (defender.getSkilllist().getProcs().get(i).getInputStat() == 9) {
                                             if (initiator.getEquippedWeapon().isUsesMagic()) {
                                                 damage /= defender.getSkilllist().getProcs().get(i).getDamageMultiplier();
-                                                result += defender.getName() + " activates " + defender.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                                result.append(defender.getName()).append(" activates ").append(defender.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                                 break;
                                             }
                                         } else if (defender.getSkilllist().getProcs().get(i).getInputStat() == 10) {
                                             damage /= defender.getSkilllist().getProcs().get(i).getDamageMultiplier();
-                                            result += defender.getName() + " activates " + defender.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                            result.append(defender.getName()).append(" activates ").append(defender.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                             break;
                                         }
                                     }
@@ -820,13 +820,13 @@ public class Battle {
                             }
                             if (Math.random() * 100 < icrit) {
                                 damage *= initiator.getEquippedWeapon().getCritModifier();
-                                result += "***CRITICAL!***\n";
+                                result.append("***CRITICAL!***\n");
                             }
-                            result += initiator.getName() + " hit for " + damage + " damage!\n";
+                            result.append(initiator.getName()).append(" hit for ").append(damage).append(" damage!\n");
                             for (j = 0; j < defender.getSkilllist().getMiracles().size(); j++) {
                                 if (damage > defender.getCurrHP() && defender.getSkilllist().getMiracles().get(j).testMiracle(dstattemp[defender.getSkilllist().getMiracles().get(j).getActivationstat()])) {
                                     damage = defender.getCurrHP() - 1;
-                                    result += defender.getName() + " activated " + defender.getSkilllist().getMiracles().get(j).getName() + " and survived with 1 HP!\n";
+                                    result.append(defender.getName()).append(" activated ").append(defender.getSkilllist().getMiracles().get(j).getName()).append(" and survived with 1 HP!\n");
                                     break;
                                 }
                             }
@@ -835,26 +835,26 @@ public class Battle {
                             }
                             if (iheal > 0) {
                                 initiator.heal(iheal);
-                                result += initiator.getStatus();
+                                result.append(initiator.getStatus());
                             }
                             if (dalive = false) {
-                                result += defender.getName() + " was defeated!\n";
+                                result.append(defender.getName()).append(" was defeated!\n");
                                 break;
                             }
                         } else {
-                            result += initiator.getName() + " missed!\n";
+                            result.append(initiator.getName()).append(" missed!\n");
                         }
                     }
                 }
             }
         } else if (defhitcount > 0 && dalive && ialive && canretaliate) {
-            result += defender.getName() + " attacks " + initiator.getName() + " with " + defender.getEquippedWeapon().getName() + ".\n";
+            result.append(defender.getName()).append(" attacks ").append(initiator.getName()).append(" with ").append(defender.getEquippedWeapon().getName()).append(".\n");
             for (i = 0; i < defender.getSkilllist().getProcs().size(); i++) { //tests for multiattack skills
                 if (defender.getSkilllist().getProcs().get(i).isAttackMulti()) {
                     if (defender.getSkilllist().getProcs().get(i).activate(dstattemp[defender.getSkilllist().getProcs().get(i).getActivationstat()])) {
                         defattack *= ((MultiHitSkill) defender.getSkilllist().getProcs().get(i)).getAttackCount();
                         defattackmod = (defender.getSkilllist().getProcs().get(i)).getDamageMultiplier();
-                        result += defender.getName() + " activates " + defender.getSkilllist().getProcs().get(i).getName() + "!\n";
+                        result.append(defender.getName()).append(" activates ").append(defender.getSkilllist().getProcs().get(i).getName()).append("!\n");
                         if (!((MultiHitSkill) defender.getSkilllist().getProcs().get(i)).getStack()) {
                             break;
                         }
@@ -888,7 +888,7 @@ public class Battle {
                                     if (defender.getSkilllist().getProcs().get(i).isCancel()) {
                                         inithitcount = 0;
                                     }
-                                    result += defender.getName() + " activates " + defender.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                    result.append(defender.getName()).append(" activates ").append(defender.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                     break;
                                 }
                             }
@@ -900,18 +900,18 @@ public class Battle {
                                 if (initiator.getSkilllist().getProcs().get(i).getInputStat() == 8) {
                                     if (!defender.getEquippedWeapon().isUsesMagic()) {
                                         damage /= defender.getSkilllist().getProcs().get(i).getDamageMultiplier();
-                                        result += initiator.getName() + " activates " + initiator.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                        result.append(initiator.getName()).append(" activates ").append(initiator.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                         break;
                                     }
                                 } else if (initiator.getSkilllist().getProcs().get(i).getInputStat() == 9) {
                                     if (defender.getEquippedWeapon().isUsesMagic()) {
                                         damage /= initiator.getSkilllist().getProcs().get(i).getDamageMultiplier();
-                                        result += initiator.getName() + " activates " + initiator.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                        result.append(initiator.getName()).append(" activates ").append(initiator.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                         break;
                                     }
                                 } else if (initiator.getSkilllist().getProcs().get(i).getInputStat() == 10) {
                                     damage /= initiator.getSkilllist().getProcs().get(i).getDamageMultiplier();
-                                    result += initiator.getName() + " activates " + initiator.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                    result.append(initiator.getName()).append(" activates ").append(initiator.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                     break;
                                 }
                             }
@@ -925,13 +925,13 @@ public class Battle {
                     }
                     if (Math.random() * 100 < dcrit) {
                         damage *= defender.getEquippedWeapon().getCritModifier();
-                        result += "***CRITICAL!***\n";
+                        result.append("***CRITICAL!***\n");
                     }
-                    result += defender.getName() + " hit for " + damage + " damage!\n";
+                    result.append(defender.getName()).append(" hit for ").append(damage).append(" damage!\n");
                     for (j = 0; j < initiator.getSkilllist().getMiracles().size(); j++) {
                         if (damage > initiator.getCurrHP() && initiator.getSkilllist().getMiracles().get(j).testMiracle(istattemp[initiator.getSkilllist().getMiracles().get(j).getActivationstat()])) {
                             damage = initiator.getCurrHP() - 1;
-                            result += initiator.getName() + " activated " + initiator.getSkilllist().getMiracles().get(j).getName() + " and survived with 1 HP!\n";
+                            result.append(initiator.getName()).append(" activated ").append(initiator.getSkilllist().getMiracles().get(j).getName()).append(" and survived with 1 HP!\n");
                             break;
                         }
                     }
@@ -940,24 +940,24 @@ public class Battle {
                     }
                     if (dheal > 0) {
                         defender.heal(dheal);
-                        result += defender.getStatus();
+                        result.append(defender.getStatus());
                     }
                     if (ialive = false) {
-                        result += initiator.getName() + " was defeated!\n";
+                        result.append(initiator.getName()).append(" was defeated!\n");
                         break;
                     }
                 } else {
-                    result += defender.getName() + " missed!\n";
+                    result.append(defender.getName()).append(" missed!\n");
                 }
             }
             if (dbrave && ialive) {
-                result += defender.getName() + " attacks again consecutively!\n";
+                result.append(defender.getName()).append(" attacks again consecutively!\n");
                 for (i = 0; i < defender.getSkilllist().getProcs().size(); i++) { //tests for multiattack skills
                     if (defender.getSkilllist().getProcs().get(i).isAttackMulti()) {
                         if (defender.getSkilllist().getProcs().get(i).activate(dstattemp[defender.getSkilllist().getProcs().get(i).getActivationstat()])) {
                             defattack *= ((MultiHitSkill) defender.getSkilllist().getProcs().get(i)).getAttackCount();
                             defattackmod = (defender.getSkilllist().getProcs().get(i)).getDamageMultiplier();
-                            result += defender.getName() + " activates " + defender.getSkilllist().getProcs().get(i).getName() + "!\n";
+                            result.append(defender.getName()).append(" activates ").append(defender.getSkilllist().getProcs().get(i).getName()).append("!\n");
                             if (!((MultiHitSkill) defender.getSkilllist().getProcs().get(i)).getStack()) {
                                 break;
                             }
@@ -991,7 +991,7 @@ public class Battle {
                                         if (defender.getSkilllist().getProcs().get(i).isCancel()) {
                                             inithitcount = 0;
                                         }
-                                        result += defender.getName() + " activates " + defender.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                        result.append(defender.getName()).append(" activates ").append(defender.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                         break;
                                     }
                                 }
@@ -1003,18 +1003,18 @@ public class Battle {
                                     if (initiator.getSkilllist().getProcs().get(i).getInputStat() == 8) {
                                         if (!defender.getEquippedWeapon().isUsesMagic()) {
                                             damage /= defender.getSkilllist().getProcs().get(i).getDamageMultiplier();
-                                            result += initiator.getName() + " activates " + initiator.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                            result.append(initiator.getName()).append(" activates ").append(initiator.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                             break;
                                         }
                                     } else if (initiator.getSkilllist().getProcs().get(i).getInputStat() == 9) {
                                         if (defender.getEquippedWeapon().isUsesMagic()) {
                                             damage /= initiator.getSkilllist().getProcs().get(i).getDamageMultiplier();
-                                            result += initiator.getName() + " activates " + initiator.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                            result.append(initiator.getName()).append(" activates ").append(initiator.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                             break;
                                         }
                                     } else if (initiator.getSkilllist().getProcs().get(i).getInputStat() == 10) {
                                         damage /= initiator.getSkilllist().getProcs().get(i).getDamageMultiplier();
-                                        result += initiator.getName() + " activates " + initiator.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                        result.append(initiator.getName()).append(" activates ").append(initiator.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                         break;
                                     }
                                 }
@@ -1028,13 +1028,13 @@ public class Battle {
                         }
                         if (Math.random() * 100 < dcrit) {
                             damage *= defender.getEquippedWeapon().getCritModifier();
-                            result += "***CRITICAL!***\n";
+                            result.append("***CRITICAL!***\n");
                         }
-                        result += defender.getName() + " hit for " + damage + " damage!\n";
+                        result.append(defender.getName()).append(" hit for ").append(damage).append(" damage!\n");
                         for (j = 0; j < initiator.getSkilllist().getMiracles().size(); j++) {
                             if (damage > initiator.getCurrHP() && initiator.getSkilllist().getMiracles().get(j).testMiracle(istattemp[initiator.getSkilllist().getMiracles().get(j).getActivationstat()])) {
                                 damage = initiator.getCurrHP() - 1;
-                                result += initiator.getName() + " activated " + initiator.getSkilllist().getMiracles().get(j).getName() + " and survived with 1 HP!\n";
+                                result.append(initiator.getName()).append(" activated ").append(initiator.getSkilllist().getMiracles().get(j).getName()).append(" and survived with 1 HP!\n");
                                 break;
                             }
                         }
@@ -1043,25 +1043,25 @@ public class Battle {
                         }
                         if (dheal > 0) {
                             defender.heal(dheal);
-                            result += defender.getStatus();
+                            result.append(defender.getStatus());
                         }
                         if (ialive = false) {
-                            result += initiator.getName() + " was defeated!\n";
+                            result.append(initiator.getName()).append(" was defeated!\n");
                             break;
                         }
                     } else {
-                        result += defender.getName() + " missed!\n";
+                        result.append(defender.getName()).append(" missed!\n");
                     }
                 }
             }
             if (defhitcount > 0 && inithitcount < 1 && canretaliate && ialive && dalive) {
-                    result += defender.getName() + " attacks " + initiator.getName() + " with " + defender.getEquippedWeapon().getName() + ".\n";
+                    result.append(defender.getName()).append(" attacks ").append(initiator.getName()).append(" with ").append(defender.getEquippedWeapon().getName()).append(".\n");
                     for (i = 0; i < defender.getSkilllist().getProcs().size(); i++) { //tests for multiattack skills
                         if (defender.getSkilllist().getProcs().get(i).isAttackMulti()) {
                             if (defender.getSkilllist().getProcs().get(i).activate(dstattemp[defender.getSkilllist().getProcs().get(i).getActivationstat()])) {
                                 defattack *= ((MultiHitSkill) defender.getSkilllist().getProcs().get(i)).getAttackCount();
                                 defattackmod = (defender.getSkilllist().getProcs().get(i)).getDamageMultiplier();
-                                result += defender.getName() + " activates " + defender.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                result.append(defender.getName()).append(" activates ").append(defender.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                 if (!((MultiHitSkill) defender.getSkilllist().getProcs().get(i)).getStack()) {
                                     break;
                                 }
@@ -1095,7 +1095,7 @@ public class Battle {
                                             if (defender.getSkilllist().getProcs().get(i).isCancel()) {
                                                 inithitcount = 0;
                                             }
-                                            result += defender.getName() + " activates " + defender.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                            result.append(defender.getName()).append(" activates ").append(defender.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                             break;
                                         }
                                     }
@@ -1107,18 +1107,18 @@ public class Battle {
                                         if (initiator.getSkilllist().getProcs().get(i).getInputStat() == 8) {
                                             if (!defender.getEquippedWeapon().isUsesMagic()) {
                                                 damage /= defender.getSkilllist().getProcs().get(i).getDamageMultiplier();
-                                                result += initiator.getName() + " activates " + initiator.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                                result.append(initiator.getName()).append(" activates ").append(initiator.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                                 break;
                                             }
                                         } else if (initiator.getSkilllist().getProcs().get(i).getInputStat() == 9) {
                                             if (defender.getEquippedWeapon().isUsesMagic()) {
                                                 damage /= initiator.getSkilllist().getProcs().get(i).getDamageMultiplier();
-                                                result += initiator.getName() + " activates " + initiator.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                                result.append(initiator.getName()).append(" activates ").append(initiator.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                                 break;
                                             }
                                         } else if (initiator.getSkilllist().getProcs().get(i).getInputStat() == 10) {
                                             damage /= initiator.getSkilllist().getProcs().get(i).getDamageMultiplier();
-                                            result += initiator.getName() + " activates " + initiator.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                            result.append(initiator.getName()).append(" activates ").append(initiator.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                             break;
                                         }
                                     }
@@ -1132,13 +1132,13 @@ public class Battle {
                             }
                             if (Math.random() * 100 < dcrit) {
                                 damage *= defender.getEquippedWeapon().getCritModifier();
-                                result += "***CRITICAL!***\n";
+                                result.append("***CRITICAL!***\n");
                             }
-                            result += defender.getName() + " hit for " + damage + " damage!\n";
+                            result.append(defender.getName()).append(" hit for ").append(damage).append(" damage!\n");
                             for (j = 0; j < initiator.getSkilllist().getMiracles().size(); j++) {
                                 if (damage > initiator.getCurrHP() && initiator.getSkilllist().getMiracles().get(j).testMiracle(istattemp[initiator.getSkilllist().getMiracles().get(j).getActivationstat()])) {
                                     damage = initiator.getCurrHP() - 1;
-                                    result += initiator.getName() + " activated " + initiator.getSkilllist().getMiracles().get(j).getName() + " and survived with 1 HP!\n";
+                                    result.append(initiator.getName()).append(" activated ").append(initiator.getSkilllist().getMiracles().get(j).getName()).append(" and survived with 1 HP!\n");
                                     break;
                                 }
                             }
@@ -1147,24 +1147,24 @@ public class Battle {
                             }
                             if (dheal > 0) {
                                 defender.heal(iheal);
-                                result += defender.getStatus();
+                                result.append(defender.getStatus());
                             }
                             if (ialive = false) {
-                                result += initiator.getName() + " was defeated!\n";
+                                result.append(initiator.getName()).append(" was defeated!\n");
                                 break;
                             }
                         } else {
-                            result += defender.getName() + " missed!\n";
+                            result.append(defender.getName()).append(" missed!\n");
                         }
                     }
                     if (dbrave && ialive) {
-                        result += defender.getName() + " attacks again consecutively!\n";
+                        result.append(defender.getName()).append(" attacks again consecutively!\n");
                         for (i = 0; i < defender.getSkilllist().getProcs().size(); i++) { //tests for multiattack skills
                             if (defender.getSkilllist().getProcs().get(i).isAttackMulti()) {
                                 if (defender.getSkilllist().getProcs().get(i).activate(dstattemp[defender.getSkilllist().getProcs().get(i).getActivationstat()])) {
                                     defattack *= ((MultiHitSkill) defender.getSkilllist().getProcs().get(i)).getAttackCount();
                                     defattackmod = (defender.getSkilllist().getProcs().get(i)).getDamageMultiplier();
-                                    result += defender.getName() + " activates " + defender.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                    result.append(defender.getName()).append(" activates ").append(defender.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                     if (!((MultiHitSkill) defender.getSkilllist().getProcs().get(i)).getStack()) {
                                         break;
                                     }
@@ -1198,7 +1198,7 @@ public class Battle {
                                                 if (defender.getSkilllist().getProcs().get(i).isCancel()) {
                                                     inithitcount = 0;
                                                 }
-                                                result += defender.getName() + " activates " + defender.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                                result.append(defender.getName()).append(" activates ").append(defender.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                                 break;
                                             }
                                         }
@@ -1210,18 +1210,18 @@ public class Battle {
                                             if (initiator.getSkilllist().getProcs().get(i).getInputStat() == 8) {
                                                 if (!defender.getEquippedWeapon().isUsesMagic()) {
                                                     damage /= defender.getSkilllist().getProcs().get(i).getDamageMultiplier();
-                                                    result += initiator.getName() + " activates " + initiator.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                                    result.append(initiator.getName()).append(" activates ").append(initiator.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                                     break;
                                                 }
                                             } else if (initiator.getSkilllist().getProcs().get(i).getInputStat() == 9) {
                                                 if (defender.getEquippedWeapon().isUsesMagic()) {
                                                     damage /= initiator.getSkilllist().getProcs().get(i).getDamageMultiplier();
-                                                    result += initiator.getName() + " activates " + initiator.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                                    result.append(initiator.getName()).append(" activates ").append(initiator.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                                     break;
                                                 }
                                             } else if (initiator.getSkilllist().getProcs().get(i).getInputStat() == 10) {
                                                 damage /= initiator.getSkilllist().getProcs().get(i).getDamageMultiplier();
-                                                result += initiator.getName() + " activates " + initiator.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                                result.append(initiator.getName()).append(" activates ").append(initiator.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                                 break;
                                             }
                                         }
@@ -1235,13 +1235,13 @@ public class Battle {
                                 }
                                 if (Math.random() * 100 < dcrit) {
                                     damage *= defender.getEquippedWeapon().getCritModifier();
-                                    result += "***CRITICAL!***\n";
+                                    result.append("***CRITICAL!***\n");
                                 }
-                                result += defender.getName() + " hit for " + damage + " damage!\n";
+                                result.append(defender.getName()).append(" hit for ").append(damage).append(" damage!\n");
                                 for (j = 0; j < initiator.getSkilllist().getMiracles().size(); j++) {
                                     if (damage > initiator.getCurrHP() && initiator.getSkilllist().getMiracles().get(j).testMiracle(istattemp[initiator.getSkilllist().getMiracles().get(j).getActivationstat()])) {
                                         damage = initiator.getCurrHP() - 1;
-                                        result += initiator.getName() + " activated " + initiator.getSkilllist().getMiracles().get(j).getName() + " and survived with 1 HP!\n";
+                                        result.append(initiator.getName()).append(" activated ").append(initiator.getSkilllist().getMiracles().get(j).getName()).append(" and survived with 1 HP!\n");
                                         break;
                                     }
                                 }
@@ -1250,14 +1250,14 @@ public class Battle {
                                 }
                                 if (dheal > 0) {
                                     defender.heal(iheal);
-                                    result += defender.getStatus();
+                                    result.append(defender.getStatus());
                                 }
                                 if (ialive = false) {
-                                    result += initiator.getName() + " was defeated!\n";
+                                    result.append(initiator.getName()).append(" was defeated!\n");
                                     break;
                                 }
                             } else {
-                                result += defender.getName() + " missed!\n";
+                                result.append(defender.getName()).append(" missed!\n");
                             }
                         }
                     }
@@ -1268,7 +1268,7 @@ public class Battle {
                             if (initiator.getSkilllist().getProcs().get(i).activate(istattemp[initiator.getSkilllist().getProcs().get(i).getActivationstat()])) {
                                 initattack *= ((MultiHitSkill) initiator.getSkilllist().getProcs().get(i)).getAttackCount();
                                 iattackmod = (initiator.getSkilllist().getProcs().get(i)).getDamageMultiplier();
-                                result += initiator.getName() + " activates " + initiator.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                result.append(initiator.getName()).append(" activates ").append(initiator.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                 if (!((MultiHitSkill) initiator.getSkilllist().getProcs().get(i)).getStack()) {
                                     break;
                                 }
@@ -1302,7 +1302,7 @@ public class Battle {
                                             if (initiator.getSkilllist().getProcs().get(i).isCancel()) {
                                                 defhitcount = 0;
                                             }
-                                            result += initiator.getName() + " activates " + initiator.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                            result.append(initiator.getName()).append(" activates ").append(initiator.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                             break;
                                         }
                                     }
@@ -1314,18 +1314,18 @@ public class Battle {
                                         if (defender.getSkilllist().getProcs().get(i).getInputStat() == 8) {
                                             if (!initiator.getEquippedWeapon().isUsesMagic()) {
                                                 damage /= defender.getSkilllist().getProcs().get(i).getDamageMultiplier();
-                                                result += defender.getName() + " activates " + defender.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                                result.append(defender.getName()).append(" activates ").append(defender.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                                 break;
                                             }
                                         } else if (defender.getSkilllist().getProcs().get(i).getInputStat() == 9) {
                                             if (initiator.getEquippedWeapon().isUsesMagic()) {
                                                 damage /= defender.getSkilllist().getProcs().get(i).getDamageMultiplier();
-                                                result += defender.getName() + " activates " + defender.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                                result.append(defender.getName()).append(" activates ").append(defender.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                                 break;
                                             }
                                         } else if (defender.getSkilllist().getProcs().get(i).getInputStat() == 10) {
                                             damage /= defender.getSkilllist().getProcs().get(i).getDamageMultiplier();
-                                            result += defender.getName() + " activates " + defender.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                            result.append(defender.getName()).append(" activates ").append(defender.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                             break;
                                         }
                                     }
@@ -1339,13 +1339,13 @@ public class Battle {
                             }
                             if (Math.random() * 100 < icrit) {
                                 damage *= initiator.getEquippedWeapon().getCritModifier();
-                                result += "***CRITICAL!***\n";
+                                result.append("***CRITICAL!***\n");
                             }
-                            result += initiator.getName() + " hit for " + damage + " damage!\n";
+                            result.append(initiator.getName()).append(" hit for ").append(damage).append(" damage!\n");
                             for (j = 0; j < defender.getSkilllist().getMiracles().size(); j++) {
                                 if (damage > defender.getCurrHP() && defender.getSkilllist().getMiracles().get(j).testMiracle(dstattemp[defender.getSkilllist().getMiracles().get(j).getActivationstat()])) {
                                     damage = defender.getCurrHP() - 1;
-                                    result += defender.getName() + " activated " + defender.getSkilllist().getMiracles().get(j).getName() + " and survived with 1 HP!\n";
+                                    result.append(defender.getName()).append(" activated ").append(defender.getSkilllist().getMiracles().get(j).getName()).append(" and survived with 1 HP!\n");
                                     break;
                                 }
                             }
@@ -1354,24 +1354,24 @@ public class Battle {
                             }
                             if (iheal > 0) {
                                 initiator.heal(iheal);
-                                result += initiator.getStatus();
+                                result.append(initiator.getStatus());
                             }
                             if (dalive = false) {
-                                result += defender.getName() + " was defeated!\n";
+                                result.append(defender.getName()).append(" was defeated!\n");
                                 break;
                             }
                         } else {
-                            result += initiator.getName() + " missed!\n";
+                            result.append(initiator.getName()).append(" missed!\n");
                         }
                     }
                     if (ibrave && dalive) {
-                        result += initiator.getName() + " attacks again consecutively!\n";
+                        result.append(initiator.getName()).append(" attacks again consecutively!\n");
                         for (i = 0; i < initiator.getSkilllist().getProcs().size(); i++) { //tests for multiattack skills
                             if (initiator.getSkilllist().getProcs().get(i).isAttackMulti()) {
                                 if (initiator.getSkilllist().getProcs().get(i).activate(istattemp[initiator.getSkilllist().getProcs().get(i).getActivationstat()])) {
                                     initattack *= ((MultiHitSkill) initiator.getSkilllist().getProcs().get(i)).getAttackCount();
                                     iattackmod = (initiator.getSkilllist().getProcs().get(i)).getDamageMultiplier();
-                                    result += initiator.getName() + " activates " + initiator.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                    result.append(initiator.getName()).append(" activates ").append(initiator.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                     if (!((MultiHitSkill) initiator.getSkilllist().getProcs().get(i)).getStack()) {
                                         break;
                                     }
@@ -1405,7 +1405,7 @@ public class Battle {
                                                 if (initiator.getSkilllist().getProcs().get(i).isCancel()) {
                                                     defhitcount = 0;
                                                 }
-                                                result += initiator.getName() + " activates " + initiator.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                                result.append(initiator.getName()).append(" activates ").append(initiator.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                                 break;
                                             }
                                         }
@@ -1417,18 +1417,18 @@ public class Battle {
                                             if (defender.getSkilllist().getProcs().get(i).getInputStat() == 8) {
                                                 if (!initiator.getEquippedWeapon().isUsesMagic()) {
                                                     damage /= defender.getSkilllist().getProcs().get(i).getDamageMultiplier();
-                                                    result += defender.getName() + " activates " + defender.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                                    result.append(defender.getName()).append(" activates ").append(defender.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                                     break;
                                                 }
                                             } else if (defender.getSkilllist().getProcs().get(i).getInputStat() == 9) {
                                                 if (initiator.getEquippedWeapon().isUsesMagic()) {
                                                     damage /= defender.getSkilllist().getProcs().get(i).getDamageMultiplier();
-                                                    result += defender.getName() + " activates " + defender.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                                    result.append(defender.getName()).append(" activates ").append(defender.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                                     break;
                                                 }
                                             } else if (defender.getSkilllist().getProcs().get(i).getInputStat() == 10) {
                                                 damage /= defender.getSkilllist().getProcs().get(i).getDamageMultiplier();
-                                                result += defender.getName() + " activates " + defender.getSkilllist().getProcs().get(i).getName() + "!\n";
+                                                result.append(defender.getName()).append(" activates ").append(defender.getSkilllist().getProcs().get(i).getName()).append("!\n");
                                                 break;
                                             }
                                         }
@@ -1442,13 +1442,13 @@ public class Battle {
                                 }
                                 if (Math.random() * 100 < icrit) {
                                     damage *= initiator.getEquippedWeapon().getCritModifier();
-                                    result += "***CRITICAL!***\n";
+                                    result.append("***CRITICAL!***\n");
                                 }
-                                result += initiator.getName() + " hit for " + damage + " damage!\n";
+                                result.append(initiator.getName()).append(" hit for ").append(damage).append(" damage!\n");
                                 for (j = 0; j < defender.getSkilllist().getMiracles().size(); j++) {
                                     if (damage > defender.getCurrHP() && defender.getSkilllist().getMiracles().get(j).testMiracle(dstattemp[defender.getSkilllist().getMiracles().get(j).getActivationstat()])) {
                                         damage = defender.getCurrHP() - 1;
-                                        result += defender.getName() + " activated " + defender.getSkilllist().getMiracles().get(j).getName() + " and survived with 1 HP!\n";
+                                        result.append(defender.getName()).append(" activated ").append(defender.getSkilllist().getMiracles().get(j).getName()).append(" and survived with 1 HP!\n");
                                         break;
                                     }
                                 }
@@ -1457,14 +1457,14 @@ public class Battle {
                                 }
                                 if (iheal > 0) {
                                     initiator.heal(iheal);
-                                    result += initiator.getStatus();
+                                    result.append(initiator.getStatus());
                                 }
                                 if (dalive = false) {
-                                    result += defender.getName() + " was defeated!\n";
+                                    result.append(defender.getName()).append(" was defeated!\n");
                                     break;
                                 }
                             } else {
-                                result += initiator.getName() + " missed!\n";
+                                result.append(initiator.getName()).append(" missed!\n");
                             }
                         }
                     }
@@ -1475,12 +1475,12 @@ public class Battle {
             if (dalive) {
                 if (!initiator.isNPC()) {
                     initiator.gainExperience(calculateExperience(initiator, defender, false, dstartinghp - defender.getCurrHP()));
-                    result += initiator.getStatus();
+                    result.append(initiator.getStatus());
                 }
             } else {
                 if (!initiator.isNPC()) {
                     initiator.gainExperience(calculateExperience(initiator, defender, true, dstartinghp - defender.getCurrHP()));
-                    result += initiator.getStatus();
+                    result.append(initiator.getStatus());
                 }
             }
         }
@@ -1488,16 +1488,16 @@ public class Battle {
             if (ialive) {
                 if (!defender.isNPC()) {
                     defender.gainExperience(calculateExperience(defender, initiator, false, istartinghp - initiator.getCurrHP()));
-                    result += defender.getStatus();
+                    result.append(defender.getStatus());
                 }
             } else {
                 if (!defender.isNPC()) {
                     defender.gainExperience(calculateExperience(defender, initiator, true, istartinghp - initiator.getCurrHP()));
-                    result += defender.getStatus();
+                    result.append(defender.getStatus());
                 }
             }
         }
-        return result;
+        return result.toString();
     }
 
     public String battleForecast(Character initiator, Character defender) { // returns a string containing the battle forecast
@@ -1754,7 +1754,7 @@ public class Battle {
         return result;
     }
 
-    public int CalculateHit(Character c, boolean init) { //calculates hitrate of character before skills
+    private int CalculateHit(Character c, boolean init) { //calculates hitrate of character before skills
         double hit = 0;
         hit += c.getStats()[3] * 1.5;
         hit += c.getStats()[5] * 0.5;
@@ -1782,7 +1782,7 @@ public class Battle {
         return (int) hit;
     }
 
-    public int CalculateAvoid(Character c, boolean init) { //calculates avoid of character before skills
+    private int CalculateAvoid(Character c, boolean init) { //calculates avoid of character before skills
         double avoid = 0;
         avoid += c.getStats()[4] * 1.5;
         avoid += c.getStats()[5] * 0.5;
@@ -1808,7 +1808,7 @@ public class Battle {
         return (int) avoid;
     }
 
-    public int CalculateCrit(Character c, boolean init) { //calculates crit chance of character before skills
+    private int CalculateCrit(Character c, boolean init) { //calculates crit chance of character before skills
         double crit = 0;
         crit += c.getStats()[3] * 0.5;
         crit += c.getCurrentClass().getClassBonuses()[10];
@@ -1832,7 +1832,7 @@ public class Battle {
         return (int) crit;
     }
 
-    public int CalculateDamage(Character i, boolean init) { //calculates estimated raw damage character will deal before defenses
+    private int CalculateDamage(Character i, boolean init) { //calculates estimated raw damage character will deal before defenses
         int damage = 0;
         int j;
         if (i.isEquippingWeapon()) {
@@ -1876,7 +1876,7 @@ public class Battle {
         return damage;
     }
 
-    public int CalculateDefenses(Character i, boolean magic, boolean init) { //calculates defense character has against a damage type
+    private int CalculateDefenses(Character i, boolean magic, boolean init) { //calculates defense character has against a damage type
         int defense = 0;
         int j;
         if (magic) {
@@ -1917,7 +1917,7 @@ public class Battle {
         return defense;
     }
 
-    public int canDouble(Character i, Character d) { //calculates if character can double enemy
+    private int canDouble(Character i, Character d) { //calculates if character can double enemy
         int doub = 0;
         if (i.getEquippedWeapon().canDouble()) {
             int ispeed = i.getStats()[4] + i.getEquippedWeapon().getStatBonuses()[4] + i.getCurrentClass().getClassBonuses()[4];
@@ -1944,7 +1944,7 @@ public class Battle {
         return doub;
     }
 
-    public boolean isEffective(Character i, Character d) {
+    private boolean isEffective(Character i, Character d) {
         boolean eff = false;
         if (i.getEquippedWeapon().isAntiArmor() && d.getCurrentClass().isArmored()) {
             eff = true;
@@ -1961,7 +1961,7 @@ public class Battle {
         return eff;
     }
 
-    public int calculateExperience(Character i, Character d, boolean killed, int damage) {
+    private int calculateExperience(Character i, Character d, boolean killed, int damage) {
         int e = 0;
         if (damage < 1) { return 1; }
         int damageexp = (31 + (d.getLevel() + (d.getCurrentClass().getTier() * 20 - 20) - (i.getLevel() + (i.getCurrentClass().getTier() * 20 - 20))));

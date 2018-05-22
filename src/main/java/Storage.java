@@ -5,37 +5,37 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Storage {
-    Map charhash = Collections.synchronizedMap(new HashMap<String, Character>(200));
-    Map itemhash = Collections.synchronizedMap(new HashMap<String, Item>(200));
-    Map classhash = Collections.synchronizedMap(new HashMap<String, Class>(200));
-    Map skillhash = Collections.synchronizedMap(new HashMap<String, Skill>(200));
-    public void addCharacter(String s, Character c) { charhash.put(s, c); }
-    public void addItem(String s, Item i) { itemhash.put(s, i); }
-    public void addClass(String s, Class c) { classhash.put(s, c); }
-    public void addSkill(String s, Skill sk) { skillhash.put(s, sk); }
-    public boolean hasCharacter(String s) { return charhash.containsKey(s); }
-    public boolean hasItem(String s) { return itemhash.containsKey(s); }
-    public boolean hasClass(String s) { return classhash.containsKey(s); }
-    public boolean hasSkill(String s) { return skillhash.containsKey(s); }
-    public Character getCharacter(String s) { return (Character)charhash.get(s); }
-    public Item getItem(String s) { return (Item)itemhash.get(s); }
-    public Class getClass(String s) { return (Class)classhash.get(s); }
-    public Skill getSkill(String s) { return (Skill)skillhash.get(s); }
-    public void removeCharacter(String s) { charhash.remove(s); }
+    private Map charhash = Collections.synchronizedMap(new HashMap<String, Character>(200));
+    private Map itemhash = Collections.synchronizedMap(new HashMap<String, Item>(200));
+    private Map classhash = Collections.synchronizedMap(new HashMap<String, Class>(200));
+    private Map skillhash = Collections.synchronizedMap(new HashMap<String, Skill>(200));
+    void addCharacter(String s, Character c) { charhash.put(s, c); }
+    void addItem(String s, Item i) { itemhash.put(s, i); }
+    void addClass(String s, Class c) { classhash.put(s, c); }
+    void addSkill(String s, Skill sk) { skillhash.put(s, sk); }
+    boolean hasCharacter(String s) { return charhash.containsKey(s); }
+    boolean hasItem(String s) { return itemhash.containsKey(s); }
+    boolean hasClass(String s) { return classhash.containsKey(s); }
+    boolean hasSkill(String s) { return skillhash.containsKey(s); }
+    Character getCharacter(String s) { return (Character)charhash.get(s); }
+    Item getItem(String s) { return (Item)itemhash.get(s); }
+    Class getClass(String s) { return (Class)classhash.get(s); }
+    Skill getSkill(String s) { return (Skill)skillhash.get(s); }
+    void removeCharacter(String s) { charhash.remove(s); }
     public void removeItem(String s) { itemhash.remove(s); }
     public void removeClass(String s) { classhash.remove(s); }
-    public void removeSkill(String s) { skillhash.remove(s); }
-    public Character[] getcharlist() {
+    void removeSkill(String s) { skillhash.remove(s); }
+    Character[] getcharlist() {
         Collection<Character> tempchar = charhash.values();
         Character[] chararray = tempchar.toArray(new Character[0]);
         return chararray;
     }
-    public Class[] getclasslist() {
+    Class[] getclasslist() {
         Collection<Character> tempclass = classhash.values();
         Class[] classarray = tempclass.toArray(new Class[0]);
         return classarray;
     }
-    public Skill[] getskilllist() {
+    Skill[] getskilllist() {
         Collection<Character> tempskill = skillhash.values();
         Skill[] skillarray = tempskill.toArray(new Skill[0]);
         return skillarray;
@@ -45,7 +45,7 @@ public class Storage {
         Item[] itemarray = tempitem.toArray(new Item[0]);
         return itemarray;
     }
-    public void saveData()
+    void saveData()
     {
         Collection<Character> tempchar = charhash.values();
         Collection<Item> tempitem = itemhash.values();
@@ -140,7 +140,7 @@ public class Storage {
             System.out.println(e);
         }
     }
-    public void loadData()
+    void loadData()
     {
         try {
             File[] charfiles = new File(System.getProperty("user.dir") + "/characters/").listFiles();

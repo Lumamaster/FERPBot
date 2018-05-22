@@ -10,42 +10,6 @@ import sx.blah.discord.util.RateLimitException;
 
 import java.util.List;
 
-/**List of commands that users can input:
- * WEAPON COMMANDS
- * !setphysadvantage weapon weapontype
- * !setphysweakness weapon weapontype
- * !setmagadvantage weapon weapontype
- * !setmagdisadvantage weapon weapontype
- * !setrequiredweaponrank weapon rank
- * !setweaponeffectiveness weapon weapontype yes/no
- * !setarmorslaying weapon yes/no
- * !setantifliers weapon yes/no
- * !setantimounted weapon yes/no
- * !settargetsres weapon yes/no
- * !setusesmagicstat weapon yes/no
- * !setweaponhitrate weapon hitrate
- * !setweaponmight weapon might
- * !setweaponcritrate weapon critrate
- * !setweaponcounterable weapon yes/no
- * !setminweaponrange weapon range
- * !setmaxweaponrange weapon range
- * !setbraveweapon weapon yes/no
- * !setweaponcandouble weapon yes/no
- * !setweaponignoredefense weapon yes/no
- * !setlifesteal weapon yes/no
- *
- * STAFF COMMANDS
- * !setstaffrank staff rank
- * !sethealingstaff staff yes/no
- * !setstaffmagmulti staff multiplier
- *
- * BATTLE COMMANDS
- * !battle initiator defender
- * !battlecommand initiator defender command
- * !battleforecast char1 char2
- * !battlestaff initiator target
- */
-
 public class FERPBot extends BaseBot implements IListener<MessageEvent> {
     private Storage store = new Storage();
 
@@ -3436,13 +3400,16 @@ public class FERPBot extends BaseBot implements IListener<MessageEvent> {
                             printmessage("Invalid argument amount. Usage: !makeindestructible \"item\" true/false", channel);
                         } else {
                             boolean indes;
-                            if (m[2].equals("true")) {
-                                indes = true;
-                            } else if (m[2].equals("false")) {
-                                indes = false;
-                            } else {
-                                printmessage("Please use true/false.", channel);
-                                return;
+                            switch (m[2]) {
+                                case "true":
+                                    indes = true;
+                                    break;
+                                case "false":
+                                    indes = false;
+                                    break;
+                                default:
+                                    printmessage("Please use true/false.", channel);
+                                    return;
                             }
                             if (store.hasItem(m[1])) {
                                 store.getItem(m[1]).setIndestructible(indes);
@@ -3459,7 +3426,12 @@ public class FERPBot extends BaseBot implements IListener<MessageEvent> {
                             printmessage("Invalid argument amount. Usage: !useitem \"char\" \"item\"", channel);
                         } else {
                             if (store.hasItem(m[1])) {
-
+                                store.getItem(m[1]).use();
+                                if (store.getItem(m[1]).getCurrUses() == 0) {
+                                    store.getItem(m[1]).isBroken();
+                                    printmessage(store.getItem(m[1]).getStatus(), channel);
+                                    store.saveData();
+                                }
                             } else {
                                 printmessage("Item does not exist.", channel);
                             }
@@ -3470,7 +3442,14 @@ public class FERPBot extends BaseBot implements IListener<MessageEvent> {
                         if (m.length != 3) {
                             printmessage("Invalid argument amount. Usage: !breakitem \"char\" \"item\"", channel);
                         } else {
-
+                            if (store.hasItem(m[1])) {
+                                store.getItem(m[1]).setCurrUses(0);
+                                store.getItem(m[1]).isBroken();
+                                printmessage(store.getItem(m[1]).getStatus(), channel);
+                                store.saveData();
+                            } else {
+                                printmessage("Item does not exist.", channel);
+                            }
                         }
                     }
                     if (m[0].equals("iteminfo")) // item
@@ -3478,7 +3457,1025 @@ public class FERPBot extends BaseBot implements IListener<MessageEvent> {
                         if (m.length != 3) {
                             printmessage("Invalid argument amount. Usage: !iteminfo \"item\"", channel);
                         } else {
+                            if (store.hasItem(m[1])) {
+                                String temp = "***Item Info:***\n";
+                                temp += "**Name: **" + store.getItem(m[1]).getName() + "\n";
+                                temp += "**Description: **\n" + store.getItem(m[1]).getDescription() + "\n";
+                                if (store.getItem(m[1]).isIndestructible()) {
+                                    temp += "**Uses: ** --/--\n";
+                                } else {
+                                    temp += "**Uses: **" + store.getItem(m[1]).getCurrUses() + "/" + store.getItem(m[1]).getMaxUses() + "\n";
+                                }
+                                if (store.getItem(m[1]).isWeapon()) {
+                                    temp += "**Weapon Type: **";
+                                    switch (((Weapon) store.getItem(m[1])).getWeapontype()) {
+                                        case 0:
+                                            temp += "None\n";
+                                            break;
+                                        case 1:
+                                            temp += "Sword\n";
+                                            break;
+                                        case 2:
+                                            temp += "Lance\n";
+                                            break;
+                                        case 3:
+                                            temp += "Axe\n";
+                                            break;
+                                        case 4:
+                                            temp += "Anima\n";
+                                            break;
+                                        case 5:
+                                            temp += "Light\n";
+                                            break;
+                                        case 6:
+                                            temp += "Dark\n";
+                                            break;
+                                        case 7:
+                                            temp += "Bow\n";
+                                            break;
+                                    }
+                                    String rank = "E";
+                                    switch (((Weapon) store.getItem(m[1])).getWeaponRank()) {
+                                        case 0:
+                                            rank = "E";
+                                            break;
+                                        case 1:
+                                            rank = "D";
+                                            break;
+                                        case 2:
+                                            rank = "C";
+                                            break;
+                                        case 3:
+                                            rank = "B";
+                                            break;
+                                        case 4:
+                                            rank = "A";
+                                            break;
+                                        case 5:
+                                            rank = "S";
+                                            break;
+                                    }
+                                    temp += "**Weapon Rank: **" + rank + "\n";
+                                    temp += "**Hit: **" + ((Weapon)store.getItem(m[1])).getHitRate() + "\n";
+                                    temp += "**Might: **" + ((Weapon)store.getItem(m[1])).getMight() + "\n";
+                                    temp += "**Crit: **" + ((Weapon)store.getItem(m[1])).getCritRate() + "\n";
+                                    temp += "**Crit Damage: **" + ((Weapon)store.getItem(m[1])).getCritModifier() + "x\n";
+                                    temp += "**Range: **" + ((Weapon)store.getItem(m[1])).getMinRange() + "-" + ((Weapon)store.getItem(m[1])).getMaxRange() + "\n";
+                                    temp += "**Advantageous Against: **\n";
+                                    if (((Weapon)store.getItem(m[1])).getPhysicalAdvantage() != 0) {
+                                        temp += ((Weapon)store.getItem(m[1])).weapontypes[((Weapon)store.getItem(m[1])).getPhysicalAdvantage()] + "\n";
+                                    }
+                                    if (((Weapon)store.getItem(m[1])).getMagicalAdvantage() != 0) {
+                                        temp += ((Weapon)store.getItem(m[1])).weapontypes[((Weapon)store.getItem(m[1])).getMagicalAdvantage()] + "\n";
+                                    }
+                                    temp += "**Disadvantageous Against: **\n";
+                                    if (((Weapon)store.getItem(m[1])).getPhysicalWeakness() != 0) {
+                                        temp += ((Weapon)store.getItem(m[1])).weapontypes[((Weapon)store.getItem(m[1])).getPhysicalWeakness()] + "\n";
+                                    }
+                                    if (((Weapon)store.getItem(m[1])).getMagicalWeakness() != 0) {
+                                        temp += ((Weapon)store.getItem(m[1])).weapontypes[((Weapon)store.getItem(m[1])).getMagicalWeakness()] + "\n";
+                                    }
+                                    temp += "**Effective Against: **\n";
+                                    if (((Weapon)store.getItem(m[1])).isEffectiveAgainst(0)) {
+                                        temp += "Swords\n";
+                                    } else if (((Weapon)store.getItem(m[1])).isEffectiveAgainst(1)) {
+                                        temp += "Axes\n";
+                                    } else if (((Weapon)store.getItem(m[1])).isEffectiveAgainst(2)) {
+                                        temp += "Lances\n";
+                                    } else if (((Weapon)store.getItem(m[1])).isEffectiveAgainst(3)) {
+                                        temp += "Anima\n";
+                                    } else if (((Weapon)store.getItem(m[1])).isEffectiveAgainst(4)) {
+                                        temp += "Light\n";
+                                    } else if (((Weapon)store.getItem(m[1])).isEffectiveAgainst(5)) {
+                                        temp += "Dark\n";
+                                    } else if (((Weapon)store.getItem(m[1])).isEffectiveAgainst(6)) {
+                                        temp += "Bows\n";
+                                    }
+                                    temp += "**Weapon Attributes: **\n";
+                                    if (!((Weapon)store.getItem(m[1])).canDouble()) {
+                                        temp += "Cannot double.\n";
+                                    }
+                                    if (((Weapon)store.getItem(m[1])).isBrave()) {
+                                        temp += "Brave.\n";
+                                    }
+                                    if (!((Weapon)store.getItem(m[1])).isCounterable()) {
+                                        temp += "Uncounterable.\n";
+                                    }
+                                    if (((Weapon)store.getItem(m[1])).isAntiArmor()) {
+                                        temp += "Armorslaying.\n";
+                                    }
+                                    if (((Weapon)store.getItem(m[1])).isAntiFlier()) {
+                                        temp += "Anti-Fliers.\n";
+                                    }
+                                    if (((Weapon)store.getItem(m[1])).isAntimounted()) {
+                                        temp += "Anti-mounted.\n";
+                                    }
+                                    if (((Weapon)store.getItem(m[1])).isUsesMagic()) {
+                                        temp += "Magic weapon.\n";
+                                    } else {
+                                        temp += "Physical weapon.\n";
+                                    }
+                                    if (((Weapon)store.getItem(m[1])).isMagicTarget()) {
+                                        temp += "Targets resistance.\n";
+                                    } else {
+                                        temp += "Targets defense.\n";
+                                    }
+                                    if (((Weapon)store.getItem(m[1])).isLifeSteal()) {
+                                        temp += "Restores HP equal to damage dealt.\n";
+                                    }
+                                    if (((Weapon)store.getItem(m[1])).isIgnoreDefense()) {
+                                        temp += "Ignores defenses.\n";
+                                    }
+                                    if (((Weapon)store.getItem(m[1])).getStatBonuses()[0] > 1) {
+                                        temp += "Boosts HP by " + ((Weapon)store.getItem(m[1])).getStatBonuses()[0] + " while equipped.\n";
+                                    }
+                                    if (((Weapon)store.getItem(m[1])).getStatBonuses()[1] > 1) {
+                                        temp += "Boosts Strength by " + ((Weapon)store.getItem(m[1])).getStatBonuses()[1] + " while equipped.\n";
+                                    }
+                                    if (((Weapon)store.getItem(m[1])).getStatBonuses()[2] > 1) {
+                                        temp += "Boosts Magic by " + ((Weapon)store.getItem(m[1])).getStatBonuses()[2] + " while equipped.\n";
+                                    }
+                                    if (((Weapon)store.getItem(m[1])).getStatBonuses()[3] > 1) {
+                                        temp += "Boosts Skill by " + ((Weapon)store.getItem(m[1])).getStatBonuses()[3] + " while equipped.\n";
+                                    }
+                                    if (((Weapon)store.getItem(m[1])).getStatBonuses()[4] > 1) {
+                                        temp += "Boosts Speed by " + ((Weapon)store.getItem(m[1])).getStatBonuses()[4] + " while equipped.\n";
+                                    }
+                                    if (((Weapon)store.getItem(m[1])).getStatBonuses()[5] > 1) {
+                                        temp += "Boosts Luck by " + ((Weapon)store.getItem(m[1])).getStatBonuses()[5] + " while equipped.\n";
+                                    }
+                                    if (((Weapon)store.getItem(m[1])).getStatBonuses()[6] > 1) {
+                                        temp += "Boosts Defense by " + ((Weapon)store.getItem(m[1])).getStatBonuses()[6] + " while equipped.\n";
+                                    }
+                                    if (((Weapon)store.getItem(m[1])).getStatBonuses()[7] > 1) {
+                                        temp += "Boosts Resistance by " + ((Weapon)store.getItem(m[1])).getStatBonuses()[7] + " while equipped.\n";
+                                    }
+                                    if (((Weapon)store.getItem(m[1])).getStatBonuses()[8] > 1) {
+                                        temp += "Boosts Hit by " + ((Weapon)store.getItem(m[1])).getStatBonuses()[8] + " while equipped.\n";
+                                    }
+                                    if (((Weapon)store.getItem(m[1])).getStatBonuses()[9] > 1) {
+                                        temp += "Boosts Avoid by " + ((Weapon)store.getItem(m[1])).getStatBonuses()[9] + " while equipped.\n";
+                                    }
+                                    if (((Weapon)store.getItem(m[1])).getStatBonuses()[10] > 1) {
+                                        temp += "Boosts Crit by " + ((Weapon)store.getItem(m[1])).getStatBonuses()[10] + " while equipped.\n";
+                                    }
+                                } else if (store.getItem(m[1]).isStaff()) {
+                                    String rank = "E";
+                                    switch (((Staff) store.getItem(m[1])).getWeaponRank()) {
+                                        case 0:
+                                            rank = "E";
+                                            break;
+                                        case 1:
+                                            rank = "D";
+                                            break;
+                                        case 2:
+                                            rank = "C";
+                                            break;
+                                        case 3:
+                                            rank = "B";
+                                            break;
+                                        case 4:
+                                            rank = "A";
+                                            break;
+                                        case 5:
+                                            rank = "S";
+                                            break;
+                                    }
+                                    temp += "**Weapon Rank: **" + rank + "\n";
+                                    temp += "**Staff Type: **";
+                                    if (((Staff) store.getItem(m[1])).isHealing()) {
+                                        temp += "Healing\n";
+                                        temp += "**Base Healing Amount:** " + ((Staff) store.getItem(m[1])).getBaseHeal() + "\n";
+                                        temp += "**Bonus Heal Per Magic:** " + ((Staff) store.getItem(m[1])).getMagicMultiplier() + "\n";
+                                    } else {
+                                        temp += "Status\n";
+                                    }
 
+                                } else if (store.getItem(m[1]).isBuff()) {
+                                    if (((Consumable)store.getItem(m[1])).isHealing()) {
+                                        temp += "Heals the user for " + ((Consumable)store.getItem(m[1])).getHealAmount() + " HP.\n";
+                                    }
+                                    if (((Consumable)store.getItem(m[1])).getStatModifiers()[0] > 0) {
+                                        temp += "Boosts max HP by: " + ((Consumable)store.getItem(m[1])).getStatModifiers()[0];
+                                    }
+                                    if (((Consumable)store.getItem(m[1])).getStatModifiers()[1] > 0) {
+                                        temp += "Boosts Strength by: " + ((Consumable)store.getItem(m[1])).getStatModifiers()[0];
+                                    }
+                                    if (((Consumable)store.getItem(m[1])).getStatModifiers()[2] > 0) {
+                                        temp += "Boosts Magic by: " + ((Consumable)store.getItem(m[1])).getStatModifiers()[0];
+                                    }
+                                    if (((Consumable)store.getItem(m[1])).getStatModifiers()[3] > 0) {
+                                        temp += "Boosts Skill by: " + ((Consumable)store.getItem(m[1])).getStatModifiers()[0];
+                                    }
+                                    if (((Consumable)store.getItem(m[1])).getStatModifiers()[4] > 0) {
+                                        temp += "Boosts Speed by: " + ((Consumable)store.getItem(m[1])).getStatModifiers()[0];
+                                    }
+                                    if (((Consumable)store.getItem(m[1])).getStatModifiers()[5] > 0) {
+                                        temp += "Boosts Luck by: " + ((Consumable)store.getItem(m[1])).getStatModifiers()[0];
+                                    }
+                                    if (((Consumable)store.getItem(m[1])).getStatModifiers()[6] > 0) {
+                                        temp += "Boosts Defense by: " + ((Consumable)store.getItem(m[1])).getStatModifiers()[0];
+                                    }
+                                    if (((Consumable)store.getItem(m[1])).getStatModifiers()[7] > 0) {
+                                        temp += "Boosts Resistance by: " + ((Consumable)store.getItem(m[1])).getStatModifiers()[0];
+                                    }
+                                    if (((Consumable)store.getItem(m[1])).getStatModifiers()[8] > 0) {
+                                        temp += "Boosts Hit by: " + ((Consumable)store.getItem(m[1])).getStatModifiers()[0];
+                                    }
+                                    if (((Consumable)store.getItem(m[1])).getStatModifiers()[9] > 0) {
+                                        temp += "Boosts Avoid by: " + ((Consumable)store.getItem(m[1])).getStatModifiers()[0];
+                                    }
+                                    if (((Consumable)store.getItem(m[1])).getStatModifiers()[10] > 0) {
+                                        temp += "Boosts Crit by: " + ((Consumable)store.getItem(m[1])).getStatModifiers()[0];
+                                    }
+                                }
+                                printmessage(temp, channel);
+                            } else {
+                                printmessage("Item does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("setphysadvantage")) // weapon weapontype
+                    {
+                        if (m.length != 3) {
+                            printmessage("Invalid argument amount. Usage: !setphysadvantage \"weapon\" weapontype", channel);
+                        } else {
+                            if (store.hasItem(m[1])) {
+                                if (store.getItem(m[1]).isWeapon()) {
+                                    int weapon;
+                                    switch (m[2]) {
+                                        case "Sword":
+                                            weapon = 0;
+                                            break;
+                                        case "Lance":
+                                            weapon = 1;
+                                            break;
+                                        case "Axe":
+                                            weapon = 2;
+                                            break;
+                                        case "Bow":
+                                            weapon = 6;
+                                            break;
+                                        default:
+                                            printmessage("Invalid weapon type inputted. The bot currently only supports: \"Sword, Lance, Axe, Bow\".", channel);
+                                            return;
+                                    }
+                                    ((Weapon)store.getItem(m[1])).setPhysicalAdvantage(weapon);
+                                    printmessage(store.getItem(m[1]).getStatus(), channel);
+                                    store.saveData();
+                                } else {
+                                    printmessage("Item is not a weapon.", channel);
+                                }
+                            } else {
+                                printmessage("Item does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("setphysweakness")) // weapon weapontype
+                    {
+                        if (m.length != 3) {
+                            printmessage("Invalid argument amount. Usage: !setphysweakness \"weapon\" weapontype", channel);
+                        } else {
+                            if (store.hasItem(m[1])) {
+                                if (store.getItem(m[1]).isWeapon()) {
+                                    int weapon;
+                                    switch (m[2]) {
+                                        case "Sword":
+                                            weapon = 0;
+                                            break;
+                                        case "Lance":
+                                            weapon = 1;
+                                            break;
+                                        case "Axe":
+                                            weapon = 2;
+                                            break;
+                                        case "Bow":
+                                            weapon = 6;
+                                            break;
+                                        default:
+                                            printmessage("Invalid weapon type inputted. The bot currently only supports: \"Sword, Lance, Axe, Bow\".", channel);
+                                            return;
+                                    }
+                                    ((Weapon)store.getItem(m[1])).setPhysicalWeakness(weapon);
+                                    printmessage(store.getItem(m[1]).getStatus(), channel);
+                                    store.saveData();
+                                } else {
+                                    printmessage("Item is not a weapon.", channel);
+                                }
+                            } else {
+                                printmessage("Item does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("setmagadvantage")) // weapon weapontype
+                    {
+                        if (m.length != 3) {
+                            printmessage("Invalid argument amount. Usage: !setmagadvantage \"weapon\" weapontype", channel);
+                        } else {
+                            if (store.hasItem(m[1])) {
+                                if (store.getItem(m[1]).isWeapon()) {
+                                    int weapon;
+                                    switch (m[2]) {
+                                        case "Anima":
+                                            weapon = 3;
+                                            break;
+                                        case "Light":
+                                            weapon = 4;
+                                            break;
+                                        case "Dark":
+                                            weapon = 5;
+                                            break;
+                                        default:
+                                            printmessage("Invalid weapon type inputted. The bot currently only supports: \"Anima, Light, Dark\".", channel);
+                                            return;
+                                    }
+                                    ((Weapon)store.getItem(m[1])).setMagicalAdvantage(weapon);
+                                    printmessage(store.getItem(m[1]).getStatus(), channel);
+                                    store.saveData();
+                                } else {
+                                    printmessage("Item is not a weapon.", channel);
+                                }
+                            } else {
+                                printmessage("Item does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("setmagdisadvantage")) // weapon weapontype
+                    {
+                        if (m.length != 3) {
+                            printmessage("Invalid argument amount. Usage: !setmagdisadvantage \"weapon\" weapontype", channel);
+                        } else {
+                            if (store.hasItem(m[1])) {
+                                if (store.getItem(m[1]).isWeapon()) {
+                                    int weapon;
+                                    switch (m[2]) {
+                                        case "Anima":
+                                            weapon = 3;
+                                            break;
+                                        case "Light":
+                                            weapon = 4;
+                                            break;
+                                        case "Dark":
+                                            weapon = 5;
+                                            break;
+                                        default:
+                                            printmessage("Invalid weapon type inputted. The bot currently only supports: \"Anima, Light, Dark\".", channel);
+                                            return;
+                                    }
+                                    ((Weapon)store.getItem(m[1])).setMagicalWeakness(weapon);
+                                    printmessage(store.getItem(m[1]).getStatus(), channel);
+                                    store.saveData();
+                                } else {
+                                    printmessage("Item is not a weapon.", channel);
+                                }
+                            } else {
+                                printmessage("Item does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("setrequiredweaponrank")) // weapon rank
+                    {
+                        if (m.length != 3) {
+                            printmessage("Invalid argument amount. Usage: !setrequiredweaponrank \"weapon\" weapontype", channel);
+                        } else {
+                            if (store.hasItem(m[1])) {
+                                if (store.getItem(m[1]).isWeapon()) {
+                                    int rank;
+                                    String regex = "\\d+";
+                                    if (m[2].matches(regex)) {
+                                        rank = Integer.parseInt(m[3]);
+                                    } else {
+                                        printmessage("Invalid weapon rank. Ensure it is a number from 0-5 (0 = E, 1 = D, 2 = C, 3 = B, 4 = A, 5 = S).", channel);
+                                        return;
+                                    }
+                                    ((Weapon)store.getItem(m[1])).setWeaponRank(rank);
+                                    printmessage(store.getItem(m[1]).getStatus(), channel);
+                                    store.saveData();
+                                } else {
+                                    printmessage("Item is not a weapon.", channel);
+                                }
+                            } else {
+                                printmessage("Item does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("setweaponeffectiveness")) // weapon weapontype yes/no
+                    {
+                        if (m.length != 4) {
+                            printmessage("Invalid argument amount. Usage: !setweaponeffectiveness \"weapon\" weapontype true/false", channel);
+                        } else {
+                            if (store.hasItem(m[1])) {
+                                if (store.getItem(m[1]).isWeapon()) {
+                                    int weapon;
+                                    boolean effective;
+                                    switch (m[2]) {
+                                        case "Sword":
+                                            weapon = 0;
+                                            break;
+                                        case "Lance":
+                                            weapon = 1;
+                                            break;
+                                        case "Axe":
+                                            weapon = 2;
+                                            break;
+                                        case "Anima":
+                                            weapon = 3;
+                                            break;
+                                        case "Light":
+                                            weapon = 4;
+                                            break;
+                                        case "Dark":
+                                            weapon = 5;
+                                            break;
+                                        case "Bow":
+                                            weapon = 6;
+                                            break;
+                                        default:
+                                            printmessage("Invalid weapon type inputted. The bot currently only supports: \"Sword, Lance, Axe, Bow, Anima, Light, Dark\".", channel);
+                                            return;
+                                    }
+                                    switch (m[3]) {
+                                        case "true":
+                                            effective = true;
+                                            break;
+                                        case "false":
+                                            effective = false;
+                                            break;
+                                        default:
+                                            printmessage("Please use true/false.", channel);
+                                            return;
+                                    }
+                                    ((Weapon)store.getItem(m[1])).setWeaponEffectiveness(weapon, effective);
+                                    printmessage(store.getItem(m[1]).getStatus(), channel);
+                                    store.saveData();
+                                } else {
+                                    printmessage("Item is not a weapon.", channel);
+                                }
+                            } else {
+                                printmessage("Item does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("setarmorslaying")) // weapon yes/no
+                    {
+                        if (m.length != 3) {
+                            printmessage("Invalid argument amount. Usage: !setarmorslaying \"weapon\" true/false", channel);
+                        } else {
+                            if (store.hasItem(m[1])) {
+                                if (store.getItem(m[1]).isWeapon()) {
+                                    boolean slaying;
+                                    switch (m[2]) {
+                                        case "true":
+                                            slaying = true;
+                                            break;
+                                        case "false":
+                                            slaying = false;
+                                            break;
+                                        default:
+                                            printmessage("Please use true/false.", channel);
+                                            return;
+                                    }
+                                    ((Weapon)store.getItem(m[1])).setAntiArmor(slaying);
+                                    printmessage(store.getItem(m[1]).getStatus(), channel);
+                                    store.saveData();
+                                } else {
+                                    printmessage("Item is not a weapon.", channel);
+                                }
+                            } else {
+                                printmessage("Item does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("setantifliers")) // weapon yes/no
+                    {
+                        if (m.length != 3) {
+                            printmessage("Invalid argument amount. Usage: !setantifliers \"weapon\" true/false", channel);
+                        } else {
+                            if (store.hasItem(m[1])) {
+                                if (store.getItem(m[1]).isWeapon()) {
+                                    boolean slaying;
+                                    switch (m[2]) {
+                                        case "true":
+                                            slaying = true;
+                                            break;
+                                        case "false":
+                                            slaying = false;
+                                            break;
+                                        default:
+                                            printmessage("Please use true/false.", channel);
+                                            return;
+                                    }
+                                    ((Weapon)store.getItem(m[1])).setAntiFlier(slaying);
+                                    printmessage(store.getItem(m[1]).getStatus(), channel);
+                                    store.saveData();
+                                } else {
+                                    printmessage("Item is not a weapon.", channel);
+                                }
+                            } else {
+                                printmessage("Item does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("setantimounted")) // weapon yes/no
+                    {
+                        if (m.length != 3) {
+                            printmessage("Invalid argument amount. Usage: !setantimounted \"weapon\" true/false", channel);
+                        } else {
+                            if (store.hasItem(m[1])) {
+                                if (store.getItem(m[1]).isWeapon()) {
+                                    boolean slaying;
+                                    switch (m[2]) {
+                                        case "true":
+                                            slaying = true;
+                                            break;
+                                        case "false":
+                                            slaying = false;
+                                            break;
+                                        default:
+                                            printmessage("Please use true/false.", channel);
+                                            return;
+                                    }
+                                    ((Weapon)store.getItem(m[1])).setAntiMounted(slaying);
+                                    printmessage(store.getItem(m[1]).getStatus(), channel);
+                                    store.saveData();
+                                } else {
+                                    printmessage("Item is not a weapon.", channel);
+                                }
+                            } else {
+                                printmessage("Item does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("settargetsres")) // weapon yes/no
+                    {
+                        if (m.length != 3) {
+                            printmessage("Invalid argument amount. Usage: !settargetres \"weapon\" true/false", channel);
+                        } else {
+                            if (store.hasItem(m[1])) {
+                                if (store.getItem(m[1]).isWeapon()) {
+                                    boolean targres;
+                                    switch (m[2]) {
+                                        case "true":
+                                            targres = true;
+                                            break;
+                                        case "false":
+                                            targres = false;
+                                            break;
+                                        default:
+                                            printmessage("Please use true/false.", channel);
+                                            return;
+                                    }
+                                    ((Weapon)store.getItem(m[1])).setMagicTarget(targres);
+                                    printmessage(store.getItem(m[1]).getStatus(), channel);
+                                    store.saveData();
+                                } else {
+                                    printmessage("Item is not a weapon.", channel);
+                                }
+                            } else {
+                                printmessage("Item does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("setusesmagicstat")) // weapon yes/no
+                    {
+                        if (m.length != 3) {
+                            printmessage("Invalid argument amount. Usage: !setusesmagicstat \"weapon\" true/false", channel);
+                        } else {
+                            if (store.hasItem(m[1])) {
+                                if (store.getItem(m[1]).isWeapon()) {
+                                    boolean magic;
+                                    switch (m[2]) {
+                                        case "true":
+                                            magic = true;
+                                            break;
+                                        case "false":
+                                            magic = false;
+                                            break;
+                                        default:
+                                            printmessage("Please use true/false.", channel);
+                                            return;
+                                    }
+                                    ((Weapon)store.getItem(m[1])).usesMagic(magic);
+                                    printmessage(store.getItem(m[1]).getStatus(), channel);
+                                    store.saveData();
+                                } else {
+                                    printmessage("Item is not a weapon.", channel);
+                                }
+                            } else {
+                                printmessage("Item does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("setweaponhitrate")) // weapon hitrate
+                    {
+                        if (m.length != 3) {
+                            printmessage("Invalid argument amount. Usage: !setweaponhitrate \"weapon\" hitrate", channel);
+                        } else {
+                            if (store.hasItem(m[1])) {
+                                if (store.getItem(m[1]).isWeapon()) {
+                                    int hit;
+                                    String regex = "\\d+";
+                                    if (m[2].matches(regex)) {
+                                        hit = Integer.parseInt(m[2]);
+                                    } else {
+                                        printmessage("Invalid hit rate. Ensure it is a number.", channel);
+                                        return;
+                                    }
+                                    ((Weapon)store.getItem(m[1])).setHitRate(hit);
+                                    printmessage(store.getItem(m[1]).getStatus(), channel);
+                                    store.saveData();
+                                } else {
+                                    printmessage("Item is not a weapon.", channel);
+                                }
+                            } else {
+                                printmessage("Item does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("setweaponmight")) // weapon might
+                    {
+                        if (m.length != 3) {
+                            printmessage("Invalid argument amount. Usage: !setweaponmight \"weapon\" might", channel);
+                        } else {
+                            if (store.hasItem(m[1])) {
+                                if (store.getItem(m[1]).isWeapon()) {
+                                    int might;
+                                    String regex = "\\d+";
+                                    if (m[2].matches(regex)) {
+                                        might = Integer.parseInt(m[2]);
+                                    } else {
+                                        printmessage("Invalid might. Ensure it is a number.", channel);
+                                        return;
+                                    }
+                                    ((Weapon)store.getItem(m[1])).setMight(might);
+                                    printmessage(store.getItem(m[1]).getStatus(), channel);
+                                    store.saveData();
+                                } else {
+                                    printmessage("Item is not a weapon.", channel);
+                                }
+                            } else {
+                                printmessage("Item does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("setweaponcritrate")) // weapon critrate
+                    {
+                        if (m.length != 3) {
+                            printmessage("Invalid argument amount. Usage: !setweaponcritrate \"weapon\" critrate", channel);
+                        } else {
+                            if (store.hasItem(m[1])) {
+                                if (store.getItem(m[1]).isWeapon()) {
+                                    int crit;
+                                    String regex = "\\d+";
+                                    if (m[2].matches(regex)) {
+                                        crit = Integer.parseInt(m[2]);
+                                    } else {
+                                        printmessage("Invalid crit rate. Ensure it is a number.", channel);
+                                        return;
+                                    }
+                                    ((Weapon)store.getItem(m[1])).setCritRate(crit);
+                                    printmessage(store.getItem(m[1]).getStatus(), channel);
+                                    store.saveData();
+                                } else {
+                                    printmessage("Item is not a weapon.", channel);
+                                }
+                            } else {
+                                printmessage("Item does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("setweaponcounterable")) // weapon yes/no
+                    {
+                        if (m.length != 3) {
+                            printmessage("Invalid argument amount. Usage: !setweaponcounterable \"weapon\" yes/no", channel);
+                        } else {
+                            if (store.hasItem(m[1])) {
+                                if (store.getItem(m[1]).isWeapon()) {
+                                    boolean counter;
+                                    switch (m[2]) {
+                                        case "true":
+                                            counter = true;
+                                            break;
+                                        case "false":
+                                            counter = false;
+                                            break;
+                                        default:
+                                            printmessage("Please use true/false.", channel);
+                                            return;
+                                    }
+                                    ((Weapon)store.getItem(m[1])).setCounterable(counter);
+                                    printmessage(store.getItem(m[1]).getStatus(), channel);
+                                    store.saveData();
+                                } else {
+                                    printmessage("Item is not a weapon.", channel);
+                                }
+                            } else {
+                                printmessage("Item does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("setminweaponrange")) // weapon range
+                        if (m.length != 3) {
+                            printmessage("Invalid argument amount. Usage: !setminweaponrange \"weapon\" range", channel);
+                        } else {
+                            if (store.hasItem(m[1])) {
+                                if (store.getItem(m[1]).isWeapon()) {
+                                    int range;
+                                    String regex = "\\d+";
+                                    if (m[2].matches(regex)) {
+                                        range = Integer.parseInt(m[2]);
+                                    } else {
+                                        printmessage("Invalid range. Ensure it is a number.", channel);
+                                        return;
+                                    }
+                                    ((Weapon)store.getItem(m[1])).setMinRange(range);
+                                    printmessage(store.getItem(m[1]).getStatus(), channel);
+                                    store.saveData();
+                                } else {
+                                    printmessage("Item is not a weapon.", channel);
+                                }
+                            } else {
+                                printmessage("Item does not exist.", channel);
+                            }
+                        }
+                    if (m[0].equals("setmaxweaponrange")) // weapon range
+                    {
+                        if (m.length != 3) {
+                            printmessage("Invalid argument amount. Usage: !setmaxweaponrange \"weapon\" range", channel);
+                        } else {
+                            if (store.hasItem(m[1])) {
+                                if (store.getItem(m[1]).isWeapon()) {
+                                    int range;
+                                    String regex = "\\d+";
+                                    if (m[2].matches(regex)) {
+                                        range = Integer.parseInt(m[2]);
+                                    } else {
+                                        printmessage("Invalid range. Ensure it is a number.", channel);
+                                        return;
+                                    }
+                                    ((Weapon)store.getItem(m[1])).setMaxRange(range);
+                                    printmessage(store.getItem(m[1]).getStatus(), channel);
+                                    store.saveData();
+                                } else {
+                                    printmessage("Item is not a weapon.", channel);
+                                }
+                            } else {
+                                printmessage("Item does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("setbraveweapon")) // weapon yes/no
+                    {
+                        if (m.length != 3) {
+                            printmessage("Invalid argument amount. Usage: !setbraveweapon \"weapon\" yes/no", channel);
+                        } else {
+                            if (store.hasItem(m[1])) {
+                                if (store.getItem(m[1]).isWeapon()) {
+                                    boolean brave;
+                                    switch (m[2]) {
+                                        case "true":
+                                            brave = true;
+                                            break;
+                                        case "false":
+                                            brave = false;
+                                            break;
+                                        default:
+                                            printmessage("Please use true/false.", channel);
+                                            return;
+                                    }
+                                    ((Weapon)store.getItem(m[1])).setBrave(brave);
+                                    printmessage(store.getItem(m[1]).getStatus(), channel);
+                                    store.saveData();
+                                } else {
+                                    printmessage("Item is not a weapon.", channel);
+                                }
+                            } else {
+                                printmessage("Item does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("setweaponcandouble")) // weapon yes/no
+                    {
+                        if (m.length != 3) {
+                            printmessage("Invalid argument amount. Usage: !setweaponcandouble \"weapon\" true/false", channel);
+                        } else {
+                            if (store.hasItem(m[1])) {
+                                if (store.getItem(m[1]).isWeapon()) {
+                                    boolean d;
+                                    switch (m[2]) {
+                                        case "true":
+                                            d = true;
+                                            break;
+                                        case "false":
+                                            d = false;
+                                            break;
+                                        default:
+                                            printmessage("Please use true/false.", channel);
+                                            return;
+                                    }
+                                    ((Weapon)store.getItem(m[1])).setDouble(d);
+                                    printmessage(store.getItem(m[1]).getStatus(), channel);
+                                    store.saveData();
+                                } else {
+                                    printmessage("Item is not a weapon.", channel);
+                                }
+                            } else {
+                                printmessage("Item does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("setweaponignoredefense")) // weapon yes/no
+                    {
+                        if (m.length != 3) {
+                            printmessage("Invalid argument amount. Usage: !setweaponignoredefense \"weapon\" true/false", channel);
+                        } else {
+                            if (store.hasItem(m[1])) {
+                                if (store.getItem(m[1]).isWeapon()) {
+                                    boolean luna;
+                                    switch (m[2]) {
+                                        case "true":
+                                            luna = true;
+                                            break;
+                                        case "false":
+                                            luna = false;
+                                            break;
+                                        default:
+                                            printmessage("Please use true/false.", channel);
+                                            return;
+                                    }
+                                    ((Weapon)store.getItem(m[1])).setIgnoreDefense(luna);
+                                    printmessage(store.getItem(m[1]).getStatus(), channel);
+                                    store.saveData();
+                                } else {
+                                    printmessage("Item is not a weapon.", channel);
+                                }
+                            } else {
+                                printmessage("Item does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("setlifesteal")) // weapon yes/no
+                    {
+                        if (m.length != 3) {
+                            printmessage("Invalid argument amount. Usage: !setlifesteal \"weapon\" true/false", channel);
+                        } else {
+                            if (store.hasItem(m[1])) {
+                                if (store.getItem(m[1]).isWeapon()) {
+                                    boolean ls;
+                                    switch (m[2]) {
+                                        case "true":
+                                            ls = true;
+                                            break;
+                                        case "false":
+                                            ls = false;
+                                            break;
+                                        default:
+                                            printmessage("Please use true/false.", channel);
+                                            return;
+                                    }
+                                    ((Weapon)store.getItem(m[1])).setLifeSteal(ls);
+                                    printmessage(store.getItem(m[1]).getStatus(), channel);
+                                    store.saveData();
+                                } else {
+                                    printmessage("Item is not a weapon.", channel);
+                                }
+                            } else {
+                                printmessage("Item does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("setstaffrank")) // staff rank
+                    {
+                        if (m.length != 3) {
+                            printmessage("Invalid argument amount. Usage: !setstaffrank \"staff\" rank", channel);
+                        } else {
+                            if (store.hasItem(m[1])) {
+                                if (store.getItem(m[1]).isStaff()) {
+
+                                } else {
+                                    printmessage("Item is not a staff.", channel);
+                                }
+                            } else {
+                                printmessage("Item does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("sethealingstaff")) // staff yes/no
+                    {
+                        if (m.length != 3) {
+                            printmessage("Invalid argument amount. Usage: !sethealingstaff \"staff\" true/false", channel);
+                        } else {
+                            if (store.hasItem(m[1])) {
+                                if (store.getItem(m[1]).isStaff()) {
+                                    int rank;
+                                    String regex = "\\d+";
+                                    if (m[2].matches(regex)) {
+                                        rank = Integer.parseInt(m[3]);
+                                    } else {
+                                        printmessage("Invalid weapon rank. Ensure it is a number from 0-5 (0 = E, 1 = D, 2 = C, 3 = B, 4 = A, 5 = S).", channel);
+                                        return;
+                                    }
+                                    ((Staff)store.getItem(m[1])).setWeaponRank(rank);
+                                    printmessage(store.getItem(m[1]).getStatus(), channel);
+                                    store.saveData();
+                                } else {
+                                    printmessage("Item is not a staff.", channel);
+                                }
+                            } else {
+                                printmessage("Item does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("setstaffmagmulti")) // staff multiplier
+                    {
+                        if (m.length != 3) {
+                            printmessage("Invalid argument amount. Usage: !setstaffmagmulti \"staff\" multiplier", channel);
+                        } else {
+                            if (store.hasItem(m[1])) {
+                                if (store.getItem(m[1]).isStaff()) {
+                                    int multi;
+                                    String regex = "\\d+";
+                                    if (m[2].matches(regex)) {
+                                        multi = Integer.parseInt(m[3]);
+                                    } else {
+                                        printmessage("Invalid multiplier. Ensure it is a number.", channel);
+                                        return;
+                                    }
+                                    ((Staff)store.getItem(m[1])).setMagicMultiplier(multi);
+                                    printmessage(store.getItem(m[1]).getStatus(), channel);
+                                    store.saveData();
+                                } else {
+                                    printmessage("Item is not a staff.", channel);
+                                }
+                            } else {
+                                printmessage("Item does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("battle")) // initiator defender
+                    {
+                        if (m.length != 3) {
+                            printmessage("Invalid argument amount. Usage: !battle \"initiator\" \"defender\"", channel);
+                        } else {
+                            if (store.hasCharacter(m[1])) {
+                                if (store.hasCharacter(m[2])) {
+                                    Battle temp = new Battle();
+                                    String mess = temp.commenceBattle(store.getCharacter(m[1]),store.getCharacter(m[2]));
+                                    printmessage(mess, channel);
+                                    store.saveData();
+                                } else {
+                                    printmessage("Defender does not exist.", channel);
+                                }
+                            } else {
+                                printmessage("Initiator does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("battleforecast")) // char1 char2
+                    {
+                        if (m.length != 3) {
+                            printmessage("Invalid argument amount. Usage: !battleforecast \"initiator\" \"defender\"", channel);
+                        } else {
+                            if (store.hasCharacter(m[1])) {
+                                if (store.hasCharacter(m[2])) {
+                                    Battle temp = new Battle();
+                                    String mess = temp.battleForecast(store.getCharacter(m[1]),store.getCharacter(m[2]));
+                                    printmessage(mess, channel);
+                                } else {
+                                    printmessage("Defender does not exist.", channel);
+                                }
+                            } else {
+                                printmessage("Initiator does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("battlestaff")) // initiator target
+                    {
+                        if (m.length != 3) {
+                            printmessage("Invalid argument amount. Usage: !battlestaff \"caster\" \"target\"", channel);
+                        } else {
+                            if (store.hasCharacter(m[1])) {
+                                if (store.hasCharacter(m[2])) {
+                                    if (store.getCharacter(m[1]).getEquippedStaff() != null) {
+                                        if (store.getCharacter(m[1]).getEquippedStaff().isHealing()) {
+                                            store.getCharacter(m[2]).heal(store.getCharacter(m[1]).getEquippedStaff().getBaseHeal() + store.getCharacter(m[1]).getEquippedStaff().getMagicMultiplier() * store.getCharacter(m[1]).getStats()[2]);
+                                            store.getCharacter(m[1]).getEquippedStaff().use();
+                                            String mess = store.getCharacter(m[2]).getStatus();
+                                            mess += store.getCharacter(m[1]).getEquippedStaff().getStatus();
+                                            printmessage(mess, channel);
+                                            store.saveData();
+                                        } else {
+                                            printmessage("Status staves have not been implemented.", channel);
+                                        }
+                                    } else {
+                                        printmessage("Initiator does not have an equipped staff.", channel);
+                                    }
+                                } else {
+                                    printmessage("Target does not exist.", channel);
+                                }
+                            } else {
+                                printmessage("Initiator does not exist.", channel);
+                            }
                         }
                     }
                 }

@@ -26,12 +26,12 @@ public class Weapon extends Item implements Serializable{
     private String statusmessage;
     private int[] statbonus = new int[11];
     private boolean[] weaponeffective = new boolean[7];
-    private String[] weapontypes = new String[] {"None","Sword", "Lance", "Axe", "Anima", "Light", "Dark", "Bow"};
+    String[] weapontypes = new String[] {"None","Sword", "Lance", "Axe", "Anima", "Light", "Dark", "Bow"};
     private String[] ranktypes = new String[] {"E","D","C","B","A","S"};
     private String[] stattypes = new String[] {"HP", "Strength", "Magic", "Skill", "Speed", "Luck", "Defense", "Resistance", "Hit", "Avoid", "Crit"};
-    public Weapon(String name, int type) { //constructor
+    Weapon(String name, int type) { //constructor
         super(name);
-        statusmessage = "New " + type + " named " + name + " created!\n";
+        statusmessage = "New " + weapontypes[type] + " named " + name + " created!\n";
         weaponrank = 0;
         might = 0;
         hitrate = 0;
@@ -59,38 +59,24 @@ public class Weapon extends Item implements Serializable{
         magadvantage = 0;
         magweak = 0;
         physadvantage = 0;
-        magweak = 0;
         switch (type) {
             case 1:
                 weapontype = type;
-                minrange = 1;
-                maxrange = 1;
-                targetsmagic = false;
-                usesmagic = false;
                 physadvantage = 3;
                 physweak = 2;
                 break;
             case 2:
                 weapontype = type;
-                minrange = 1;
-                maxrange = 1;
-                targetsmagic = false;
-                usesmagic = false;
                 physadvantage = 1;
                 physweak = 3;
                 break;
             case 3:
                 weapontype = type;
-                minrange = 1;
-                maxrange = 1;
-                targetsmagic = false;
-                usesmagic = false;
                 physadvantage = 2;
                 physweak = 1;
                 break;
             case 4:
                 weapontype = type;
-                minrange = 1;
                 maxrange = 2;
                 targetsmagic = true;
                 usesmagic = true;
@@ -99,7 +85,6 @@ public class Weapon extends Item implements Serializable{
                 break;
             case 5:
                 weapontype = type;
-                minrange = 1;
                 maxrange = 2;
                 targetsmagic = true;
                 usesmagic = true;
@@ -108,7 +93,6 @@ public class Weapon extends Item implements Serializable{
                 break;
             case 6:
                 weapontype = type;
-                minrange = 1;
                 maxrange = 2;
                 targetsmagic = true;
                 usesmagic = true;
@@ -119,8 +103,6 @@ public class Weapon extends Item implements Serializable{
                 weapontype = type;
                 minrange = 2;
                 maxrange = 2;
-                targetsmagic = false;
-                usesmagic = false;
                 antiflier = true;
                 break;
         }
@@ -136,7 +118,7 @@ public class Weapon extends Item implements Serializable{
         statusmessage += this.getName() + "'s required rank set to " + ranktypes[i] + ".\n";
         weaponrank = i;
     }
-    public int getWeaponRank() { return weaponrank; }
+    int getWeaponRank() { return weaponrank; }
     public void setWeaponEffectiveness(int weapon, boolean e) {
         if (e) {
             statusmessage += getName() + " is now effective against " + weapontypes[weapon + 1] + ".\n";
@@ -145,7 +127,7 @@ public class Weapon extends Item implements Serializable{
         }
         weaponeffective[weapon + 1] = e;
     }
-    public boolean isEffectiveAgainst(int weapon) { return weaponeffective[weapon + 1]; }
+    boolean isEffectiveAgainst(int weapon) { return weaponeffective[weapon + 1]; }
     public void setAntiArmor(boolean b) { //sets if weapon is armorslaying
         if (b) {
             statusmessage += getName() + " is now an anti armor weapon.\n";
@@ -154,7 +136,7 @@ public class Weapon extends Item implements Serializable{
         }
         antiarmor = b;
     }
-    public boolean isAntiArmor() { return antiarmor; }
+    boolean isAntiArmor() { return antiarmor; }
     public void setAntiFlier(boolean b) { //sets if weapon is anti fliers
         if (b) {
             statusmessage += getName() + " is now an anti flier weapon.\n";
@@ -163,7 +145,7 @@ public class Weapon extends Item implements Serializable{
         }
         antiflier = b;
     }
-    public boolean isAntiFlier() { return antiflier; }
+    boolean isAntiFlier() { return antiflier; }
     public void setAntiMounted(boolean b) { //sets if weapon is anti mounted
         if (b) {
             statusmessage += getName() + " is now an anti mounted weapon.\n";
@@ -172,7 +154,7 @@ public class Weapon extends Item implements Serializable{
         }
         antimounted = b;
     }
-    public boolean isAntimounted() { return antimounted; }
+    boolean isAntimounted() { return antimounted; }
     public void setPhysicalAdvantage(int s) { //sets advantageous weapon
         statusmessage += this.getName() + "is now advantageous against " + weapontypes[s] + ".\n";
         physadvantage = s;
@@ -209,7 +191,7 @@ public class Weapon extends Item implements Serializable{
         statusmessage += this.getName() + "is now classified as " + weapontypes[s+1] + ".\n";
         weapontype = s+1;
     }
-    public int getWeapontype()
+    int getWeapontype()
     {
         return weapontype-1;
     }
@@ -221,7 +203,7 @@ public class Weapon extends Item implements Serializable{
         }
         targetsmagic = b;
     }
-    public boolean isMagicTarget() { return targetsmagic; }
+    boolean isMagicTarget() { return targetsmagic; }
     public void setHitRate(int i) { //changes weapon hitrate
         statusmessage += this.getName() + "'s hitrate is now " + i + ".\n";
         hitrate = i;
@@ -234,8 +216,8 @@ public class Weapon extends Item implements Serializable{
         }
         usesmagic = b;
     }
-    public boolean isUsesMagic() { return usesmagic; }
-    public int getHitRate()
+    boolean isUsesMagic() { return usesmagic; }
+    int getHitRate()
     {
         return hitrate;
     }
@@ -243,7 +225,7 @@ public class Weapon extends Item implements Serializable{
         statusmessage += this.getName() + "'s critrate is now " + i + ".\n";
         critrate = i;
     }
-    public int getCritRate()
+    int getCritRate()
     {
         return critrate;
     }
@@ -251,7 +233,7 @@ public class Weapon extends Item implements Serializable{
         statusmessage += this.getName() + "'s crit modifier is now " + i + ".\n";
         critmodifier = i;
     }
-    public int getCritModifier()
+    int getCritModifier()
     {
         return critmodifier;
     }
@@ -259,7 +241,7 @@ public class Weapon extends Item implements Serializable{
         statusmessage += this.getName() + "'s might is now " + i + ".\n";
         might = i;
     }
-    public int getMight()
+    int getMight()
     {
         return might;
     }
@@ -271,7 +253,7 @@ public class Weapon extends Item implements Serializable{
         }
         counterable = c;
     }
-    public boolean isCounterable()
+    boolean isCounterable()
     {
         return counterable;
     }
@@ -299,7 +281,7 @@ public class Weapon extends Item implements Serializable{
         }
         brave = b;
     }
-    public boolean isBrave()
+    boolean isBrave()
     {
         return brave;
     }
@@ -311,12 +293,12 @@ public class Weapon extends Item implements Serializable{
         }
         candouble = b;
     }
-    public boolean canDouble() { return candouble; }
+    boolean canDouble() { return candouble; }
     public void setStatBonus(int stat, int bonus) { //sets weapon stat bonuses
         statusmessage += this.getName() + " now grants a bonus of " + bonus + " to " + stattypes[stat] + ".\n";
         statbonus[stat] = bonus;
     }
-    public int[] getStatBonuses()
+    int[] getStatBonuses()
     {
         return statbonus;
     }
@@ -328,7 +310,7 @@ public class Weapon extends Item implements Serializable{
         }
         ignoredefense = b;
     }
-    public boolean isIgnoreDefense()
+    boolean isIgnoreDefense()
     {
         return ignoredefense;
     }
@@ -344,7 +326,7 @@ public class Weapon extends Item implements Serializable{
     {
         return lifesteal;
     }
-    public int hasAdvantage(int s) { //calculates weapon advantage against given weapon
+    int hasAdvantage(int s) { //calculates weapon advantage against given weapon
         if (physadvantage == s) {
             return 2;
         }

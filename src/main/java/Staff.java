@@ -9,7 +9,7 @@ public class Staff extends Item implements Serializable{
     private String[] ranktypes = new String[] {"E","D","C","B","A","S"};
     private String[] stattypes = new String[] {"HP", "Strength", "Magic", "Skill", "Speed", "Luck", "Defense", "Resistance", "Hit", "Avoid", "Crit"};
 
-    public Staff(String name) { //constructor
+    Staff(String name) { //constructor
         super(name);
         baseheal = 0;
         magicmulti = 1;
@@ -26,7 +26,7 @@ public class Staff extends Item implements Serializable{
         statusmessage += this.getName() + "'s required staff rank set to " + ranktypes[i] + ".\n";
         weaponrank = i;
     }
-    public int getWeaponRank()
+    int getWeaponRank()
     {
         return weaponrank;
     }

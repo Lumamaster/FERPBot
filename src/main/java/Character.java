@@ -52,7 +52,7 @@ public class Character implements Serializable {
         isBoss = false;
     }
 
-    public Character(String name) {
+    Character(String name) {
         this();
         statusmessage += "New character named " + name + " created!\n";
         this.name = name;
@@ -73,7 +73,7 @@ public class Character implements Serializable {
         isPlayerChar = !b;
     }
 
-    public boolean isNPC() {
+    boolean isNPC() {
         return (!isPlayerChar);
     }
 
@@ -86,16 +86,16 @@ public class Character implements Serializable {
         isBoss = b;
     }
 
-    public boolean isBoss() {
+    boolean isBoss() {
         return isBoss;
     }
 
-    public void setOwner(String s) {
+    void setOwner(String s) {
         owner = s;
         statusmessage += s + " is now the owner of " + getName() + ".\n";
     }
 
-    public String getOwner() {
+    String getOwner() {
         return owner;
     }
 
@@ -103,7 +103,7 @@ public class Character implements Serializable {
         return skilllist;
     }
 
-    public void addSkill(Skill s) { //adds skill to skill list if not already in
+    void addSkill(Skill s) { //adds skill to skill list if not already in
         if (skilllist.addSkill(s)) {
             statusmessage += s.getName() + " has been added to " + name + "'s skills.\n";
         } else {
@@ -111,7 +111,7 @@ public class Character implements Serializable {
         }
     }
 
-    public void removeSkill(Skill s) { //checks if skill is in skill list, then removes if it is
+    void removeSkill(Skill s) { //checks if skill is in skill list, then removes if it is
         if (skilllist.removeSkill(s)) {
             statusmessage += s.getName() + " has been removed from " + name + "'s skills.\n";
         } else {
@@ -119,7 +119,7 @@ public class Character implements Serializable {
         }
     }
 
-    public void changeName(String n) { //changes name of character
+    void changeName(String n) { //changes name of character
         statusmessage += name + " is now named " + n + ".\n";
         name = n;
     }
@@ -137,33 +137,33 @@ public class Character implements Serializable {
         return appearance;
     }
 
-    public void setDescription(String s) { //changes description of character
+    void setDescription(String s) { //changes description of character
         statusmessage += name + "'s description has been changed.\n";
         description = s;
     }
 
-    public String getDescription() {
+    String getDescription() {
         return description;
     }
 
-    public void setRace(String s) { //changes character race
+    void setRace(String s) { //changes character race
         statusmessage += name + "'s race has been changed.\n";
         race = s;
     }
 
-    public String getRace() {
+    String getRace() {
         return race;
     }
 
-    public ArrayList<Item> getInventory() {
+    ArrayList<Item> getInventory() {
         return inventory;
     }
 
-    public SkillList getSkilllist() {
+    SkillList getSkilllist() {
         return skilllist;
     }
 
-    public Weapon getEquippedWeapon() {
+    Weapon getEquippedWeapon() {
         return equippedweapon;
     }
 
@@ -175,20 +175,20 @@ public class Character implements Serializable {
         return growths;
     }
 
-    public int[] getStats() {
+    int[] getStats() {
         return stats;
     }
 
-    public int getCurrHP() {
+    int getCurrHP() {
         return currHP;
     }
 
-    public void setMaxHP(int value) {
+    void setMaxHP(int value) {
         stats[0] = value;
         statusmessage += name + "'s maximum HP has been set to " + value + ".\n";
     }
 
-    public void setCurrHP(int value) {
+    void setCurrHP(int value) {
         currHP = value;
         statusmessage += name + "'s current HP has been set to " + value + ".\n";
     }
@@ -228,55 +228,53 @@ public class Character implements Serializable {
         statusmessage += name + "'s resistance has been set to " + value + ".\n";
     }
 
-    public void setLevel(int i) { //sets character level
+    void setLevel(int i) { //sets character level
         statusmessage += name + "'s level has been set to " + i + "\n";
         level = i;
     }
 
-    public int getLevel() {
+    int getLevel() {
         return level;
     }
-    public void setHPGrowth(int value) {
+    void setHPGrowth(int value) {
         growths[0] = value;
         statusmessage += name + "'s HP growth has been set to " + value + "\n";
     }
-    public void setSTRGrowth(int value) {
+    void setSTRGrowth(int value) {
         growths[1] = value;
         statusmessage += name + "'s Strength growth has been set to " + value + "\n";
     }
-    public void setMAGGrowth(int value) {
+    void setMAGGrowth(int value) {
         growths[2] = value;
         statusmessage += name + "'s Magic growth has been set to " + value + "\n";
     }
-    public void setSKLGrowth(int value) {
+    void setSKLGrowth(int value) {
         growths[3] = value;
         statusmessage += name + "'s Skill growth has been set to " + value + "\n";
     }
-    public void setSPDGrowth(int value) {
+    void setSPDGrowth(int value) {
         growths[4] = value;
         statusmessage += name + "'s Speed growth has been set to " + value + "\n";
     }
-    public void setLUCKGrowth(int value) {
+    void setLUCKGrowth(int value) {
         growths[5] = value;
         statusmessage += name + "'s Luck growth has been set to " + value + "\n";
     }
-    public void setDEFGrowth(int value) {
+    void setDEFGrowth(int value) {
         growths[6] = value;
         statusmessage += name + "'s Defense growth has been set to " + value + "\n";
     }
-    public void setRESGrowth(int value) {
+    void setRESGrowth(int value) {
         growths[7] = value;
         statusmessage += name + "'s Resistance growth has been set to " + value + "\n";
     }
 
-
-
-    public void setLevelCap(int i) { //sets level cap
+    void setLevelCap(int i) { //sets level cap
         statusmessage += name + "'s level cap has been set to " + i + "\n";
         levelcap = i;
     }
 
-    public int getLevelCap() {
+    int getLevelCap() {
         return levelcap;
     }
 
@@ -285,11 +283,11 @@ public class Character implements Serializable {
         charclass = c;
     }
 
-    public Class getCurrentClass() {
+    Class getCurrentClass() {
         return charclass;
     }
 
-    public void setTeam(int i) { //changes character team
+    void setTeam(int i) { //changes character team
         statusmessage += name + "'s team has been set to " + i + "\n";
         team = i;
     }
@@ -316,16 +314,16 @@ public class Character implements Serializable {
         return false;
     }
 
-    public void setWeaponRank(int weapon, int rank) { //changes character weapon rank
+    void setWeaponRank(int weapon, int rank) { //changes character weapon rank
         statusmessage += name + "'s " + weapontypes[weapon] + " rank has been set to " + ranktypes[rank] + ".\n";
         weaponrank[weapon] = rank;
     }
 
-    public int[] getWeaponRanks() {
+    int[] getWeaponRanks() {
         return weaponrank;
     }
 
-    public boolean equipWeapon(Weapon w) { //equips a weapon in character's inventory if it exists
+    boolean equipWeapon(Weapon w) { //equips a weapon in character's inventory if it exists
         if (inventory.contains(w)) {
             if (weaponrank[w.getWeapontype()] >= w.getWeaponRank()) {
                 equippedweapon = w;
@@ -340,7 +338,7 @@ public class Character implements Serializable {
         return false;
     }
 
-    public void unequipWeapon() { //unequips weapon if weapon is equipped
+    void unequipWeapon() { //unequips weapon if weapon is equipped
         if (hasEquippedWeapon) {
             statusmessage += name + " has unequipped " + equippedweapon.getName() + ".\n";
             hasEquippedWeapon = false;
@@ -349,11 +347,11 @@ public class Character implements Serializable {
         }
     }
 
-    public boolean isEquippingWeapon() {
+    boolean isEquippingWeapon() {
         return hasEquippedWeapon;
     }
 
-    public boolean equipStaff(Staff s) { //equips a staff if staff is in character's weapon
+    boolean equipStaff(Staff s) { //equips a staff if staff is in character's weapon
         if (inventory.contains(s)) {
             if (weaponrank[7] >= s.getWeaponRank()) {
                 equippedstaff = s;
@@ -368,7 +366,7 @@ public class Character implements Serializable {
         return false;
     }
 
-    public boolean promote(Class c) { //promotes a character to the specified class if it is a promotion path
+    boolean promote(Class c) { //promotes a character to the specified class if it is a promotion path
         statusmessage = "Promotion!\n";
         int i;
         if (charclass.getPromotionPaths().contains(c)) {
@@ -415,7 +413,7 @@ public class Character implements Serializable {
         return false;
     }
 
-    public void levelup() { //levels up the character
+    void levelup() { //levels up the character
         if (level < levelcap) {
             statusmessage += name + " leveled up from " + level + " to " + (level + 1) + "!\n";
             int i;
@@ -441,7 +439,7 @@ public class Character implements Serializable {
         }
     }
 
-    public void gainExperience(int experience) { //adds experience to the character and levels it up if it reaches 100
+    void gainExperience(int experience) { //adds experience to the character and levels it up if it reaches 100
         if (level < levelcap) {
             if (experience > 0) {
                 statusmessage += name + " gained " + experience + " experience!\n";
@@ -462,7 +460,7 @@ public class Character implements Serializable {
         }
     }
 
-    public int getExperience() {
+    int getExperience() {
         return exp;
     }
 
@@ -476,7 +474,7 @@ public class Character implements Serializable {
         }
     }
 
-    public void heal(int healing) {
+    void heal(int healing) {
         int h;
         int temp = stats[1];
         if (healing + stats[1] > stats[0]) {
