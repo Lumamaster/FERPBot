@@ -101,6 +101,10 @@ Below are a list of commands and their functions.
 ###### CLASS COMMANDS
  * !createclass "name" 
    - Creates a new class.
+ * !renameclass "class" "name" 
+   - Renames the specified class.
+ * !deleteclass "name" 
+   - Deletes the specified class. All characters with the deleted class will be set to no class.
  * !addclasspromopath "name" "class"
    - Adds a promotion path to the specified class.
  * !removeclasspromopath "name" "class"
@@ -138,7 +142,7 @@ Below are a list of commands and their functions.
  * !createmiracleskill "name" stat multiplier
    - Creates a new miracle-type skill.
  * !deleteskill "name"
-   - Deletes the specified skill if it exists.
+   - Deletes the specified skill if it exists from all characters and classes.
  * !setskillname "skill" "name"
    - Sets the name of the skill.
  * !setskilldesc "skill" "description"
@@ -195,6 +199,10 @@ Below are a list of commands and their functions.
 ###### ITEM COMMANDS
  * !createitem "name" type uses
    - Creates a new item. (item, weapon, staff, consumable)
+ * !renameitem "item" "name"
+   - Renames the specified item.
+ * !deleteitem "item"
+   - Deletes the specified item (will delete from all inventories).
  * !setitemdescription "item" "desc"
    - Sets the item's description.
  * !makeindestructible "item" true/false
