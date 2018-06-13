@@ -7,7 +7,7 @@ import java.io.*;
 public class Main {
     public static void main(String[] args) throws IOException {
         String token;
-        FileInputStream fin = null;
+        FileInputStream fin;
         try {
             fin = new FileInputStream(System.getProperty("user.dir")+"\\token.txt");
             BufferedReader br = new BufferedReader(new InputStreamReader(fin));
@@ -20,7 +20,7 @@ public class Main {
             e.printStackTrace();
         }
     }
-    public static IDiscordClient createClient(String token, boolean login) { // Returns a new instance of the Discord client
+    private static IDiscordClient createClient(String token, boolean login) { // Returns a new instance of the Discord client
         ClientBuilder clientBuilder = new ClientBuilder(); // Creates the ClientBuilder instance
         clientBuilder.withToken(token); // Adds the login info to the builder
         try {

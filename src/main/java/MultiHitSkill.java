@@ -8,7 +8,6 @@ public class MultiHitSkill extends ProcSkill implements Serializable{
         super(name,proc,damage,stat, 0);
         super.setAttackMulti(true);
         attackcount = ac;
-        statusmessage = "";
     }
     public String getStatus() {
         String temp = statusmessage;

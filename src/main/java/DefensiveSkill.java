@@ -7,7 +7,6 @@ public class DefensiveSkill extends Skill implements Serializable{
     DefensiveSkill(String name) {
         super(name);
         super.setDefensive(true);
-        statusmessage = "";
         int i;
         for (i = 0; i < 17; i++) {
             buff[i] = 0;

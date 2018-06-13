@@ -21,10 +21,42 @@ public class Storage {
     Item getItem(String s) { return (Item)itemhash.get(s); }
     Class getClass(String s) { return (Class)classhash.get(s); }
     Skill getSkill(String s) { return (Skill)skillhash.get(s); }
-    void removeCharacter(String s) { charhash.remove(s); }
-    public void removeItem(String s) { itemhash.remove(s); }
-    public void removeClass(String s) { classhash.remove(s); }
-    void removeSkill(String s) { skillhash.remove(s); }
+    void removeCharacter(String s) {
+        File f = new File(System.getProperty("user.dir") + "/characters/" + s);
+        if (f.delete()) {
+            System.out.println("Character " + s + " deleted.");
+        } else {
+            System.out.println("Character failed to be deleted.");
+        }
+        charhash.remove(s);
+    }
+    public void removeItem(String s) {
+        File f = new File(System.getProperty("user.dir") + "/items/" + s);
+        if (f.delete()) {
+            System.out.println("Item " + s + " deleted.");
+        } else {
+            System.out.println("Item failed to be deleted.");
+        }
+        itemhash.remove(s);
+    }
+    public void removeClass(String s) {
+        File f = new File(System.getProperty("user.dir") + "/classes/" + s);
+        if (f.delete()) {
+            System.out.println("Class " + s + " deleted.");
+        } else {
+            System.out.println("Class failed to be deleted.");
+        }
+        classhash.remove(s);
+    }
+    void removeSkill(String s) {
+        File f = new File(System.getProperty("user.dir") + "/skills/" + s);
+        if (f.delete()) {
+            System.out.println("Skill " + s + " deleted.");
+        } else {
+            System.out.println("Skill failed to be deleted.");
+        }
+        skillhash.remove(s);
+    }
     Character[] getcharlist() {
         Collection<Character> tempchar = charhash.values();
         Character[] chararray = tempchar.toArray(new Character[0]);

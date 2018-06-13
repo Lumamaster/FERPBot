@@ -7,7 +7,6 @@ public class InitiationSkill extends Skill implements Serializable{
     InitiationSkill(String name) {
         super(name);
         super.setOffensive(true);
-        statusmessage = "";
         int i;
         for (i = 0; i < 17; i++) {
             buff[i] = 0;

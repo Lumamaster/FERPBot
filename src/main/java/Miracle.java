@@ -9,7 +9,6 @@ public class Miracle extends Skill implements Serializable{
         super(name);
         super.setMiracle(true);
         luckmulti = p;
-        statusmessage = "";
         stattype = 5;
     }
     public String getStatus() {

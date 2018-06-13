@@ -9,7 +9,6 @@ public class PassiveSkill extends Skill implements Serializable{
     PassiveSkill(String name) { //constructor
         super(name);
         super.setPassive(true);
-        statusmessage = "";
         int i;
         for (i = 0; i < 17; i++) {
             buff[i] = 0;

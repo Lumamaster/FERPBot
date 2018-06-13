@@ -21,7 +21,6 @@ public class ProcSkill extends Skill implements Serializable{
         } else {
             activationstat = 3;
         }
-        statusmessage = "";
         super.setProc(true);
         enemystat = false;
         cancel = false;

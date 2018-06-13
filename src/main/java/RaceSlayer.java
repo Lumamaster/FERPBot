@@ -9,7 +9,6 @@ public class RaceSlayer extends Skill implements Serializable{
         super(name);
         super.setSlayer(true);
         raceslay = race;
-        statusmessage = "";
         int i;
         for (i = 0; i < 6; i++) {
             advantage[i] = 0;

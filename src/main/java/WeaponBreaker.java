@@ -10,7 +10,6 @@ public class WeaponBreaker extends PassiveSkill implements Serializable{
         super(name);
         super.setBreaker(true);
         weapon = w;
-        statusmessage = "";
         int i;
         for (i = 0; i < 6; i++) {
             advantage[i] = 0;

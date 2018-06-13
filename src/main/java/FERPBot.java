@@ -122,7 +122,7 @@ public class FERPBot extends BaseBot implements IListener<MessageEvent> {
                                 infomessage.append("\n***Skills:*** ");
                                 int j;
                                 for (j = 0; j < temp.getSkilllist().getSkills().size(); j++) {
-                                    infomessage.append(temp.getSkilllist().getSkills().get(j));
+                                    infomessage.append(temp.getSkilllist().getSkills().get(j).getName());
                                     if (j < temp.getSkilllist().getSkills().size() - 1) {
                                         infomessage.append(", ");
                                     }
@@ -934,6 +934,68 @@ public class FERPBot extends BaseBot implements IListener<MessageEvent> {
                             printmessage("Class " + m[1] + " created.", channel);
                         }
                     }
+                    if (m[0].equals("deleteclass")) //name
+                    {
+                        if (m.length != 2) {
+                            printmessage("Invalid argument amount. Usage: !deleteclass \"name\"", channel);
+                        } else {
+                            if (store.hasClass(m[1])) {
+                                store.removeClass(m[1]);
+                                int a;
+                                for (a = 0; a < store.getclasslist().length; a++) {
+                                    if (store.getcharlist()[a].getCurrentClass().getName().equals(m[1])) {
+                                        store.getCharacter(store.getcharlist()[a].getName()).setClass(null);
+                                    }
+                                }
+                                store.saveData();
+                                printmessage("Class " + m[1] + " deleted.", channel);
+                            } else {
+                                printmessage("Class does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("renameclass")) //class name
+                    {
+                        if (m.length != 3) {
+                            printmessage("Invalid argument amount. Usage: !renameclass \"class\" \"name\"", channel);
+                        } else {
+                            if (store.hasClass(m[1])) {
+                                store.getClass(m[1]).setName(m[2]);
+                                int a;
+                                for (a = 0; a < store.getclasslist().length; a++) {
+                                    if (store.getcharlist()[a].getClass().getName().equals(m[1])) {
+                                        store.getCharacter(store.getcharlist()[a].getName()).getCurrentClass().setName(m[2]);
+                                    }
+                                }
+                                store.addClass(m[2],store.getClass(m[1]));
+                                store.removeClass(m[1]);
+                                store.saveData();
+                                printmessage("Class " + m[1] + " has been renamed to " + m[2] + ".", channel);
+                            } else {
+                                printmessage("Class does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("deleteclass")) //class
+                    {
+                        if (m.length != 2) {
+                            printmessage("Invalid argument amount. Usage: !delete \"class\"", channel);
+                        } else {
+                            if (store.hasClass(m[1])) {
+                                int a;
+                                for (a = 0; a < store.getclasslist().length; a++) {
+                                    if (store.getcharlist()[a].getClass().getName().equals(m[1])) {
+                                        store.getCharacter(store.getcharlist()[a].getName()).setClass(null);
+                                    }
+                                }
+                                store.removeClass(m[1]);
+                                store.saveData();
+                                printmessage("Class " + m[1] + " has been deleted.", channel);
+                            } else {
+                                printmessage("Class does not exist.", channel);
+                            }
+                        }
+                    }
                     if (m[0].equals("setclassdescription")) // name "description"
                     {
                         if (m.length != 3) {
@@ -1059,10 +1121,10 @@ public class FERPBot extends BaseBot implements IListener<MessageEvent> {
                             }
                         }
                     }
-                    if (m[0].equals("setclassskillbonus")) // name skill
+                    if (m[0].equals("addclassskillbonus")) // name skill
                     {
                         if (m.length != 3) {
-                            printmessage("Invalid argument amount. Usage: !setclassskillbonus \"name\" \"skill\"", channel);
+                            printmessage("Invalid argument amount. Usage: !addclassskillbonus \"name\" \"skill\"", channel);
                         } else {
                             if (store.hasClass(m[1])) {
                                 int a;
@@ -1443,7 +1505,7 @@ public class FERPBot extends BaseBot implements IListener<MessageEvent> {
                             printmessage(temp.getStatus(), channel);
                         }
                     }
-                    if (m[0].equals("createprocskill")) // name type
+                    if (m[0].equals("createprocskill")) // name
                     {
                         if (m.length != 6) {
                             printmessage("Invalid argument amount. Usage: !createskill \"name\" procrate damagemultiplier activationstat inputstat", channel);
@@ -1811,7 +1873,7 @@ public class FERPBot extends BaseBot implements IListener<MessageEvent> {
                     if (m[0].equals("createslayerskill")) // name type
                     {
                         if (m.length != 5) {
-                            printmessage("Invalid argument amount. Usage: !createslayerskill \"name\" race stat advantage", channel);
+                            printmessage("Invalid argument amount. Usage: !createslayerskill \"name\" \"race\" stat advantage", channel);
                         } else {
                             double advantage;
                             int stat;
@@ -1930,6 +1992,36 @@ public class FERPBot extends BaseBot implements IListener<MessageEvent> {
                             }
                         }
                     }
+                    if (m[0].equals("renameskill")) // skill name
+                    {
+                        if (m.length != 3) {
+                            printmessage("Invalid argument amount. Usage: !renameskill \"skill\" \"name\"", channel);
+                        } else {
+                            if (store.hasSkill(m[1])) {
+                                int a;
+                                Character[] temp = store.getcharlist();
+                                Class[] tempclass = store.getclasslist();
+                                store.addSkill(m[2],store.getSkill(m[1]));
+                                for (a = 0; a < temp.length; a++) {
+                                    if (temp[a].getSkilllist().hasSkill(store.getSkill(m[1]))) {
+                                        store.getCharacter(temp[a].getName()).removeSkill(store.getSkill(m[1]));
+                                        store.getCharacter(temp[a].getName()).addSkill(store.getSkill(m[2]));
+                                    }
+                                }
+                                for (a = 0; a < tempclass.length; a++) {
+                                    if (tempclass[a].getBonusSkills().contains(store.getSkill(m[1]))) {
+                                        store.getClass(tempclass[a].getName()).removeSkill(store.getSkill(m[1]));
+                                        store.getClass(tempclass[a].getName()).addSkill(store.getSkill(m[2]));
+                                    }
+                                }
+                                store.removeSkill(m[1]);
+                                printmessage("Skill renamed from " + m[1] + " to " + m[2] + ".", channel);
+                                store.saveData();
+                            } else {
+                                printmessage("Skill does not exist.", channel);
+                            }
+                        }
+                    }
                     if (m[0].equals("setskilldesc")) // skill "description"
                     {
                         if (m.length != 3) {
@@ -1985,8 +2077,8 @@ public class FERPBot extends BaseBot implements IListener<MessageEvent> {
                         } else {
                             if (store.hasSkill(m[1])) {
                                 String temp = "";
-                                temp += "***" + store.getSkill(m[1]).getName() + "***" + "\n";
-                                temp += "***Description: ***" + store.getSkill(m[1]).getDescription();
+                                temp += "***Name:*** " + store.getSkill(m[1]).getName() + "\n";
+                                temp += "***Description: ***" + store.getSkill(m[1]).getDescription() + "\n";
                                 if (store.getSkill(m[1]).isAttackMulti()) {
                                     temp += "**Type:** Attack Multiplier\n";
                                     MultiHitSkill tempskill = (MultiHitSkill) store.getSkill(m[1]);
@@ -3380,6 +3472,48 @@ public class FERPBot extends BaseBot implements IListener<MessageEvent> {
                             }
                         }
                     }
+                    if (m[0].equals("deleteitem")) // item
+                    {
+                        if (m.length != 2) {
+                            printmessage("Invalid argument amount. Usage: !deleteitem \"item\"", channel);
+                        } else {
+                            if (store.hasItem(m[1])) {
+                                int a;
+                                for (a = 0; a < store.getcharlist().length; a++) {
+                                    if (store.getcharlist()[a].getInventory().contains(store.getItem(m[1]))) {
+                                        store.getCharacter(store.getcharlist()[a].getName()).removeItem(store.getItem(m[1]));
+                                    }
+                                }
+                                store.removeItem(m[1]);
+                                store.saveData();
+                                printmessage(m[1] + " has been deleted.", channel);
+                            } else {
+                                printmessage("Item does not exist.", channel);
+                            }
+                        }
+                    }
+                    if (m[0].equals("renameitem")) // item name
+                    {
+                        if (m.length != 3) {
+                            printmessage("Invalid argument amount. Usage: !renameitem \"item\" \"name\"", channel);
+                        } else {
+                            if (store.hasItem(m[1])) {
+                                int a;
+                                store.addItem(m[2],store.getItem(m[1]));
+                                for (a = 0; a < store.getcharlist().length; a++) {
+                                    if (store.getcharlist()[a].getInventory().contains(store.getItem(m[1]))) {
+                                        store.getCharacter(store.getcharlist()[a].getName()).removeItem(store.getItem(m[1]));
+                                        store.getCharacter(store.getcharlist()[a].getName()).addItem(store.getItem(m[2]));
+                                    }
+                                }
+                                store.removeItem(m[1]);
+                                printmessage("Item " + m[1] + " has been renamed to " + m[2] + ".", channel);
+                                store.saveData();
+                            } else {
+                                printmessage("Item does not exist.", channel);
+                            }
+                        }
+                    }
                     if (m[0].equals("setitemdescription")) // item "desc"
                     {
                         if (m.length != 3) {
@@ -3836,7 +3970,7 @@ public class FERPBot extends BaseBot implements IListener<MessageEvent> {
                     if (m[0].equals("setrequiredweaponrank")) // weapon rank
                     {
                         if (m.length != 3) {
-                            printmessage("Invalid argument amount. Usage: !setrequiredweaponrank \"weapon\" weapontype", channel);
+                            printmessage("Invalid argument amount. Usage: !setrequiredweaponrank \"weapon\" rank", channel);
                         } else {
                             if (store.hasItem(m[1])) {
                                 if (store.getItem(m[1]).isWeapon()) {
